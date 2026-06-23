@@ -1,0 +1,359 @@
+\section{Refrescos S.A.}
+
+
+\subsection{Presentación del caso}
+
+La compañía \textbf{REFRESCOS S.A.}, dedicada a la fabricación y distribución de bebidas refrescantes, ha detectado una modificación en la demanda de sus clientes y plantea estudiar el interés de cerrar alguna de sus unidades productivas.  
+Se produce y distribuye un único producto.  
+La empresa cuenta con tres líneas de fabricación en la actualidad: \textbf{Madrid}, \textbf{Toledo} y \textbf{Segovia}.  
+Dispone de cinco almacenes de distribución: Madrid (mismo emplazamiento que la línea), Segovia (mismo emplazamiento que la línea) y tres en Toledo (Toledo 1, Toledo 2 y Toledo 3).  
+En cada línea se pueden realizar dos turnos diarios.  
+
+Los costes fijos de funcionamiento de las líneas son:  
+Madrid: 90.000 €; Toledo: 90.000 €; Segovia: 12.000 €.  
+
+Los costes fijos por turno en cada línea son:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Línea & Turno 1 (€) & Turno 2 (€) \\
+\midrule
+Madrid & 24.000 & 30.000 \\
+Toledo & 12.000 & 15.000 \\
+Segovia & 6.000 & 7.500 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Los costes variables de transporte (en €/caja) son:
+
+\begin{center}
+\begin{tabular}{lcl}
+Madrid $\rightarrow$ Toledo 1 & : & 0.12 \\
+Madrid $\rightarrow$ Toledo 2 & : & 0.15 \\
+Madrid $\rightarrow$ Toledo 3 & : & 0.18 \\
+Madrid $\rightarrow$ Segovia & : & 0.09 \\
+Toledo $\rightarrow$ Toledo 2 & : & 0.06 \\
+Toledo $\rightarrow$ Toledo 3 & : & 0.09 \\
+Toledo $\rightarrow$ Segovia & : & 0.21 \\
+Segovia $\rightarrow$ Toledo 2 & : & 0.24 \\
+Segovia $\rightarrow$ Toledo 3 & : & 0.27 \\
+\end{tabular}
+\end{center}
+
+Las líneas tienen la siguiente capacidad de producción:
+
+\begin{itemize}
+    \item Madrid: 150 horas/mes por turno. Produce 1000 cajas en 1,2 horas.
+    \item Toledo: 140 horas/mes por turno. Produce 1000 cajas en 2,8 horas.
+    \item Segovia: 140 horas/mes por turno. Produce 1000 cajas en 2 horas.
+\end{itemize}
+
+La demanda mensual es la siguiente:
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Almacén & Demanda (miles de cajas/mes) \\
+\midrule
+Madrid & 200 \\
+Toledo 1 & 30 \\
+Toledo 2 & 10 \\
+Toledo 3 & 10 \\
+Segovia & 30 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{lcl}
+$x_{la}$ & : & miles de cajas transportadas desde la línea $l$ al almacén $a$ \\
+$\alpha_l$ & : & 1 si la línea $l$ está abierta; 0 en caso contrario \\
+$\beta_{lt}$ & : & 1 si el turno $t$ de la línea $l$ está abierto; 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Función objetivo}\mbox{}\\
+
+Minimizar los costes totales:
+
+\begin{align}
+\mbox{min. } z = & \; 0.12x_{12} + 0.15x_{13} + 0.18x_{14} + 0.09x_{15} \notag\\
+& + 0.21x_{21} + 0.06x_{23} + 0.09x_{24} + 0.21x_{25} \notag\\
+& + 0.09x_{31} + 0.21x_{32} + 0.24x_{33} + 0.27x_{34} \notag\\
+& + 90000\alpha_1 + 90000\alpha_2 + 12000\alpha_3 \notag\\
+& + 24000\beta_{11} + 30000\beta_{12} + 12000\beta_{21} + 15000\beta_{22} + 6000\beta_{31} + 7500\beta_{32}
+\end{align}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Producción máxima disponible en cada línea:  
+(La capacidad se calcula como $H_{tl} \times P_l$ para cada turno abierto)
+
+\begin{align}
+x_{11}+x_{12}+x_{13}+x_{14}+x_{15} &\le (150\times0.8333)\beta_{11} + (150\times0.8333)\beta_{12} = 125\,\beta_{11} + 125\,\beta_{12} \\
+x_{21}+x_{22}+x_{23}+x_{24}+x_{25} &\le (140\times0.3571)\beta_{21} + (140\times0.3571)\beta_{22} = 50\,\beta_{21} + 50\,\beta_{22} \\
+x_{31}+x_{32}+x_{33}+x_{34}+x_{35} &\le (140\times0.5)\beta_{31} + (140\times0.5)\beta_{32} = 70\,\beta_{31} + 70\,\beta_{32}
+\end{align}
+
+Demanda en los almacenes:
+
+\begin{align}
+x_{11}+x_{21}+x_{31} &\ge 200 \\
+x_{12}+x_{22}+x_{32} &\ge 30 \\
+x_{13}+x_{23}+x_{33} &\ge 10 \\
+x_{14}+x_{24}+x_{34} &\ge 10 \\
+x_{15}+x_{25}+x_{35} &\ge 30
+\end{align}
+
+Relación entre líneas y turnos:
+
+\begin{align}
+\beta_{11} &= \alpha_1 \\
+\beta_{21} &= \alpha_2 \\
+\beta_{31} &= \alpha_3 \\
+\beta_{11} &\ge \beta_{12} \\
+\beta_{21} &\ge \beta_{22} \\
+\beta_{31} &\ge \beta_{32}
+\end{align}
+
+Restricciones de no negatividad e integralidad:
+
+\begin{align}
+x_{la} &\ge 0 \\
+\alpha_l,\,\beta_{lt} &\in \{0,1\}
+\end{align}
+
+\paragraph{Nota de unidades}\mbox{}\\
+Todas las variables de flujo $x_{la}$ y demandas $D_a$ están en \textbf{miles de cajas}.  
+Los costes de transporte $CT_{la}$ están en \textbf{euros por mil cajas}.  
+En la restricción de capacidad, $H_{tl}$ (horas por turno en la línea $l$) y $P_l$ (miles de cajas por hora en la línea $l$) generan capacidades en miles de cajas coherentes con $x_{la}$.
+**
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{L}$ & : & líneas de producción\\
+$\mathcal{A}$ & : & almacenes de distribución\\
+$\mathcal{T}$ & : & turnos por línea\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$CT_{la}$ & : & coste de transporte por mil cajas desde $l$ a $a$\\
+$CF_l$ & : & coste fijo por abrir la línea $l$\\
+$CT_{lt}$ & : & coste fijo por abrir el turno $t$ en la línea $l$\\
+$H_{tl}$ & : & horas disponibles en el turno $t$ de la línea $l$\\
+$P_l$ & : & productividad (miles de cajas/hora) de la línea $l$\\
+$D_a$ & : & demanda (miles de cajas) del almacén $a$\\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_{la}$ & : & miles de cajas enviadas de $l$ a $a$\\
+$\alpha_l$ & : & 1 si la línea $l$ está abierta\\
+$\beta_{lt}$ & : & 1 si el turno $t$ de la línea $l$ está abierto\\
+\end{tabular}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{l\in\mathcal{L}}\sum_{a\in\mathcal{A}} CT_{la}\,x_{la} \;+\; \sum_{l\in\mathcal{L}} CF_l\,\alpha_l \;+\; \sum_{l\in\mathcal{L}}\sum_{t\in\mathcal{T}} CT_{lt}\,\beta_{lt} \notag\\[1mm]
+\mbox{s. a.:}\quad
+& \sum_{a\in\mathcal{A}} x_{la} \;\le\; \sum_{t\in\mathcal{T}} H_{tl}\,P_l\,\beta_{lt} && \forall l\in\mathcal{L} \notag\\
+& \sum_{l\in\mathcal{L}} x_{la} \;\ge\; D_a && \forall a\in\mathcal{A} \notag\\
+& \beta_{l1} = \alpha_l && \forall l\in\mathcal{L} \notag\\
+& \beta_{l2} \le \beta_{l1} && \forall l\in\mathcal{L} \notag\\
+& x_{la}\ge 0 && \forall l\in\mathcal{L},\,a\in\mathcal{A} \notag\\
+& \alpha_l,\,\beta_{lt}\in\{0,1\} && \forall l\in\mathcal{L},\,t\in\mathcal{T} \notag
+\end{align}
+
+Los valores de los parámetros, de acuerdo con la información proporcionada son os siguientes.
+
+\begin{table}[!h]
+\centering
+\caption{parámetros del caso \textit{Refrescos S.A.}}
+\begin{tabular}{lcl}
+\toprule
+\textbf{Parámetro} & \textbf{Símbolo} & \textbf{Valor} \\
+\midrule
+\textbf{Demanda (miles de cajas/mes)} & & \\
+\quad Madrid & $D_{\text{Madrid}}$ & 200 \\
+\quad Toledo 1 & $D_{\text{Toledo1}}$ & 30 \\
+\quad Toledo 2 & $D_{\text{Toledo2}}$ & 10 \\
+\quad Toledo 3 & $D_{\text{Toledo3}}$ & 10 \\
+\quad Segovia & $D_{\text{Segovia}}$ & 30 \\
+\midrule
+\textbf{Costes fijos de apertura de línea (€/mes)} & $CF_l$ & \\
+\quad Madrid & $CF_{\text{Madrid}}$ & 90{,}000 \\
+\quad Toledo & $CF_{\text{Toledo}}$ & 90{,}000 \\
+\quad Segovia & $CF_{\text{Segovia}}$ & 12{,}000 \\
+\midrule
+\textbf{Costes fijos por turno (€/mes)} & $CT_{lt}$ & \\
+\quad Madrid, turno 1 & $CT_{\text{Madrid},1}$ & 24{,}000 \\
+\quad Madrid, turno 2 & $CT_{\text{Madrid},2}$ & 30{,}000 \\
+\quad Toledo, turno 1 & $CT_{\text{Toledo},1}$ & 12{,}000 \\
+\quad Toledo, turno 2 & $CT_{\text{Toledo},2}$ & 15{,}000 \\
+\quad Segovia, turno 1 & $CT_{\text{Segovia},1}$ & 6{,}000 \\
+\quad Segovia, turno 2 & $CT_{\text{Segovia},2}$ & 7{,}500 \\
+\midrule
+\textbf{Horas disponibles por turno} & $H_{tl}$ & \\
+\quad Madrid & $H_{\text{Madrid}}$ & 150 \\
+\quad Toledo & $H_{\text{Toledo}}$ & 140 \\
+\quad Segovia & $H_{\text{Segovia}}$ & 140 \\
+\midrule
+\textbf{Productividad (miles de cajas/hora)} & $P_l$ & \\
+\quad Madrid & $P_{\text{Madrid}}$ & 0.8333 \\
+\quad Toledo & $P_{\text{Toledo}}$ & 0.3571 \\
+\quad Segovia & $P_{\text{Segovia}}$ & 0.5000 \\
+\midrule
+\textbf{Costes de transporte (€/mil cajas)} & $CT_{la}$ & \\
+\quad Madrid $\rightarrow$ Toledo 1 & $CT_{\text{Madrid,Toledo1}}$ & 120 \\
+\quad Madrid $\rightarrow$ Toledo 2 & $CT_{\text{Madrid,Toledo2}}$ & 150 \\
+\quad Madrid $\rightarrow$ Toledo 3 & $CT_{\text{Madrid,Toledo3}}$ & 180 \\
+\quad Madrid $\rightarrow$ Segovia & $CT_{\text{Madrid,Segovia}}$ & 90 \\
+\quad Toledo $\rightarrow$ Toledo 2 & $CT_{\text{Toledo,Toledo2}}$ & 60 \\
+\quad Toledo $\rightarrow$ Toledo 3 & $CT_{\text{Toledo,Toledo3}}$ & 90 \\
+\quad Toledo $\rightarrow$ Segovia & $CT_{\text{Toledo,Segovia}}$ & 210 \\
+\quad Segovia $\rightarrow$ Toledo 2 & $CT_{\text{Segovia,Toledo2}}$ & 240 \\
+\quad Segovia $\rightarrow$ Toledo 3 & $CT_{\text{Segovia,Toledo3}}$ & 270 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+% \subsection{Presentación del caso}
+
+% La compañía \textbf{REFRESCOS S.A.}, dedicada a la fabricación y distribución de bebidas refrescantes, ha detectado una modificación en la demanda de sus clientes y plantea estudiar el interés de cerrar alguna de sus unidades productivas.  
+% Se produce y distribuye un único producto.  
+% La empresa cuenta con tres líneas de fabricación en la actualidad: \textbf{Madrid}, \textbf{Toledo} y \textbf{Segovia}.  
+% Dispone de cinco almacenes de distribución: Madrid (mismo emplazamiento que la línea), Segovia (mismo emplazamiento que la línea) y tres en Toledo (Toledo 1, Toledo 2 y Toledo 3).  
+% En cada línea se pueden realizar dos turnos diarios.  
+
+% Los costes fijos de funcionamiento de las líneas son:  
+% Madrid: 90.000 €; Toledo: 90.000 €; Segovia: 12.000 €.  
+
+% Los costes fijos por turno en cada línea son:
+
+% \begin{center}
+% \begin{tabular}{lcc}
+% \toprule
+% Línea & Turno 1 (€) & Turno 2 (€) \\
+% \midrule
+% Madrid & 24.000 & 30.000 \\
+% Toledo & 12.000 & 15.000 \\
+% Segovia & 6.000 & 7.500 \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+
+% Los costes variables de transporte (en €/caja) son:
+
+% \begin{center}
+% \begin{tabular}{lcl}
+% Madrid $\rightarrow$ Toledo 1 & : & 0.12 \\
+% Madrid $\rightarrow$ Toledo 2 & : & 0.15 \\
+% Madrid $\rightarrow$ Toledo 3 & : & 0.18 \\
+% Madrid $\rightarrow$ Segovia & : & 0.09 \\
+% Toledo $\rightarrow$ Toledo 2 & : & 0.06 \\
+% Toledo $\rightarrow$ Toledo 3 & : & 0.09 \\
+% Toledo $\rightarrow$ Segovia & : & 0.21 \\
+% Segovia $\rightarrow$ Toledo 2 & : & 0.24 \\
+% Segovia $\rightarrow$ Toledo 3 & : & 0.27 \\
+% \end{tabular}
+% \end{center}
+
+% Las líneas tienen la siguiente capacidad de producción:
+
+% \begin{itemize}
+%     \item Madrid: 150 horas/mes por turno. Produce 1000 cajas en 1,2 horas.
+%     \item Toledo: 140 horas/mes por turno. Produce 1000 cajas en 2,8 horas.
+%     \item Segovia: 140 horas/mes por turno. Produce 1000 cajas en 2 horas.
+% \end{itemize}
+
+% La demanda mensual es la siguiente:
+
+% \begin{center}
+% \begin{tabular}{lc}
+% \toprule
+% Almacén & Demanda (miles de cajas/mes) \\
+% \midrule
+% Madrid & 200 \\
+% Toledo 1 & 30 \\
+% Toledo 2 & 10 \\
+% Toledo 3 & 10 \\
+% Segovia & 30 \\
+% \bottomrule
+% \end{tabular}
+% \end{center}
+
+
+% \subsection{Formulación generalizada}
+
+% \paragraph{Conjuntos}\mbox{}\\
+
+% \begin{tabular}{lcl}
+% $\mathcal{L}$ & : & líneas de producción \\
+% $\mathcal{A}$ & : & almacenes de distribución \\
+% $\mathcal{T}$ & : & turnos disponibles por línea \\
+% \end{tabular}
+
+% \paragraph{Parámetros}\mbox{}\\
+
+% \begin{tabular}{lcl}
+% $C_{la}$ & : & coste de transporte por caja desde la línea $l$ al almacén $a$ \\
+% $CF_l$ & : & coste fijo por abrir la línea $l$ \\
+% $CT_{lt}$ & : & coste fijo por abrir el turno $t$ de la línea $l$ \\
+% $P_{lt}$ & : & capacidad de producción (cajas) de la línea $l$ en el turno $t$ \\
+% $D_a$ & : & demanda (cajas) del almacén $a$ \\
+% \end{tabular}
+
+% \paragraph{Variables}\mbox{}\\
+
+% \begin{tabular}{lcl}
+% $x_{la}$ & : & número de cajas transportadas desde la línea $l$ al almacén $a$ \\
+% $\alpha_l$ & : & 1 si la línea $l$ está abierta \\
+% $f_{lt}$ & : & 1 si el turno $t$ de la línea $l$ está abierto \\
+% \end{tabular}
+
+% \paragraph{Función objetivo}\mbox{}\\
+
+% \begin{equation}
+% \mbox{min. } z = \sum_{l \in \mathcal{L}}\sum_{a \in \mathcal{A}} C_{la}x_{la} + \sum_{l \in \mathcal{L}} CF_l \alpha_l + \sum_{l \in \mathcal{L}}\sum_{t \in \mathcal{T}} CT_{lt} f_{lt}
+% \end{equation}
+
+% \paragraph{Restricciones}\mbox{}\\
+
+% Capacidad de producción:
+
+% \begin{equation}
+% \sum_{a \in \mathcal{A}} x_{la} \le \sum_{t \in \mathcal{T}} P_{lt} f_{lt} \quad \forall l \in \mathcal{L}
+% \end{equation}
+
+% Satisfacción de la demanda:
+
+% \begin{equation}
+% \sum_{l \in \mathcal{L}} x_{la} \ge D_a \quad \forall a \in \mathcal{A}
+% \end{equation}
+
+% Relación entre líneas y turnos:
+
+% \begin{align}
+% f_{l1} &= \alpha_l \quad \forall l \in \mathcal{L} \\
+% f_{l1} &\ge f_{l2} \quad \forall l \in \mathcal{L}
+% \end{align}
+
+% No negatividad e integralidad:
+
+% \begin{align}
+% x_{la} &\ge 0 \quad \forall l \in \mathcal{L}, a \in \mathcal{A} \\
+% \alpha_l, f_{lt} &\in \{0,1\}
+% \end{align}

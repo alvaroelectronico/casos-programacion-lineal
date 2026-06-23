@@ -1,0 +1,140 @@
+\section{Muebles propileno}
+
+\subsection{Presentación del caso}
+Un reciclador de polipropileno (PP) dispone semanalmente de 900 kg de residuo de PP con los que puede obtener dos 
+productos diferentes de mobiliario urbano: bancos y mesas. Su principal limitación de fabricación está en las 80 horas 
+máquina semanales disponibles para la fabricación. 
+
+Conocidos los requisitos unitarios de los dos posibles productos a fabricar (en horas-máquina de fabricación y en kg de 
+residuo de PP), así como sus contribuciones unitarias al beneficio en euros, se plantea el siguiente modelo de 
+programación lineal para determinar el plan semanal óptimo de producción.  
+
+\begin{center}
+\begin{tabular}{l c c c}
+\hline
+Producto & h·m/unidad & kg/unidad & €/unidad \\
+\hline
+Banco & 2 & 30 & 300 \\
+Mesa  & 2 & 15 & 400 \\
+\hline
+\end{tabular}
+\end{center}
+
+Además, existe el compromiso de suministrar al menos 10 bancos semanales y el mercado de mesas está limitado a 25 
+unidades por semana .
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_1$  & : & número de bancos producidos semanalmente\\
+    $x_2$  & : & número de mesas producidas semanalmente\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Disponibilidad máxima de horas máquina:
+\begin{equation}
+    2x_1 + 2x_2 \leq 80
+\end{equation}
+
+Disponibilidad máxima de polipropileno:
+\begin{equation}
+    30x_1 + 15x_2 \leq 900
+\end{equation}
+
+Compromiso mínimo de producción de bancos:
+\begin{equation}
+    x_1 \geq 10
+\end{equation}
+
+Limitación máxima de mercado de mesas:
+\begin{equation}
+    x_2 \leq 25
+\end{equation}
+
+Restricciones de no negatividad:
+\begin{equation}
+    x_1, x_2 \geq 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Beneficio total semanal:
+\begin{equation}
+    \mbox{max. } z = 300x_1 + 400x_2
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.} \quad & 300x_1 + 400x_2 \notag \\
+\mbox{s. a.:} \quad & 2x_1 + 2x_2 \leq 80 \notag \\
+             & 30x_1 + 15x_2 \leq 900 \notag \\
+             & x_1 \geq 10 \notag \\
+             & x_2 \leq 25 \notag \\
+             & x_1, x_2 \geq 0
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{P}$  & : & tipos de productos de mobiliario urbano (bancos, mesas) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $H$  & : & número máximo de horas máquina disponibles por semana \\
+    $W_p$  & : & horas máquina requeridas para producir una unidad de producto $p \in \mathcal{P}$ \\
+    $K$  & : & cantidad máxima de polipropileno disponible semanalmente (kg) \\
+    $M_p$  & : & kg de polipropileno requeridos para producir una unidad de producto $p \in \mathcal{P}$ \\
+    $B_p$  & : & beneficio unitario por producir una unidad de producto $p \in \mathcal{P}$ \\
+    $L_b$  & : & compromiso mínimo de producción de bancos \\
+    $U_m$  & : & máximo de mesas que el mercado puede absorber semanalmente \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_p$  & : & número de unidades producidas de producto $p \in \mathcal{P}$ \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Limitación de horas máquina:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} W_p x_p \leq H
+\end{equation}
+
+Limitación de polipropileno:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} M_p x_p \leq K
+\end{equation}
+
+Compromiso de bancos:
+\begin{equation}
+    x_{\text{banco}} \geq L_b
+\end{equation}
+
+Limitación de mercado de mesas:
+\begin{equation}
+    x_{\text{mesa}} \leq U_m
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_p \geq 0 \quad \forall p \in \mathcal{P}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+    \mbox{max. } z = \sum_{p \in \mathcal{P}} B_p x_p
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.} \quad & \sum_{p \in \mathcal{P}} B_p x_p \notag \\
+\mbox{s. a.:} \quad & \sum_{p \in \mathcal{P}} W_p x_p \leq H \notag \\
+             & \sum_{p \in \mathcal{P}} M_p x_p \leq K \notag \\
+             & x_{\text{banco}} \geq L_b \notag \\
+             & x_{\text{mesa}} \leq U_m \notag \\
+             & x_p \geq 0 \quad \forall p \in \mathcal{P} \notag
+\end{align}

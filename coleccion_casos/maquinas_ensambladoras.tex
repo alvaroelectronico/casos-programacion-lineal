@@ -1,0 +1,123 @@
+\subsection{Presentación del caso}
+El Sr.\ Programación es el encargado de organizar el horario del personal de enfermería para el servicio de Cardiología del hospital de San José. Un día laborable en este servicio se divide en doce periodos de dos horas. Las necesidades de personal cambian de periodo a periodo: por la noche bastan pocas personas y por la mañana se requiere un número relativamente elevado, según la tabla de requisitos facilitada por la jefa del servicio. 
+
+\noindent Se pide elaborar modelos de programación lineal para: 
+
+\begin{itemize}
+    \item Escenario 1: determinar el número mínimo de personas necesarias para cubrir dichas necesidades, sabiendo que cada profesional trabaja 8 horas diarias y disfruta de 2 horas de descanso tras las primeras 4 horas de trabajo.
+    \item Escenario 2: dado que solo se dispone de 80 personas, permitir hasta 2 horas extra tras las 4 últimas horas de trabajo y encontrar la organización que minimiza el número de personas que realizan horas extra.
+\end{itemize}:contentReference[oaicite:0]{index=0}
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$  & : & número de profesionales que inician su turno en el periodo $t$, $t=1,\dots,12$\\
+    $e_t$  & : & (Escenario 2) número de profesionales, de los $x_t$, que realizan 2 horas extra al final de su turno\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$  & : & personal mínimo requerido en el periodo $t=1,\dots,12$\\
+\end{tabular}
+
+\paragraph{Restricciones (Escenario 1)}\mbox{}\\
+Cobertura mínima en cada periodo $t$ (índices módulo 12):
+\begin{equation}
+    x_t + x_{t-1} + x_{t-3} + x_{t-4} \;\geq\; R_t \qquad t=1,\dots,12
+\end{equation}
+
+\noindent No negatividad:
+\begin{equation}
+    x_t \;\geq\; 0 \quad (\text{y enteras}) \qquad t=1,\dots,12
+\end{equation}
+
+\paragraph{Función objetivo (Escenario 1)}\mbox{}\\
+\begin{equation}
+\mbox{min.}\; z \;=\; \sum_{t=1}^{12} x_t
+\end{equation}
+
+\paragraph{Modelo completo (Escenario 1)}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t=1}^{12} x_t \notag \\
+\mbox{s.\ a.:}\quad 
+& x_t + x_{t-1} + x_{t-3} + x_{t-4} \;\geq\; R_t \qquad t=1,\dots,12 \notag \\
+& x_t \;\geq\; 0 \qquad t=1,\dots,12 \notag
+\end{align}
+
+\paragraph{Restricciones adicionales (Escenario 2)}\mbox{}\\
+Dotación máxima disponible:
+\begin{equation}
+    \sum_{t=1}^{12} x_t \;\leq\; 80
+\end{equation}
+
+\noindent Relación entre horas extra e inicios:
+\begin{equation}
+    0 \;\leq\; e_t \;\leq\; x_t \qquad t=1,\dots,12
+\end{equation}
+
+\noindent Cobertura con horas extra (módulo 12):
+\begin{equation}
+    x_t + x_{t-1} + x_{t-3} + x_{t-4} + e_{t-5} \;\geq\; R_t \qquad t=1,\dots,12
+\end{equation}
+
+\paragraph{Función objetivo (Escenario 2)}\mbox{}\\
+\begin{equation}
+\mbox{min.}\; z \;=\; \sum_{t=1}^{12} e_t
+\end{equation}
+
+\paragraph{Modelo completo (Escenario 2)}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t=1}^{12} e_t \notag \\
+\mbox{s.\ a.:}\quad 
+& \sum_{t=1}^{12} x_t \;\leq\; 80 \notag \\
+& 0 \;\leq\; e_t \;\leq\; x_t \qquad t=1,\dots,12 \notag \\
+& x_t + x_{t-1} + x_{t-3} + x_{t-4} + e_{t-5} \;\geq\; R_t \qquad t=1,\dots,12 \notag \\
+& x_t,\ e_t \;\geq\; 0 \qquad t=1,\dots,12 \notag
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{T}$ & : & periodos de planificación, $\mathcal{T}=\{1,\dots,12\}$\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$ & : & personal mínimo requerido en cada $t\in\mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$ & : & profesionales que inician turno en $t\in\mathcal{T}$\\
+    $e_t$ & : & (opcional) profesionales con 2 horas extra asociados al inicio $t\in\mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Cobertura sin horas extra:
+\begin{equation}
+    \sum_{k\in\{0,1,3,4\}} x_{t-k} \;\geq\; R_t \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+Cobertura con horas extra:
+\begin{equation}
+    \sum_{k\in\{0,1,3,4\}} x_{t-k} + e_{t-5} \;\geq\; R_t \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+& \mbox{(Esc.~1) }\ \mbox{min.}\ z \;=\; \sum_{t\in\mathcal{T}} x_t \notag \\
+& \mbox{(Esc.~2) }\ \mbox{min.}\ z \;=\; \sum_{t\in\mathcal{T}} e_t \notag
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t\in\mathcal{T}} x_t \quad \text{o} \quad z \;=\; \sum_{t\in\mathcal{T}} e_t \notag \\
+\mbox{s.\ a.:}\quad 
+& \sum_{k\in\{0,1,3,4\}} x_{t-k} (+ e_{t-5}) \;\geq\; R_t \qquad \forall t\in\mathcal{T} \notag \\
+& x_t,\ e_t \;\geq\; 0 \qquad \forall t\in\mathcal{T} \notag
+\end{align}
+
+\medskip
+\textit{Nota:} todas las expresiones con $t\pm k$ deben entenderse módulo 12 (p.ej., $x_{0}\equiv x_{12}$, $x_{-1}\equiv x_{11}$).

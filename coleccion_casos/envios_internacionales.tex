@@ -1,0 +1,183 @@
+\section{Envíos internacionales}
+
+
+% ===================== CASO: ENVÍOS INTERNACIONALES =====================
+
+\subsection{Presentación del caso}
+Una empresa multinacional con operaciones globales dispone de 3 plantas (F1, F2 y F3) que fabrican el mismo producto, y 4 almacenes regionales (A1, A2, A3 y A4) que abastecen la demanda local. La capacidad de producción y las demandas anuales (en millones de unidades), así como los costes unitarios de transporte (en u.m./unidad) entre plantas y almacenes, son los siguientes:
+
+\paragraph{Capacidades de planta (millones uds)}\mbox{}\\
+\begin{tabular}{c c c}
+\hline
+\textbf{Planta} & \textbf{Localización} & \textbf{Capacidad} \\
+\hline
+F1 & China       & 7  \\
+F2 & EEUU        & 11 \\
+F3 & Eslovaquia  & 15 \\
+\hline
+\end{tabular}
+
+\vspace{0.6em}
+\paragraph{Demandas por almacén (millones uds)}\mbox{}\\
+\begin{tabular}{c c c c}
+\hline
+\textbf{Almacén} & \textbf{Localización} & \textbf{Región} & \textbf{Demanda} \\
+\hline
+A1 & México    & Norteamérica y CALA & 4  \\
+A2 & Francia   & EMEA                 & 8  \\
+A3 & Australia & Asia-Pacífico 1      & 9  \\
+A4 & China     & Asia-Pacífico 2      & 12 \\
+\hline
+\end{tabular}
+
+\vspace{0.6em}
+\paragraph{Costes unitarios de transporte (u.m./unidad)}\mbox{}\\
+\begin{tabular}{c | c c c c}
+\hline
+            & A1 & A2 & A3 & A4 \\
+\hline
+F1          & 4  & 2  & 3  & 1  \\
+F2          & 3  & 3  & 5  & 7  \\
+F3          & 5  & 4  & 7  & 4  \\
+\hline
+\end{tabular}
+
+\noindent
+No se permite transferir stock entre almacenes ni entre plantas. Se desea calcular el programa de transporte que \textbf{minimice el coste total anual} de transporte.
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{f1,a1}$ & : & unidades enviadas de F1 a A1 \\
+    $x_{f1,a2}$ & : & unidades enviadas de F1 a A2 \\
+    $x_{f1,a3}$ & : & unidades enviadas de F1 a A3 \\
+    $x_{f1,a4}$ & : & unidades enviadas de F1 a A4 \\
+    $x_{f2,a1}$ & : & unidades enviadas de F2 a A1 \\
+    $x_{f2,a2}$ & : & unidades enviadas de F2 a A2 \\
+    $x_{f2,a3}$ & : & unidades enviadas de F2 a A3 \\
+    $x_{f2,a4}$ & : & unidades enviadas de F2 a A4 \\
+    $x_{f3,a1}$ & : & unidades enviadas de F3 a A1 \\
+    $x_{f3,a2}$ & : & unidades enviadas de F3 a A2 \\
+    $x_{f3,a3}$ & : & unidades enviadas de F3 a A3 \\
+    $x_{f3,a4}$ & : & unidades enviadas de F3 a A4 \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Capacidad de F1:
+\begin{equation}
+    x_{f1,a1} + x_{f1,a2} + x_{f1,a3} + x_{f1,a4} \leq 7
+\end{equation}
+
+Capacidad de F2:
+\begin{equation}
+    x_{f2,a1} + x_{f2,a2} + x_{f2,a3} + x_{f2,a4} \leq 11
+\end{equation}
+
+Capacidad de F3:
+\begin{equation}
+    x_{f3,a1} + x_{f3,a2} + x_{f3,a3} + x_{f3,a4} \leq 15
+\end{equation}
+
+Demanda de A1:
+\begin{equation}
+    x_{f1,a1} + x_{f2,a1} + x_{f3,a1} = 4
+\end{equation}
+
+Demanda de A2:
+\begin{equation}
+    x_{f1,a2} + x_{f2,a2} + x_{f3,a2} = 8
+\end{equation}
+
+Demanda de A3:
+\begin{equation}
+    x_{f1,a3} + x_{f2,a3} + x_{f3,a3} = 9
+\end{equation}
+
+Demanda de A4:
+\begin{equation}
+    x_{f1,a4} + x_{f2,a4} + x_{f3,a4} = 12
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_{f i, a j} \geq 0 \qquad \text{para todas las parejas } (i,j).
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\begin{split}
+\mbox{min.}\; z \;=\;
+&\; 4\,x_{f1,a1} + 2\,x_{f1,a2} + 3\,x_{f1,a3} + 1\,x_{f1,a4} \\
+&+ 3\,x_{f2,a1} + 3\,x_{f2,a2} + 5\,x_{f2,a3} + 7\,x_{f2,a4} \\
+&+ 5\,x_{f3,a1} + 4\,x_{f3,a2} + 7\,x_{f3,a3} + 4\,x_{f3,a4}
+\end{split}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\; z \;=\;
+&\; 4x_{f1,a1} + 2x_{f1,a2} + 3x_{f1,a3} + 1x_{f1,a4} \notag \\
+&+ 3x_{f2,a1} + 3x_{f2,a2} + 5x_{f2,a3} + 7x_{f2,a4} \notag \\
+&+ 5x_{f3,a1} + 4x_{f3,a2} + 7x_{f3,a3} + 4x_{f3,a4} \notag \\
+\mbox{s. a.:}\quad
+& x_{f1,a1} + x_{f1,a2} + x_{f1,a3} + x_{f1,a4} \le 7 \notag \\
+& x_{f2,a1} + x_{f2,a2} + x_{f2,a3} + x_{f2,a4} \le 11 \notag \\
+& x_{f3,a1} + x_{f3,a2} + x_{f3,a3} + x_{f3,a4} \le 15 \notag \\
+& x_{f1,a1} + x_{f2,a1} + x_{f3,a1} = 4 \notag \\
+& x_{f1,a2} + x_{f2,a2} + x_{f3,a2} = 8 \notag \\
+& x_{f1,a3} + x_{f2,a3} + x_{f3,a3} = 9 \notag \\
+& x_{f1,a4} + x_{f2,a4} + x_{f3,a4} = 12 \notag \\
+& x_{f i, a j} \ge 0 \quad \forall i \in \{1,2,3\},\; \forall j \in \{1,2,3,4\}. \notag
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{F}$  & : & plantas (orígenes) \\
+    $\mathcal{A}$  & : & almacenes (destinos) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $S_f$   & : & capacidad disponible en $f \in \mathcal{F}$ \\
+    $D_a$   & : & demanda del almacén $a \in \mathcal{A}$ \\
+    $C_{fa}$ & : & coste unitario de transporte de $f$ a $a$ \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{fa}$ & : & unidades enviadas desde $f \in \mathcal{F}$ a $a \in \mathcal{A}$ \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad por planta:
+\begin{equation}
+    \sum_{a \in \mathcal{A}} x_{fa} \le S_f \qquad \forall f \in \mathcal{F}
+\end{equation}
+
+Demanda por almacén:
+\begin{equation}
+    \sum_{f \in \mathcal{F}} x_{fa} = D_a \qquad \forall a \in \mathcal{A}
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_{fa} \ge 0 \qquad \forall f \in \mathcal{F},\; \forall a \in \mathcal{A}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min.}\; z \;=\; \sum_{f \in \mathcal{F}} \sum_{a \in \mathcal{A}} C_{fa}\,x_{fa}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\; z \;=\; & \sum_{f \in \mathcal{F}} \sum_{a \in \mathcal{A}} C_{fa}\,x_{fa} \notag \\
+\mbox{s. a.:}\quad
+& \sum_{a \in \mathcal{A}} x_{fa} \le S_f \quad \forall f \in \mathcal{F} \notag \\
+& \sum_{f \in \mathcal{F}} x_{fa} = D_a \quad \forall a \in \mathcal{A} \notag \\
+& x_{fa} \ge 0 \quad \forall f \in \mathcal{F},\ \forall a \in \mathcal{A} \notag
+\end{align}

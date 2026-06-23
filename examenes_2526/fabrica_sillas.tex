@@ -1,0 +1,588 @@
+\section{Producción de sillas}
+
+\subsection{Presentación del caso (situación inicial)}
+Un pequeño taller artesanal fabrica tres tipos de sillas de diseño: \textit{comedor}, \textit{oficina} y \textit{plegable}. Cada modelo requiere tiempos distintos de \textbf{corte de madera}, \textbf{montaje} y \textbf{acabado}, y proporciona un beneficio diferente por unidad vendida. El taller dispone semanalmente de una cantidad limitada de horas para cada una de esas tareas y, por motivos de calidad, no desea fabricar más de \textbf{200} unidades por semana en total.
+
+Los datos son los siguientes:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Tipo} & \textbf{Corte (h/u)} & \textbf{Montaje (h/u)} & \textbf{Acabado (h/u)} & \textbf{Beneficio (€/u)}\\
+\midrule
+Comedor  & 0.5 & 1.5 & 0.75 & 30\\
+Oficina  & 0.4 & 1.2 & 0.5  & 25\\
+Plegable & 0.3 & 0.8 & 0.4  & 18\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Las horas disponibles por semana son las siguientes:
+\begin{itemize}
+    \item \textbf{Corte:} 80.
+    \item\textbf{Montaje:} 150.
+    \item\textbf{Acabado:} 70.\\
+\end{itemize}
+
+Se pide formular un modelo de programación lineal que determine cuántas unidades de cada tipo fabricar para \textbf{maximizar el beneficio semanal}.
+
+\subsection{Formulación explícita (situación inicial)}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_c$  & : & número de sillas de \textit{comedor} a fabricar por semana\\
+    $x_o$  & : & número de sillas de \textit{oficina} a fabricar por semana\\
+    $x_p$  & : & número de sillas \textit{plegables} a fabricar por semana\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\\
+No se superan las horas disponibles de \textbf{corte}:
+\begin{equation}
+    0.5x_c + 0.4x_o + 0.3x_p \leq 80
+\end{equation}
+\\
+\\
+No se superan las horas disponibles de \textbf{montaje}:
+\begin{equation}
+    1.5x_c + 1.2x_o + 0.8x_p \leq 150
+\end{equation}
+\\
+\\
+No se superan las horas disponibles de \textbf{acabado}:
+\begin{equation}
+    0.75x_c + 0.5x_o + 0.4x_p \leq 60
+\end{equation}
+\\
+\\
+Límite global de producción semanal por motivos de calidad:
+\begin{equation}
+    x_c + x_o + x_p \leq 200
+\end{equation}
+\\
+\\
+Restricciones de no negatividad:
+\begin{equation}
+    x_c, x_o, x_p \geq 0
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+\\
+Maximizar el beneficio semanal:
+\begin{equation}
+\mbox{max. } z = 30x_c + 25x_o + 18x_p
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\\
+El modelo completo es el siguiente:
+\begin{align}
+\mbox{max. } z \quad & = 30x_c + 25x_o + 18x_p \notag \\
+\mbox{s. a.:} \quad 
+& 0.5x_c + 0.4x_o + 0.3x_p \leq 60 \qquad \mbox{(corte)} \notag \\
+& 1.5x_c + 1.0x_o + 0.8x_p \leq 150 \qquad \mbox{(montaje)} \notag \\
+& 0.75x_c + 0.5x_o + 0.4x_p \leq 80 \qquad \mbox{(acabado)} \notag \\
+& x_c + x_o + x_p \leq 200 \qquad \mbox{(límite total semanal)} \notag \\
+& x_c, x_o, x_p \geq 0 \qquad \mbox{(no negatividad)} \notag
+\end{align}
+
+\subsection{Formulación generalizada (situación inicial)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{S}$  & : & tipos de sillas \\
+    $\mathcal{R}$  & : & recursos (corte, montaje, acabado)\\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $B_s$     & : & beneficio por unidad del producto $s \in \mathcal{S}$ \\
+    $REQ_{rs}$& : & horas del recurso $r \in \mathcal{R}$ necesarias por unidad de $s \in \mathcal{S}$ \\
+    $CAP_r$   & : & horas disponibles del recurso $r \in \mathcal{R}$ por semana \\
+    $V$       & : & tope semanal de unidades a fabricar (calidad)\\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_s$  & : & número de unidades del producto $s \in \mathcal{S}$ a fabricar por semana\\
+\end{tabular}
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de cada recurso $r \in \mathcal{R}$:
+\begin{equation}
+    \sum_{s \in \mathcal{S}} REQ_{rs}\, x_s \leq CAP_r \qquad \forall r \in \mathcal{R}
+\end{equation}
+\\
+Límite total semanal por calidad:
+\begin{equation}
+    \sum_{s \in \mathcal{S}} x_s \leq V
+\end{equation}
+\\
+No negatividad:
+\begin{equation}
+    x_s \geq 0 \qquad \forall s \in \mathcal{S}
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{max. } z = \sum_{s \in \mathcal{S}} B_s\, x_s
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \quad & = \sum_{s \in \mathcal{S}} B_s\, x_s \notag \\
+\mbox{s. a.:} \quad 
+& \sum_{s \in \mathcal{S}} REQ_{rs}\, x_s \leq CAP_r \qquad \forall r \in \mathcal{R} \notag \\
+& \sum_{s \in \mathcal{S}} x_s \leq V \notag \\
+& x_s \geq 0 \qquad \forall s \in \mathcal{S} \notag
+\end{align}
+
+\subsection{Presentación del caso (subcontrata de acabado y polivalencia)}
+% Se introducen dos cambios respecto al caso base:
+% \begin{itemize}
+%     \item \textbf{Polivalencia corte--montaje:} algunos operarios son polivalentes y es posible trasladar hasta \textbf{20 horas} de \textit{corte} a \textit{montaje} o viceversa, en la misma semana.
+%     \item \textbf{Acabado subcontratado:} se \textbf{subcontrata todo el acabado} a un contratista externo, que cobra por horas (no por unidades). El contratista ofrece un máximo de \textbf{100 horas} de acabado por semana, a un coste de \textbf{10 €/hora}.
+% \end{itemize}
+% El resto de datos permanecen como en el apartado 1: beneficios unitarios y requerimientos de horas por unidad para corte, montaje y acabado; y disponibilidades semanales de 60 h (corte) y 150 h (montaje). El límite global de producción por calidad (200 unidades/semana) también se mantiene.
+
+
+La empresa se enfrenta a una nueva situación operativa que obliga a reorganizar parte del trabajo en el taller. Algunos de los operarios son ahora polivalentes y pueden desempeñar indistintamente tareas de corte o de montaje, por lo que es posible trasladar hasta \textbf{20 horas} semanales de un tipo de tarea al otro, en función de las necesidades de producción.
+
+Además, la capacidad interna de acabado se ha visto reducida de forma significativa, disponiendo únicamente de \textbf{30 horas semanales} para realizar esta operación dentro del taller. 
+
+Para compensar esta limitación, la empresa ha identificado un subcontratista especializado en tareas de acabado. Este proveedor externo trabaja con mayor eficiencia, y emplea únicamente la \textbf{mitad del tiempo} que requiere el acabado interno para cada tipo de silla, y cobra \textbf{10 €/hora} por las horas de trabajo efectivamente contratadas. 
+
+No obstante, por motivos de control de calidad y de preservación del estilo artesanal del taller, el número total de sillas cuyo acabado se realice externamente no podrá superar el \textbf{50\%} de la producción semanal total.
+
+El resto de condiciones en las que opera la empresa son las mismas.
+
+
+\subsection{Formulación explícita (subcontrata de acabado y polivalencia)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_c$  & : & número de sillas de \textit{comedor} fabricadas por semana \\
+    $x_o$  & : & número de sillas de \textit{oficina} fabricadas por semana \\
+    $x_p$  & : & número de sillas \textit{plegables} fabricadas por semana \\
+    $y_{cm}$ & : & horas trasladadas de \textit{corte} a \textit{montaje} por semana \\
+    $y_{mc}$ & : & horas trasladadas de \textit{montaje} a \textit{corte} por semana \\
+    $y_c^{e}$ & : & sillas de \textit{comedor} cuyo \textit{acabado} se subcontrata \\
+    $y_o^{e}$ & : & sillas de \textit{oficina} cuyo \textit{acabado} se subcontrata \\
+    $y_p^{e}$ & : & sillas \textit{plegables} cuyo \textit{acabado} se subcontrata \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\[2pt]
+\textbf{Capacidad efectiva de corte (con polivalencia):}
+\begin{equation}
+    0.5\,x_c + 0.4\,x_o + 0.3\,x_p \;\leq\; 60 \;-\; y_{cm} \;+\; y_{mc}
+\end{equation}
+
+\textbf{Capacidad efectiva de montaje (con polivalencia):}
+\begin{equation}
+    1.5\,x_c + 1.0\,x_o + 0.8\,x_p \;\leq\; 150 \;+\; y_{cm} \;-\; y_{mc}
+\end{equation}
+
+\textbf{Límite al intercambio de horas (polivalencia):}
+\begin{equation}
+    y_{cm} + y_{mc} \;\leq\; 20
+\end{equation}
+
+\textbf{Capacidad interna de \textit{acabado}:} (solo se disponen de 30 horas internas)
+\begin{equation}
+    0.75\,(x_c - y_c^{e}) \;+\; 0.5\,(x_o - y_o^{e}) \;+\; 0.4\,(x_p - y_p^{e}) \;\leq\; 30
+\end{equation}
+
+\textbf{Vinculación de unidades subcontratadas:}
+\begin{align}
+    & 0 \;\leq\; y_c^{e} \;\leq\; x_c \\
+    & 0 \;\leq\; y_o^{e} \;\leq\; x_o \\
+    & 0 \;\leq\; y_p^{e} \;\leq\; x_p 
+\end{align}
+
+\textbf{Tope global de subcontratación por volumen:} (no más del 50\% de la producción total)
+\begin{equation}
+    y_c^{e} + y_o^{e} + y_p^{e} \;\leq\; 0.5\,(x_c + x_o + x_p)
+\end{equation}
+
+\textbf{Límite global de producción semanal (calidad):}
+\begin{equation}
+    x_c + x_o + x_p \;\leq\; 200
+\end{equation}
+
+\textbf{No negatividad:}
+\begin{equation}
+    x_c, x_o, x_p, y_{cm}, y_{mc}, y_c^{e}, y_o^{e}, y_p^{e} \;\geq\; 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\[2pt]
+El subcontratista emplea la \textbf{mitad del tiempo} que el acabado interno: las horas externas totales son
+\[
+h^{e} \;=\; 0.5\,\big(0.75\,y_c^{e} \;+\; 0.5\,y_o^{e} \;+\; 0.4\,y_p^{e}\big),
+\]
+con un coste de \textbf{10 €/h}. Por tanto, el término de coste por subcontratación es
+\[
+10\,h^{e} \;=\; 10 \times 0.5 \times \big(0.75\,y_c^{e} + 0.5\,y_o^{e} + 0.4\,y_p^{e}\big)
+\;=\; 5\,\big(0.75\,y_c^{e} + 0.5\,y_o^{e} + 0.4\,y_p^{e}\big).
+\]
+
+Maximizar el beneficio semanal:
+\begin{equation}
+\mbox{max. } z \;=\; 30\,x_c \;+\; 25\,x_o \;+\; 18\,x_p 
+\;-\; 5\,\Big(0.75\,y_c^{e} + 0.5\,y_o^{e} + 0.4\,y_p^{e}\Big)
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\[2pt]
+\begin{align}
+\mbox{max. } z \quad &=\; 30\,x_c + 25\,x_o + 18\,x_p 
+\;-\; 5\,\Big(0.75\,y_c^{e} + 0.5\,y_o^{e} + 0.4\,y_p^{e}\Big) \notag \\
+\mbox{s. a.:} \quad 
+& 0.5\,x_c + 0.4\,x_o + 0.3\,x_p \le 60 - y_{cm} + y_{mc} \notag \\
+& 1.5\,x_c + 1.0\,x_o + 0.8\,x_p \le 150 + y_{cm} - y_{mc} \notag \\
+& y_{cm} + y_{mc} \le 20 \notag \\
+& 0.75\,(x_c - y_c^{e}) + 0.5\,(x_o - y_o^{e}) + 0.4\,(x_p - y_p^{e}) \le 30 \notag \\
+& 0 \le y_c^{e} \le x_c,\;\; 0 \le y_o^{e} \le x_o,\;\; 0 \le y_p^{e} \le x_p \notag \\
+& y_c^{e} + y_o^{e} + y_p^{e} \le 0.5\,(x_c + x_o + x_p) \notag \\
+& x_c + x_o + x_p \le 200 \notag \\
+& x_c, x_o, x_p, y_{cm}, y_{mc}, y_c^{e}, y_o^{e}, y_p^{e} \ge 0 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada (subcontrata de acabado y polivalencia)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{S}$  & : & tipos de sillas (productos)\\
+    $\mathcal{R}$  & : & recursos internos con polivalencia; aquí $\mathcal{R}=\{\text{corte},\text{montaje}\}$\\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $B_s$              & : & beneficio por unidad del producto $s \in \mathcal{S}$\\
+    $REQ_{r s}$        & : & horas del recurso interno $r \in \mathcal{R}$ necesarias por unidad de $s \in \mathcal{S}$\\
+    $CAP_r$            & : & horas disponibles del recurso $r \in \mathcal{R}$ por semana\\
+    $M$                & : & máximo de horas intercambiables por polivalencia entre corte y montaje (semanal)\\
+    $REQ_{a s}$        & : & horas internas de \textit{acabado} por unidad del producto $s$\\
+    $CAP_a$            & : & horas internas disponibles de \textit{acabado} por semana\\
+    $EFF$              & : & factor de eficiencia del subcontratista en \textit{acabado} (horas externas $=$ $EFF \cdot REQ_{a s}$ por unidad)\\
+    $C_A$              & : & coste (€/hora) del subcontratista de \textit{acabado}\\
+    $R$                & : & cota de proporción subcontratable sobre la producción total ($0 \le R \le 1$)\\
+    $V$                & : & límite global semanal de unidades (calidad)\\
+\end{tabular}
+\\
+\\
+\textit{En este caso: } $M{=}20,\; CAP_{\text{corte}}{=}60,\; CAP_{\text{montaje}}{=}150,\; CAP_a{=}30,\; EFF{=}0.5,\; C_A{=}10,\; R{=}0.5,\; V{=}200.$
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_s$     & : & número de unidades del producto $s \in \mathcal{S}$ a fabricar por semana\\
+    $y^+$     & : & horas trasladadas de \textit{corte} a \textit{montaje} (polivalencia) por semana\\
+    $y^-$     & : & horas trasladadas de \textit{montaje} a \textit{corte} (polivalencia) por semana\\
+    $y_s^{e}$ & : & número de unidades del producto $s$ cuyo \textit{acabado} se subcontrata\\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+\emph{Capacidades internas con polivalencia:}
+\begin{align}
+    & \sum_{s \in \mathcal{S}} REQ_{\text{corte},s}\, x_s \;\le\; CAP_{\text{corte}} - y^+ + y^- \\
+    & \sum_{s \in \mathcal{S}} REQ_{\text{montaje},s}\, x_s \;\le\; CAP_{\text{montaje}} + y^+ - y^- \\
+    & y^+ + y^- \;\le\; M
+\end{align}
+
+\emph{Capacidad interna de \textit{acabado}:}
+\begin{equation}
+    \sum_{s \in \mathcal{S}} REQ_{a s}\,\big(x_s - y_s^{e}\big) \;\le\; CAP_a
+\end{equation}
+
+\emph{Vinculación de la subcontratación por producto:}
+\begin{equation}
+    0 \;\le\; y_s^{e} \;\le\; x_s \qquad \forall s \in \mathcal{S}
+\end{equation}
+
+\emph{Tope global de subcontratación por volumen:}
+\begin{equation}
+    \sum_{s \in \mathcal{S}} y_s^{e} \;\le\; R \sum_{s \in \mathcal{S}} x_s
+\end{equation}
+
+\emph{Límite global de producción (calidad):}
+\begin{equation}
+    \sum_{s \in \mathcal{S}} x_s \;\le\; V
+\end{equation}
+
+\emph{No negatividad:}
+\begin{equation}
+    x_s,\, y_s^{e},\, y^+,\, y^- \;\ge\; 0 \qquad \forall s \in \mathcal{S}
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+El coste de \textit{acabado} subcontratado se calcula a partir de las horas externas:
+\[
+\text{horas externas} \;=\; \sum_{s \in \mathcal{S}} \big(EFF \cdot REQ_{a s}\big)\, y_s^{e}.
+\]
+\begin{equation}
+\mbox{max. } z \;=\; \sum_{s \in \mathcal{S}} B_s\, x_s \;-\; C_A \sum_{s \in \mathcal{S}} \big(EFF \cdot REQ_{a s}\big)\, y_s^{e}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \quad &= \sum_{s \in \mathcal{S}} B_s\, x_s \;-\; C_A \sum_{s \in \mathcal{S}} \big(EFF \cdot REQ_{a s}\big)\, y_s^{e} \notag \\
+\mbox{s. a.:} \quad 
+& \sum_{s} REQ_{\text{corte},s}\, x_s \le CAP_{\text{corte}} - y^+ + y^- \notag \\
+& \sum_{s} REQ_{\text{montaje},s}\, x_s \le CAP_{\text{montaje}} + y^+ - y^- \notag \\
+& y^+ + y^- \le M \notag \\
+& \sum_{s} REQ_{a s}\,(x_s - y_s^{e}) \le CAP_a \notag \\
+& 0 \le y_s^{e} \le x_s \;\; \forall s \in \mathcal{S} \notag \\
+& \sum_{s} y_s^{e} \le R \sum_{s} x_s \notag \\
+& \sum_{s} x_s \le V \notag \\
+& x_s,\, y_s^{e},\, y^+,\, y^- \ge 0 \;\; \forall s \in \mathcal{S} \notag
+\end{align}
+
+
+
+
+\subsection{Presentación del caso (nuevas condiciones de la subcontrata)}
+
+
+El taller de sillas continúa operando en el mismo entorno que en el apartado anterior, con la posibilidad de intercambiar horas entre las tareas de corte y montaje y con la opción de subcontratar parte del acabado de su producción. Sin embargo, en esta nueva situación, la empresa ha incorporado una mejora tecnológica que automatiza parcialmente ciertas tareas de producción, modificando los tiempos y costes del proceso.
+
+Gracias a esta automatización, los tiempos necesarios por unidad en las operaciones internas de \textit{corte}, \textit{montaje} y \textit{acabado} se reducen en un \textbf{30\%}. Esta reducción afecta exclusivamente a las tareas realizadas dentro del taller, mientras que los tiempos requeridos por el subcontratista externo de acabado se mantienen sin cambios, siendo este último más eficiente que el taller, pues necesita la \textbf{mitad del tiempo} que el acabado interno para cada tipo de silla.
+
+Como contrapartida, la automatización exige tareas de preparación y ajuste que suponen un coste fijo semanal en función de los tipos de sillas que se fabriquen. Si se producen sillas de \textit{comedor}, la preparación tiene un coste de \textbf{150 €} semanales; si se fabrican sillas de \textit{oficina}, el coste es de \textbf{100 €}; y si se producen sillas \textit{plegables}, el coste asciende a \textbf{250 €}. Estos costes se aplican solo si se fabrica al menos una unidad del tipo correspondiente.
+
+El resto de condiciones permanecen invariables respecto al apartado anterior: se pueden trasladar hasta \textbf{20 horas} semanales entre corte y montaje; la capacidad interna de acabado se mantiene en \textbf{30 horas semanales}; el subcontratista cobra \textbf{10 €/hora} y puede encargarse como máximo del \textbf{50\%} de la producción semanal total. Asimismo, se conservan las disponibilidades de \textbf{60 horas} para corte y \textbf{150 horas} para montaje, así como el límite global de \textbf{200 unidades semanales} de producción.
+
+
+
+
+\subsection{Formulación explícita (nuevas condiciones de la subcontrata)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_c$  & : & sillas de \textit{comedor} fabricadas por semana \\
+    $x_o$  & : & sillas de \textit{oficina} fabricadas por semana \\
+    $x_p$  & : & sillas \textit{plegables} fabricadas por semana \\
+    $y_{cm}$ & : & horas trasladadas de \textit{corte} a \textit{montaje} por semana \\
+    $y_{mc}$ & : & horas trasladadas de \textit{montaje} a \textit{corte} por semana \\
+    $y_c^{e}$ & : & sillas de \textit{comedor} cuyo \textit{acabado} se subcontrata \\
+    $y_o^{e}$ & : & sillas de \textit{oficina} cuyo \textit{acabado} se subcontrata \\
+    $y_p^{e}$ & : & sillas \textit{plegables} cuyo \textit{acabado} se subcontrata \\
+    $b_c$ & : & binaria: 1 si se fabrica alguna silla de \textit{comedor} (activa coste de preparación) \\
+    $b_o$ & : & binaria: 1 si se fabrica alguna silla de \textit{oficina} (activa coste de preparación) \\
+    $b_p$ & : & binaria: 1 si se fabrica alguna silla \textit{plegable} (activa coste de preparación) \\
+\end{tabular}
+
+\paragraph{Tiempos (con automatización interna −30\%)}\mbox{}\\
+\emph{Internos por unidad:}\\
+\hspace*{1em}Corte: $0.35\,x_c + 0.28\,x_o + 0.21\,x_p$ \quad
+Montaje: $1.05\,x_c + 0.70\,x_o + 0.56\,x_p$ \\
+\hspace*{1em}Acabado interno: $0.525\,(x_c - y_c^{e}) + 0.35\,(x_o - y_o^{e}) + 0.28\,(x_p - y_p^{e})$\\
+\emph{Externos por unidad (subcontratista = 0.5 del acabado interno)}:\\
+\hspace*{1em}Horas externas totales: $0.2625\,y_c^{e} + 0.175\,y_o^{e} + 0.14\,y_p^{e}$
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de \textbf{corte} con polivalencia:
+\begin{equation}
+    0.35\,x_c + 0.28\,x_o + 0.21\,x_p \;\leq\; 60 \;-\; y_{cm} \;+\; y_{mc}
+\end{equation}
+
+Capacidad de \textbf{montaje} con polivalencia:
+\begin{equation}
+    1.05\,x_c + 0.70\,x_o + 0.56\,x_p \;\leq\; 150 \;+\; y_{cm} \;-\; y_{mc}
+\end{equation}
+
+Límite al \textbf{intercambio} de horas:
+\begin{equation}
+    y_{cm} + y_{mc} \;\leq\; 20
+\end{equation}
+
+Capacidad de \textbf{acabado interno} (30 h/semana):
+\begin{equation}
+    0.525\,(x_c - y_c^{e}) \;+\; 0.35\,(x_o - y_o^{e}) \;+\; 0.28\,(x_p - y_p^{e}) \;\leq\; 30
+\end{equation}
+
+Vinculación de la \textbf{subcontratación} por tipo:
+\begin{align}
+    & 0 \;\leq\; y_c^{e} \;\leq\; x_c \\
+    & 0 \;\leq\; y_o^{e} \;\leq\; x_o \\
+    & 0 \;\leq\; y_p^{e} \;\leq\; x_p 
+\end{align}
+
+Tope \textbf{global} de subcontratación (no más del 50\% del volumen):
+\begin{equation}
+    y_c^{e} + y_o^{e} + y_p^{e} \;\leq\; 0.5\,(x_c + x_o + x_p)
+\end{equation}
+
+Activación de \textbf{costes de preparación} (Big-M con $U=200$):
+\begin{align}
+    & x_c \;\leq\; 200\,b_c \\
+    & x_o \;\leq\; 200\,b_o \\
+    & x_p \;\leq\; 200\,b_p
+\end{align}
+
+Límite global de \textbf{producción} (calidad):
+\begin{equation}
+    x_c + x_o + x_p \;\leq\; 200
+\end{equation}
+
+No negatividad e integralidad:
+\begin{equation}
+    x_c, x_o, x_p, y_{cm}, y_{mc}, y_c^{e}, y_o^{e}, y_p^{e} \;\geq\; 0,
+    \qquad b_c, b_o, b_p \in \{0,1\}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Coste de subcontratación (10 €/h):
+\[
+10 \times (0.2625\,y_c^{e} + 0.175\,y_o^{e} + 0.14\,y_p^{e})
+= 2.625\,y_c^{e} + 1.75\,y_o^{e} + 1.4\,y_p^{e}.
+\]
+Costes de preparación por tipo (si se fabrica el tipo): $150\,b_c + 100\,b_o + 250\,b_p$.
+
+\begin{equation}
+\mbox{max. } z \;=\; 30\,x_c \;+\; 25\,x_o \;+\; 18\,x_p 
+\;-\; \Big(2.625\,y_c^{e} + 1.75\,y_o^{e} + 1.4\,y_p^{e}\Big)
+\;-\; \big(150\,b_c + 100\,b_o + 250\,b_p\big)
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \quad &=\; 30\,x_c + 25\,x_o + 18\,x_p 
+- (2.625\,y_c^{e} + 1.75\,y_o^{e} + 1.4\,y_p^{e})
+- (150\,b_c + 100\,b_o + 250\,b_p) \notag \\
+\mbox{s. a.:} \quad 
+& 0.35\,x_c + 0.28\,x_o + 0.21\,x_p \le 60 - y_{cm} + y_{mc} \notag \\
+& 1.05\,x_c + 0.70\,x_o + 0.56\,x_p \le 150 + y_{cm} - y_{mc} \notag \\
+& y_{cm} + y_{mc} \le 20 \notag \\
+& 0.525\,(x_c - y_c^{e}) + 0.35\,(x_o - y_o^{e}) + 0.28\,(x_p - y_p^{e}) \le 30 \notag \\
+& 0 \le y_c^{e} \le x_c,\;\; 0 \le y_o^{e} \le x_o,\;\; 0 \le y_p^{e} \le x_p \notag \\
+& y_c^{e} + y_o^{e} + y_p^{e} \le 0.5\,(x_c + x_o + x_p) \notag \\
+& x_c \le 200 b_c,\;\; x_o \le 200 b_o,\;\; x_p \le 200 b_p \notag \\
+& x_c + x_o + x_p \le 200 \notag \\
+& x_c, x_o, x_p, y_{cm}, y_{mc}, y_c^{e}, y_o^{e}, y_p^{e} \ge 0,\;\; b_c,b_o,b_p \in \{0,1\} \notag
+\end{align}
+
+
+
+
+\subsection{Formulación generalizada (nuevas condiciones de la subcontrata)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{S}$  & : & tipos de productos (sillas) \\
+    $\mathcal{R}$  & : & recursos internos con polivalencia, $\mathcal{R}=\{\text{corte},\text{montaje}\}$ \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $B_s$              & : & beneficio por unidad del producto $s \in \mathcal{S}$ \\
+    $REQ_{rs}$         & : & horas internas por unidad del recurso $r \in \mathcal{R}$ (antes de la mejora) \\
+    $REQ_{a s}$        & : & horas internas por unidad de \textit{acabado} (antes de la mejora) \\
+    $\alpha$           & : & factor de reducción de tiempos internos por automatización ($\alpha=0.7$) \\
+    $CAP_r$            & : & horas disponibles del recurso $r \in \mathcal{R}$ por semana \\
+    $M$                & : & máximo de horas intercambiables por polivalencia entre recursos \\
+    $CAP_a$            & : & horas internas disponibles de \textit{acabado} por semana \\
+    $EFF$              & : & eficiencia externa en \textit{acabado} (horas externas $=EFF\cdot (\alpha\,REQ_{a s})$ por unidad) \\
+    $C_A$              & : & coste (€/hora) del subcontratista de \textit{acabado} \\
+    $R$                & : & cota de proporción subcontratable sobre la producción total ($0\le R\le 1$) \\
+    $K_s$              & : & coste de preparación si se fabrica el producto $s$ (coste fijo por tipo activo) \\
+    $U$                & : & cota superior para enlazar producción y binaria (p.\,ej., $U=200$) \\
+    $V$                & : & límite global semanal de unidades (calidad) \\
+\end{tabular}
+\\
+\\
+\textit{En este caso: } $\alpha{=}0.7,\; EFF{=}0.5,\; C_A{=}10,\; R{=}0.5,\; K_c{=}150,\; K_o{=}100,\; K_p{=}250,\; U{=}200.$
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_s$     & : & número de unidades del producto $s \in \mathcal{S}$ por semana \\
+    $y^+$     & : & horas trasladadas de \textit{corte} a \textit{montaje} por semana \\
+    $y^-$     & : & horas trasladadas de \textit{montaje} a \textit{corte} por semana \\
+    $y_s^{e}$ & : & unidades del producto $s$ cuyo \textit{acabado} se subcontrata \\
+    $b_s$     & : & binaria: 1 si se fabrica el producto $s$ (activa su coste de preparación) \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+\emph{Capacidades internas con polivalencia (tiempos reducidos):}
+\begin{align}
+    & \sum_{s \in \mathcal{S}} \alpha\,REQ_{\text{corte},s}\, x_s \;\le\; CAP_{\text{corte}} - y^+ + y^- \\
+    & \sum_{s \in \mathcal{S}} \alpha\,REQ_{\text{montaje},s}\, x_s \;\le\; CAP_{\text{montaje}} + y^+ - y^- \\
+    & y^+ + y^- \;\le\; M
+\end{align}
+
+\emph{Capacidad interna de \textit{acabado} (tiempos reducidos):}
+\begin{equation}
+    \sum_{s \in \mathcal{S}} \alpha\,REQ_{a s}\,\big(x_s - y_s^{e}\big) \;\le\; CAP_a
+\end{equation}
+
+\emph{Vinculación de la subcontratación por producto y tope global:}
+\begin{align}
+    & 0 \;\le\; y_s^{e} \;\le\; x_s \qquad \forall s \in \mathcal{S} \\
+    & \sum_{s \in \mathcal{S}} y_s^{e} \;\le\; R \sum_{s \in \mathcal{S}} x_s
+\end{align}
+
+\emph{Activación de costes de preparación:}
+\begin{equation}
+    x_s \;\le\; U\,b_s \qquad \forall s \in \mathcal{S}
+\end{equation}
+
+\emph{Límite global de producción (calidad):}
+\begin{equation}
+    \sum_{s \in \mathcal{S}} x_s \;\le\; V
+\end{equation}
+
+\emph{No negatividad e integralidad:}
+\begin{equation}
+    x_s,\, y_s^{e},\, y^+,\, y^- \;\ge\; 0 \ \ \forall s \in \mathcal{S}, 
+    \qquad b_s \in \{0,1\} \ \ \forall s \in \mathcal{S}
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+Coste externo de \textit{acabado}: 
+\(
+C_A \sum_{s \in \mathcal{S}} \big(EFF \cdot \alpha\,REQ_{a s}\big)\, y_s^{e}.
+\)
+Costes de preparación por tipo: \(\sum_{s \in \mathcal{S}} K_s\, b_s\).
+
+\begin{equation}
+\mbox{max. } z \;=\; \sum_{s \in \mathcal{S}} B_s\, x_s 
+\;-\; C_A \sum_{s \in \mathcal{S}} \big(EFF \cdot \alpha\,REQ_{a s}\big)\, y_s^{e}
+\;-\; \sum_{s \in \mathcal{S}} K_s\, b_s
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \quad &= \sum_{s} B_s x_s 
+- C_A \sum_{s} (EFF \cdot \alpha\,REQ_{a s})\, y_s^{e}
+- \sum_{s} K_s b_s \notag \\
+\mbox{s. a.:}\quad 
+& \sum_{s} \alpha\,REQ_{\text{corte},s} x_s \le CAP_{\text{corte}} - y^+ + y^- \notag \\
+& \sum_{s} \alpha\,REQ_{\text{montaje},s} x_s \le CAP_{\text{montaje}} + y^+ - y^- \notag \\
+& y^+ + y^- \le M \notag \\
+& \sum_{s} \alpha\,REQ_{a s} (x_s - y_s^{e}) \le CAP_a \notag \\
+& 0 \le y_s^{e} \le x_s \ \forall s,\quad \sum_{s} y_s^{e} \le R \sum_{s} x_s \notag \\
+& x_s \le U\,b_s \ \forall s,\quad \sum_{s} x_s \le V \notag \\
+& x_s, y_s^{e}, y^+, y^- \ge 0 \ \forall s,\quad b_s \in \{0,1\} \ \forall s \notag
+\end{align}
+
+

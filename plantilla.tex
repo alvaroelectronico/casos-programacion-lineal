@@ -1,0 +1,147 @@
+\subsection{Presentación del caso}
+
+Aquí viene el enunciado del pptx que compartiré contigo
+
+
+\newpage
+\subsection{Formulación explíctia del modelo}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_b$  & : & número de unidades producidas de baguettes\\
+    $x_p$  & : & número de unidades producidas de pan de picos\\
+    $x_g$  & : & número de unidades producidas de pagn gallego\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\\
+No se producen más unidades de las que se pueden vender:
+
+\begin{equation}
+    x_b + x_p + x_g \leq 400
+\end{equation}
+\\
+\\
+No se pueden producir más productos que los que permite la cantidad máxima de harina disponbible
+
+\begin{equation}
+    0.1x_b + 0.2x_p + 0.4x_g \leq 600
+\end{equation}
+\\
+\\
+El tiempo necesario para amasar la producción no puede superar el tiempo disponible para amasar:
+
+
+\begin{equation}
+    2x_b + 5x_p + 7x_g \leq 4\times4\times 60 = 960
+\end{equation}
+\\
+\\
+\paragraph{Función objetivo}\mbox{}\\
+\\
+\\
+Cómputo de los ingresos:
+\begin{equation}
+1x_b + 1.5x_p + 2.5x_g
+\end{equation}
+\\
+\\
+Cómputo de los gastos en harina
+\begin{equation}
+(0.1x_b + 0.2x_p + 0.4x_g)\times0.5
+\end{equation}
+\\
+\\
+Costes fijos: los salarios de los emplados. Son costes irrelevantes para decidir la producción.
+\\
+\\
+Expresión de la función objetivo:
+\begin{equation}
+\begin{split}
+1x_b + 1.5x_p + 2.5x_g - (0.1x_b + 0.2x_p + 0.4x_g)\times0.5 \\
+= 0.95x_b + 1.4x_p + 2.3x_g 
+\end{split}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\\
+\\
+El modelo completo es el siguiente:
+\begin{align}
+\mbox{max.} \quad & 0.95x_b + 1.4x_p + 2.3x_g \notag \\
+\mbox{s. a.:} \quad &  \notag \\		
+             & x_b + x_p + x_g \leq 400 \notag \\
+             &  0.1x_b + 0.2x_p + 0.4x_g \leq 600\notag \\
+             & 2x_b + 5x_p + 7x_g \leq 960\notag  \\
+             & x_b, x_p. x_g \geq 0
+\end{align}    
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $\mathcal{T}$  & : & tipos de panes \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $P$  & : & parámetro 1 \\
+    $Q$  & : & parámetro 2 \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_t$  & : & variable 1 para $t \in \mathcal{T}$\\
+    $y_t$  & : & variable 1 para $t \in \mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Descripción del primer requisito:
+
+\begin{equation}
+    \sum_t{x_t} \leq V
+\end{equation}
+
+\
+\\
+Descripción del segundo requisito:
+
+\begin{equation}
+    \sum_t{NEC_tx_t} \leq H
+\end{equation}
+En este caso: 
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{align}
+             & \sum_tP_t{x_t}  \qquad \mbox{(ingresos por las ventas)} \notag \\
+             & -C\sum_t  NEC_t {x_t} \qquad \mbox{(costes de la harina)} \notag \\
+             & -\mbox{costes fijos} \qquad \mbox{(costes de los operarios)} \notag \\
+\end{align} 
+
+
+
+\paragraph{Modelo completo}\mbox{}\\
+El modelo de forma generalizada es el siguiente.
+\\
+\\
+\begin{align}
+\mbox{max.} \quad & \sum_tP_t{x_t}  \qquad \mbox{(ingresos por las ventas)} \notag \\
+             & -C\sum_t  NEC_t {x_t} \qquad \mbox{(costes de la harina)} \notag \\
+             & -\mbox{costes fijos} \qquad \mbox{(costes de los operarios)} \notag \\
+\mbox{s. a.:} \quad &  \notag \\		
+             & \sum_t{x_t} \leq V \qquad\mbox{(restricciones de mercado)} \notag \\
+             &  \sum_t{NEC_tx_t} \leq H \qquad\mbox{(restricciones de materia prima)}   \notag \\
+             & \sum_t{AM_tx_t} \leq T \qquad \mbox{(restricciones amasado)} \notag \\
+             & x_t,  \geq 0 \; \forall t \in \mathcal{T} \qquad \mbox{(restricciones no negatividad)} \notag
+\end{align} 

@@ -1,0 +1,111 @@
+\section{Equipos arbitrales}
+
+
+\subsection{Presentación del caso}
+Para dirigir 3 partidos de fútbol (P1, P2 y P3) se dispone de 4 equipos arbitrales (A1, A2, A3 y A4). La distancia (en centenares de kilómetros) que debería recorrer cada equipo arbitral para dirigir cada partido es la siguiente:
+
+\begin{center}
+\begin{tabular}{c|ccc}
+ & P1 & P2 & P3 \\
+\hline
+A1 & 5 & 7 & 7 \\
+A2 & 7 & 5 & 8 \\
+A3 & 6 & 4 & 8 \\
+A4 & 7 & 6 & 9 \\
+\end{tabular}
+\end{center}
+
+Se trata de determinar qué equipo debe arbitrar cada partido de modo que la distancia total recorrida en la jornada de liga sea mínima.
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & variable binaria que toma valor 1 si el equipo arbitral $i$ dirige el partido $j$,\\
+    & & 0 en caso contrario.\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Cada partido debe ser dirigido por exactamente un equipo arbitral:
+\begin{align}
+x_{11}+x_{21}+x_{31}+x_{41} &= 1 \\
+x_{12}+x_{22}+x_{32}+x_{42} &= 1 \\
+x_{13}+x_{23}+x_{33}+x_{43} &= 1
+\end{align}
+\\
+Cada equipo arbitral puede dirigir como máximo un partido:
+\begin{align}
+x_{11}+x_{12}+x_{13} &\leq 1 \\
+x_{21}+x_{22}+x_{23} &\leq 1 \\
+x_{31}+x_{32}+x_{33} &\leq 1 \\
+x_{41}+x_{42}+x_{43} &\leq 1
+\end{align}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizar la distancia total recorrida (en centenares de km):
+\begin{equation}
+\mbox{min. } z = 5x_{11}+7x_{12}+7x_{13}+7x_{21}+5x_{22}+8x_{23}+6x_{31}+4x_{32}+8x_{33}+7x_{41}+6x_{42}+9x_{43}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.} \quad 
+& z = 5x_{11}+7x_{12}+7x_{13}+7x_{21}+5x_{22}+8x_{23}+6x_{31}+4x_{32}+8x_{33}+7x_{41}+6x_{42}+9x_{43} \notag \\
+\mbox{s. a.:} \quad 
+& x_{11}+x_{21}+x_{31}+x_{41} = 1 \notag \\
+& x_{12}+x_{22}+x_{32}+x_{42} = 1 \notag \\
+& x_{13}+x_{23}+x_{33}+x_{43} = 1 \notag \\
+& x_{11}+x_{12}+x_{13} \leq 1 \notag \\
+& x_{21}+x_{22}+x_{23} \leq 1 \notag \\
+& x_{31}+x_{32}+x_{33} \leq 1 \notag \\
+& x_{41}+x_{42}+x_{43} \leq 1 \notag \\
+& x_{ij} \in \{0,1\} \quad \forall i=1,\dots,4;\; j=1,2,3 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{A}$ & : & conjunto de equipos arbitrales ($i \in \mathcal{A}$)\\
+    $\mathcal{P}$ & : & conjunto de partidos ($j \in \mathcal{P}$)\\
+\end{tabular}
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $D_{ij}$ & : & distancia (en centenares de km) que debe recorrer el equipo $i$ para dirigir el partido $j$ \\
+\end{tabular}
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & variable binaria que vale 1 si el equipo $i$ arbitra el partido $j$, 0 en caso contrario \\
+\end{tabular}
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+Cada partido debe tener un único equipo asignado:
+\begin{equation}
+    \sum_{i \in \mathcal{A}} x_{ij} = 1 \quad \forall j \in \mathcal{P}
+\end{equation}
+\\
+Cada equipo arbitral puede dirigir como máximo un partido:
+\begin{equation}
+    \sum_{j \in \mathcal{P}} x_{ij} \leq 1 \quad \forall i \in \mathcal{A}
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min. } z = \sum_{i \in \mathcal{A}} \sum_{j \in \mathcal{P}} D_{ij}\, x_{ij}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.} \quad & z = \sum_{i \in \mathcal{A}} \sum_{j \in \mathcal{P}} D_{ij}\, x_{ij} \notag \\
+\mbox{s. a.:} \quad & \sum_{i \in \mathcal{A}} x_{ij} = 1 \quad \forall j \in \mathcal{P} \notag \\
+& \sum_{j \in \mathcal{P}} x_{ij} \leq 1 \quad \forall i \in \mathcal{A} \notag \\
+& x_{ij} \in \{0,1\} \quad \forall i \in \mathcal{A},\; j \in \mathcal{P} \notag
+\end{align}

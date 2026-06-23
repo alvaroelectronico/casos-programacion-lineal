@@ -1,0 +1,206 @@
+\section{Armesa}
+
+\subsection{Presentación del caso}
+
+ARMESA es una empresa dedicada a la fabricación de armarios metálicos. 
+Dispone de cuatro modelos distintos. En la Tabla~\ref{tab:horas_talleres} se indican las horas útiles disponibles mensualmente en los cinco talleres de que consta la fábrica, así como los tiempos requeridos en cada taller para la obtención de una unidad de cada producto.
+
+\begin{table}[!h]
+\centering
+\caption{horas útiles disponibles mensualmente y tiempos de producción por unidad de producto (en horas).}
+\label{tab:horas_talleres}
+\begin{tabular}{l c c c c c}
+\hline
+Taller & 
+\makecell{Prod.\\1} & 
+\makecell{Prod.\\2} & 
+\makecell{Prod.\\3} & 
+\makecell{Prod.\\4} & 
+\makecell{Horas\\disp.} \\ \hline
+Embutición & 0,03 & 0,15 & 0,05 & 0,10 & 400 \\
+Mecanizado & 0,06 & 0,12 & ---  & 0,10 & 400 \\
+Montaje    & 0,05 & 0,10 & 0,05 & 0,12 & 500 \\
+Acabado    & 0,04 & 0,20 & 0,03 & 0,12 & 450 \\
+Embalaje   & 0,02 & 0,06 & 0,02 & 0,05 & 400 \\ \hline
+\end{tabular}
+\end{table}
+
+Para la fabricación de los armarios tipo 2 y 4 se necesitan, por unidad, 2 y 1,2 pies cuadrados de una chapa especial que escasea en el mercado. La disponibilidad máxima mensual de esta chapa es de 2.000 pies cuadrados.
+
+En la Tabla~\ref{tab:ventas_costes} se muestran los precios de venta y los costes variables unitarios de cada producto, junto con las cantidades mínimas que deben entregarse mensualmente para cumplir los contratos con determinados clientes mayoristas, y las cantidades máximas que pueden absorber el mercado mayorista y minorista en conjunto.
+
+\begin{table}[!h]
+\centering
+\caption{precios de venta, costes variables y límites de ventas mensuales (en unidades).}
+\label{tab:ventas_costes}
+\begin{tabular}{c c c c c}
+\hline
+Producto & 
+\makecell{Coste variable\\ unitario (€)} & 
+\makecell{Precio de venta\\ unitario (€)} & 
+\makecell{Ventas\\ mínimas} & 
+\makecell{Ventas\\ máximas} \\ \hline
+1 & 6  & 10 & 1.000 & 6.000 \\
+2 & 15 & 25 & ---   & 500 \\
+3 & 11 & 16 & 500   & 3.000 \\
+4 & 14 & 20 & 100   & 1.000 \\ \hline
+\end{tabular}
+\end{table}
+
+El objetivo es formular un modelo de programación lineal que permita determinar el programa mensual de produ
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_1$  & : & número de unidades producidas del producto 1 \\
+    $x_2$  & : & número de unidades producidas del producto 2 \\
+    $x_3$  & : & número de unidades producidas del producto 3 \\
+    $x_4$  & : & número de unidades producidas del producto 4 \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\\
+\textbf{Disponibilidad de los talleres:}
+\begin{equation}
+0.03x_1 + 0.15x_2 + 0.05x_3 + 0.10x_4 \leq 400
+\end{equation}
+
+\begin{equation}
+0.06x_1 + 0.12x_2 + 0.10x_4 \leq 400
+\end{equation}
+
+\begin{equation}
+0.05x_1 + 0.10x_2 + 0.05x_3 + 0.12x_4 \leq 500
+\end{equation}
+
+\begin{equation}
+0.04x_1 + 0.20x_2 + 0.03x_3 + 0.12x_4 \leq 450
+\end{equation}
+
+\begin{equation}
+0.02x_1 + 0.06x_2 + 0.02x_3 + 0.05x_4 \leq 400
+\end{equation}
+
+\noindent
+\textbf{Disponibilidad de chapa:}
+\begin{equation}
+2x_2 + 1.2x_4 \leq 2000
+\end{equation}
+
+\noindent
+\textbf{Restricciones de mercado:}
+\begin{align}
+1000 \leq & \; x_1 \leq 6000 \\
+0 \leq & \; x_2 \leq 500 \\
+500 \leq & \; x_3 \leq 3000 \\
+100 \leq & \; x_4 \leq 1000
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+\\
+La contribución unitaria de cada producto se obtiene como diferencia entre precio de venta y coste variable unitario:
+\[
+c_1 = 10 - 6 = 4, \quad
+c_2 = 25 - 15 = 10, \quad
+c_3 = 16 - 11 = 5, \quad
+c_4 = 20 - 14 = 6
+\]
+
+La función objetivo a maximizar es:
+\begin{equation}
+z = 4x_1 + 10x_2 + 5x_3 + 6x_4
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\\
+El modelo de programación lineal queda expresado como:
+\begin{align}
+\mbox{max.} \quad & z = 4x_1 + 10x_2 + 5x_3 + 6x_4 \notag \\
+\mbox{s. a.:} \quad & 0.03x_1 + 0.15x_2 + 0.05x_3 + 0.10x_4 \leq 400 \notag \\
+& 0.06x_1 + 0.12x_2 + 0.10x_4 \leq 400 \notag \\
+& 0.05x_1 + 0.10x_2 + 0.05x_3 + 0.12x_4 \leq 500 \notag \\
+& 0.04x_1 + 0.20x_2 + 0.03x_3 + 0.12x_4 \leq 450 \notag \\
+& 0.02x_1 + 0.06x_2 + 0.02x_3 + 0.05x_4 \leq 400 \notag \\
+& 2x_2 + 1.2x_4 \leq 2000 \notag \\
+& 1000 \leq x_1 \leq 6000 \notag \\
+& 0 \leq x_2 \leq 500 \notag \\
+& 500 \leq x_3 \leq 3000 \notag \\
+& 100 \leq x_4 \leq 1000 \notag \\
+& x_1, x_2, x_3, x_4 \geq 0 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $\mathcal{P}$  & : & conjunto de productos \\
+    $\mathcal{T}$  & : & conjunto de talleres \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $A_{tp}$  & : & horas requeridas en el taller $t \in \mathcal{T}$ para producir una unidad del producto $p \in \mathcal{P}$ \\
+    $H_t$     & : & horas disponibles en el taller $t \in \mathcal{T}$ \\
+    $CH_p$    & : & cantidad de chapa necesaria por unidad de producto $p \in \mathcal{P}$ \\
+    $CHAP$    & : & cantidad máxima disponible de chapa especial \\
+    $P_p$     & : & precio de venta unitario del producto $p \in \mathcal{P}$ \\
+    $C_p$     & : & coste variable unitario del producto $p \in \mathcal{P}$ \\
+    $V^{\min}_p$ & : & ventas mínimas mensuales del producto $p \in \mathcal{P}$ \\
+    $V^{\max}_p$ & : & ventas máximas mensuales del producto $p \in \mathcal{P}$ \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_p$  & : & número de unidades producidas del producto $p \in \mathcal{P}$ \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+\noindent
+\textbf{Disponibilidad de talleres:}
+\begin{equation}
+    \sum_{p \in \mathcal{P}} A_{tp} x_p \leq H_t \qquad \forall t \in \mathcal{T}
+\end{equation}
+
+\noindent
+\textbf{Disponibilidad de chapa:}
+\begin{equation}
+    \sum_{p \in \mathcal{P}} CH_p x_p \leq CHAP
+\end{equation}
+
+\noindent
+\textbf{Restricciones de mercado:}
+\begin{equation}
+    V^{\min}_p \leq x_p \leq V^{\max}_p \qquad \forall p \in \mathcal{P}
+\end{equation}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{align}
+    \max z &= \sum_{p \in \mathcal{P}} (P_p - C_p)\, x_p \qquad \mbox{(beneficio total)}
+\end{align}
+\\
+
+\paragraph{Modelo completo}\mbox{}\\
+El modelo, de forma generalizada, se expresa como:
+\\
+\begin{align}
+\mbox{max.} \quad & \sum_{p \in \mathcal{P}} (P_p - C_p)\, x_p \notag \\
+\mbox{s. a.:} \quad & \sum_{p \in \mathcal{P}} A_{tp} x_p \leq H_t \qquad \forall t \in \mathcal{T} \notag \\
+& \sum_{p \in \mathcal{P}} CH_p x_p \leq CHAP \notag \\
+& V^{\min}_p \leq x_p \leq V^{\max}_p \qquad \forall p \in \mathcal{P} \notag \\
+& x_p \geq 0 \qquad \forall p \in \mathcal{P} \notag
+\end{align}

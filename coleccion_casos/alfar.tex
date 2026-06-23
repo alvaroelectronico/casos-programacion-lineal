@@ -1,0 +1,281 @@
+\section{El alfar}
+
+\subsection{Presentación del caso}
+
+
+Gestionamos un pequeño alfar en el que podemos fabricar distintos productos artesanales: botijos, cuencos, jarras y palmatorias.
+
+La decisión a tomar consiste en abandonar el trabajo actual para dedicarse plenamente a la producción de estos productos, para lo cual es necesario analizar la viabilidad económica mediante un modelo de Programación Lineal: presuponemos que estamos gestionando el alfar para decidir cuál es el programa de producción de mayor beneficio, información con la cual se podría tomar la decisión de si asumir la gestión del alfar o no.
+
+
+\textbf{Proceso productivo del alfar.}
+
+En términos generales, se trata de transformar la arcilla en piezas acabadas mediante distintas etapas coordinadas.
+
+El proceso productivo sigue un ciclo semanal que incluye:
+
+\begin{itemize}
+
+    \item \textbf{Moldeado:} el moldeador da forma a las piezas de arcilla.
+
+    \item \textbf{Decoración y pintado:} el pintor aplica acabados y colores.
+
+    \item \textbf{Cocción:} las piezas pasan al horno colectivo, con fases de carga, calentamiento, cocción, enfriamiento y descarga.
+
+    \item \textbf{Finalización:} las piezas cocidas y enfriadas se preparan para la venta.
+
+\end{itemize}
+
+Este ciclo transforma las materias primas (arcilla, agua, pinturas) en productos terminados listos para su comercialización.
+
+
+\textbf{Recursos disponibles semanalmente en el alfar.}
+Los recursos de los que dispone el alfar cada semana y que condicionan la capacidad productiva son los siguientes:
+
+
+\begin{itemize}
+
+\item Moldeador: máximo 40 horas/semana.
+
+\item Pintor: máximo 24 horas/semana.
+
+\item Horno colectivo: capacidad operativa de 900 litros/semana.
+
+\end{itemize}
+
+Los costes del moldeador y del pintor son 350 euros semanales y el coste del horno es de 50 euros semanales.
+
+
+\textbf{Tiempos de proceso y consumos de recursos por unidad producida.}
+Por último, a continuación se ofrecen los tiempos y consumos asociados a la fabricación de cada tipo de producto (resutlado de la diferencia entre los ingresos por su venta y los costes de materia prima):
+
+
+
+\begin{center}
+
+\begin{tabular}{lccc}
+
+\toprule
+
+Producto & Moldeador (h) & Pintor (h) & Horno (l) \\
+
+\midrule
+
+Botijo     & 0.20 & 0.20 & 1.0 \\
+
+Cuenco     & 0.10 & 0.40 & 0.5 \\
+
+Jarra      & 0.15 & 0.15 & 1.0 \\
+
+Palmatoria & 0.15 & 0.10 & 0.5 \\
+
+\bottomrule
+
+\end{tabular}
+
+\end{center}
+
+
+
+\textbf{Beneficios unitarios:}
+Antes de plantear el modelo económico, se indican los beneficios unitarios que aporta cada tipo de producto:\begin{itemize}
+
+\item Botijo: 3,50 €.
+
+\item Cuenco: 4,75 €.
+
+\item Jarra: 2,10 €.
+
+\item Palmatoria: 3,20 €.
+
+\end{itemize}
+
+
+
+\textbf{Costes fijos semanales.}
+Para completar la información económica, se especifican también los costes fijos asociados a la actividad del alfar:
+
+
+
+\begin{itemize}
+
+\item Mano de obra fija (moldeador y pintor): 700 €.
+
+\item Energía (leña para el horno): 30 €.
+
+\end{itemize}
+
+
+
+El objetivo es formular y resolver un modelo de Programación Lineal que permita determinar cuántas unidades de cada producto conviene fabricar semanalmente para maximizar el beneficio del alfar.
+
+\subsection{Formulación explícita (forma canónica)}
+
+\textbf{Variables}
+
+\begin{tabular}{l c l}
+    $x_1$ & : & número de botijos producidos por semana \\
+    $x_2$ & : & número de cuencos producidos por semana \\
+    $x_3$ & : & número de jarras producidas por semana \\
+    $x_4$ & : & número de palmatorias producidas por semana \\
+\end{tabular}
+
+\textbf{Restricciones}
+
+\begin{align}
+0.20\,x_1 + 0.10\,x_2 + 0.15\,x_3 + 0.15\,x_4 & \leq 40 
+&& \text{(horas de moldeador)} \\[0.5em]
+0.20\,x_1 + 0.40\,x_2 + 0.15\,x_3 + 0.10\,x_4 & \leq 24 
+&& \text{(horas de pintor)} \\[0.5em]
+1.00\,x_1 + 0.50\,x_2 + 1.00\,x_3 + 0.50\,x_4 & \leq 900 
+&& \text{(capacidad de horno)} \\[0.5em]
+x_1,\,x_2,\,x_3,\,x_4 & \geq 0 
+&& \text{(no negatividad)}
+\end{align}
+
+
+\textbf{Función objetivo}
+
+Maximizar el beneficio semanal total:
+
+\begin{equation}   
+\mbox{máx.}\; z \;=\; 3.5\,x_1 \;+\; 4.75\,x_2 \;+\; 2.10\,x_3 \;+\; 3.20\,x_4
+\end{equation}
+
+
+\subsection{Formulación explícita (forma estándar)}
+
+\begin{tabularx}{\textwidth}{l c X}
+    $x_1$ & : & número de botijos producidos por semana. \\
+    $x_2$ & : & número de cuencos producidos por semana. \\
+    $x_3$ & : & número de jarras producidas por semana. \\
+    $x_4$ & : & número de palmatorias producidas por semana. \\
+    $h_1$ & : & horas semanales durante las que el moldeador no está moldeando productos (tiempo ocioso del moldeador). \\
+    $h_2$ & : & horas semanales durante las que el pintor no está pintando productos (tiempo ocioso del pintor). \\
+    $h_3$ & : & litros del horno no empleados en la cocción con respecto a los 900 disponibles cada semana. \\
+\end{tabularx}
+
+\textbf{Restricciones}
+\begin{align}
+0.20\,x_1 + 0.10\,x_2 + 0.15\,x_3 + 0.15\,x_4 +\,h_1 & = 40 
+&& \text{(horas de moldeador)} \\[0.5em]
+0.20\,x_1 + 0.40\,x_2 + 0.15\,x_3 + 0.10\,x_4  +\,h_2 & = 24 
+&& \text{(horas de pintor)} \\[0.5em]
+1.00\,x_1 + 0.50\,x_2 + 1.00\,x_3 + 0.50\,x_4  +\,h_3 & = 900 
+&& \text{(capacidad de horno)} \\[0.5em]
+x_1,\,x_2,\,x_3,\,x_4 +\,h_1,\,h_2,\,h_3 & \geq 0 
+&& \text{(no negatividad)}
+\end{align}
+
+
+\textbf{Función objetivo}
+
+Maximizar el beneficio semanal total:
+
+\begin{equation}   
+\mbox{máx.}\; z \;=\; 3.5\,x_1 \;+\; 4.75\,x_2 \;+\; 2.10\,x_3 \;+\; 3.20\,x_4
+\end{equation}
+
+\subsection{Formulación generalizada (forma canónica)}
+
+
+\textbf{Conjuntos}:
+
+\begin{tabular}{l c l}
+    $\mathcal{T}$  & : & tipos de productos (botijo, cuenco, jarra, palmatoria) \\
+    $\mathcal{R}$  & : & recursos (moldeador, pintor, horno)
+\end{tabular}
+\\
+\\
+
+\textbf{Parámetros}
+
+\begin{tabular}{l c l}
+    $P_t$       & : & beneficio unitario del producto $t \in \mathcal{T}$ \\
+    $A_{rt}$    & : & consumo del recurso $r \in \mathcal{R}$ por unidad del producto $t \in \mathcal{T}$ \\
+    $B_r$       & : & disponibilidad del recurso $r \in \mathcal{R}$ \\
+\end{tabular}
+\\
+\\
+
+\textbf{Variables}\mbox{}
+
+\begin{tabular}{l c l}
+    $x_t$  & : & cantidad producida del producto $t \in \mathcal{T}$ \\
+\end{tabular}
+
+\textbf{Restricciones}\mbox{}\\
+
+Uso de los recursos:
+\begin{equation}
+    \sum_{t \in \mathcal{T}} A_{rt} x_t \leq B_r \quad \forall r \in \mathcal{R}
+\end{equation}
+
+Restricciones de no negatividad:
+\begin{equation}
+    x_t \geq 0 \quad \forall t \in \mathcal{T}
+\end{equation}
+
+\textbf{Función objetivo}\mbox{}\\
+
+Maximizar el beneficio semanal total:
+\begin{equation}
+    \mbox{max. } z \;=\; \sum_{t \in \mathcal{T}} P_t x_t
+\end{equation}
+
+\subsection{Formulación generalizada (forma estándar)}
+
+
+\textbf{Conjuntos}:
+
+\begin{tabular}{l c l}
+    $\mathcal{T}$  & : & tipos de productos (botijo, cuenco, jarra, palmatoria) \\
+    $\mathcal{R}$  & : & recursos (moldeador, pintor, horno)
+\end{tabular}
+\\
+\\
+
+\textbf{Parámetros}
+
+\begin{tabular}{l c l}
+    $P_t$       & : & beneficio unitario del producto $t \in \mathcal{T}$ \\
+    $A_{rt}$    & : & consumo del recurso $r \in \mathcal{R}$ por unidad del producto $t \in \mathcal{T}$ \\
+    $B_r$       & : & disponibilidad del recurso $r \in \mathcal{R}$ \\
+\end{tabular}
+\\
+\\
+
+\textbf{Variables}\mbox{}
+
+\begin{tabular}{l c l}
+    $x_t$  & : & cantidad producida del producto $t \in \mathcal{T}$ \\
+    $h_1$  & : & cantidad no empleada de recurso $r \in \mathcal{R}$ \\
+\end{tabular}
+
+\textbf{Restricciones}\mbox{}\\
+
+Uso de los recursos:
+\begin{equation}
+    \sum_{t \in \mathcal{T}} A_{rt} x_t + h_r =  B_r \quad \forall r \in \mathcal{R}
+\end{equation}
+
+Restricciones de no negatividad:
+\begin{align}
+x_t & \geq 0 \quad && \forall t \in \mathcal{T} \\
+h_r & \geq 0 \quad && \forall r \in \mathcal{R}
+\end{align}
+
+
+\textbf{Función objetivo}\mbox{}\\
+
+Maximizar el beneficio semanal total:
+\begin{equation}
+    \mbox{max. } z \;=\; \sum_{t \in \mathcal{T}} P_t x_t
+\end{equation}
+
+% \subsection{Posibles mejoras}
+
+
+
+
+

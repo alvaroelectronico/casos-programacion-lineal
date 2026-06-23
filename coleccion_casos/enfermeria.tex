@@ -1,0 +1,254 @@
+\section{Servicio de enfermería}
+
+
+\subsection{Presentación del caso (escenario 1}
+El Sr.\ Programación es el encargado de organizar el horario del personal de enfermería para el servicio de Cardiología del hospital de San José. Un día laborable en este servicio se divide en doce periodos de dos horas. Las necesidades de personal cambian de periodo a periodo: por la noche bastan pocas personas y por la mañana se requiere un número relativamente elevado, según la tabla de requisitos facilitada por la jefa del servicio. 
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{c|cccccccccccc}
+\toprule
+\textbf{Periodo} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+\textbf{Personal requerido} & 20 & 25 & 40 & 50 & 60 & 40 & 30 & 20 & 30 & 60 & 60 & 25 \\
+\bottomrule
+\end{tabular}
+\caption{requerimientos de personal por periodo de 2 horas.}
+\end{table}
+
+
+\noindent Se pide elaborar modelos de programación lineal para determinar el número mínimo de personas necesarias para cubrir dichas necesidades, sabiendo que cada profesional trabaja 8 horas diarias y disfruta de 2 horas de descanso tras las primeras 4 horas de trabajo.
+
+% =========================
+% ESCENARIO 1: MODELO EXPLÍCITO
+% =========================
+\subsection{Formulación explícita (escenario 1)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$  & : & número de profesionales que inician su turno en el periodo $t$, $t=1,\dots,12$\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$  & : & personal mínimo requerido en el periodo $t=1,\dots,12$\\
+\end{tabular}
+
+\noindent Valores de $R_t$ (periodos de 2 horas):\\[0.2cm]
+\centerline{$
+\begin{array}{c|cccccccccccc}
+t      & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\hline
+R_t    & 20 & 25 & 40 & 50 & 60 & 40 & 30 & 20 & 30 & 60 & 60 & 25
+\end{array}$}
+
+\paragraph{Restricciones}\mbox{}\\
+Cobertura mínima en cada periodo $t$ (índices módulo 12: $x_0\equiv x_{12}$, $x_{-1}\equiv x_{11}$, etc.):
+\begin{equation}
+    x_t + x_{t-1} + x_{t-3} + x_{t-4} \;\geq\; R_t \qquad t=1,\dots,12
+\end{equation}
+
+\noindent Expansión numérica por periodo:
+\begin{align}
+x_1  + x_{12} + x_{10} + x_{9}   &\ge 20 \notag \\
+x_2  + x_{1}  + x_{11} + x_{10}  &\ge 25 \notag \\
+x_3  + x_{2}  + x_{12} + x_{11}  &\ge 40 \notag \\
+x_4  + x_{3}  + x_{1}  + x_{12}  &\ge 50 \notag \\
+x_5  + x_{4}  + x_{2}  + x_{1}   &\ge 60 \notag \\
+x_6  + x_{5}  + x_{3}  + x_{2}   &\ge 40 \notag \\
+x_7  + x_{6}  + x_{4}  + x_{3}   &\ge 30 \notag \\
+x_8  + x_{7}  + x_{5}  + x_{4}   &\ge 20 \notag \\
+x_9  + x_{8}  + x_{6}  + x_{5}   &\ge 30 \notag \\
+x_{10}+ x_{9}  + x_{7}  + x_{6}  &\ge 60 \notag \\
+x_{11}+ x_{10} + x_{8}  + x_{7}  &\ge 60 \notag \\
+x_{12}+ x_{11} + x_{9}  + x_{8}  &\ge 25 \notag
+\end{align}
+
+\noindent No negatividad:
+\begin{equation}
+    x_t \;\ge\; 0 \qquad t=1,\dots,12
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizamos el número total de personas que inician turno:
+\begin{equation}
+\mbox{min.}\; z \;=\; \sum_{t=1}^{12} x_t
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t=1}^{12} x_t \notag \\
+\mbox{s.\ a.:}\quad 
+& x_t + x_{t-1} + x_{t-3} + x_{t-4} \;\ge\; R_t \qquad t=1,\dots,12 \notag \\
+& x_1  + x_{12} + x_{10} + x_{9}   \ge 20 \notag \\
+& x_2  + x_{1}  + x_{11} + x_{10}  \ge 25 \notag \\
+& x_3  + x_{2}  + x_{12} + x_{11}  \ge 40 \notag \\
+& x_4  + x_{3}  + x_{1}  + x_{12}  \ge 50 \notag \\
+& x_5  + x_{4}  + x_{2}  + x_{1}   \ge 60 \notag \\
+& x_6  + x_{5}  + x_{3}  + x_{2}   \ge 40 \notag \\
+& x_7  + x_{6}  + x_{4}  + x_{3}   \ge 30 \notag \\
+& x_8  + x_{7}  + x_{5}  + x_{4}   \ge 20 \notag \\
+& x_9  + x_{8}  + x_{6}  + x_{5}   \ge 30 \notag \\
+& x_{10}+ x_{9}  + x_{7}  + x_{6}  \ge 60 \notag \\
+& x_{11}+ x_{10} + x_{8}  + x_{7}  \ge 60 \notag \\
+& x_{12}+ x_{11} + x_{9}  + x_{8}  \ge 25 \notag \\
+& x_t \;\ge\; 0 \qquad t=1,\dots,12 \notag
+\end{align}
+
+
+
+% =========================
+% ESCENARIO 1: FORMULACIÓN GENERALIZADA
+% =========================
+\subsection{Formulación generalizada (escenario 1)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{T}$ & : & periodos de planificación (en el caso, $\{1,\dots,12\}$)\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$ & : & personal mínimo requerido en cada $t\in\mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$ & : & profesionales que inician turno en $t\in\mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Cobertura por periodo (debido a la pauta trabajo--trabajo--descanso--trabajo--trabajo):
+\begin{equation}
+    \sum_{k\in\{0,1,3,4\}} x_{t-k} \;\ge\; R_t \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_t \;\ge\; 0 \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min.}\; z \;=\; \sum_{t\in\mathcal{T}} x_t
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t\in\mathcal{T}} x_t \notag \\
+\mbox{s.\ a.:}\quad 
+& \sum_{k\in\{0,1,3,4\}} x_{t-k} \;\ge\; R_t \qquad \forall t\in\mathcal{T} \notag \\
+& x_t \;\ge\; 0 \qquad \forall t\in\mathcal{T} \notag
+\end{align}
+
+\medskip
+\textit{Nota sobre índices:} si $\mathcal{T}=\{1,\dots,12\}$, las expresiones $t-k$ se interpretan módulo $12$ (p.\,ej., $x_{0}\equiv x_{12}$, $x_{-1}\equiv x_{11}$).
+
+
+\subsection{Presentación del caso (escenario 2)}
+El servicio solo dispone de 80 profesionales. Cada persona trabaja 8 horas (4 periodos), descansa 2 horas (1 periodo) y después trabaja 4 horas (2 periodos). Se permite que, al final del turno, hasta 2 horas adicionales (1 periodo) sean realizadas como horas extra por parte de quienes inician turno en cada periodo. Se desea organizar los inicios de turno y las horas extra de modo que se satisfagan los requisitos de personal en cada periodo y se minimice el número de personas que hacen horas extra.
+
+\subsection{Formulación explícita (escenario 2)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$ & : & número de profesionales que inician su turno en el periodo $t$, $t=1,\dots,12$\\
+    $e_t$ & : & número de profesionales (de los $x_t$) que realizan 2 horas extra al final del turno iniciado en $t$\\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$ & : & personal mínimo requerido en el periodo $t=1,\dots,12$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Dotación máxima disponible:
+\begin{equation}
+    \sum_{t=1}^{12} x_t \;\leq\; 80
+\end{equation}
+
+Relación entre horas extra e inicios:
+\begin{equation}
+    0 \;\leq\; e_t \;\leq\; x_t \qquad t=1,\dots,12
+\end{equation}
+
+Cobertura por periodo con horas extra (índices módulo 12):
+\begin{equation}
+    x_t + x_{t-1} + x_{t-3} + x_{t-4} + e_{t-5} \;\geq\; R_t \qquad t=1,\dots,12
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_t,\ e_t \;\geq\; 0 \qquad t=1,\dots,12
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizar el número de personas que realizan horas extra:
+\begin{equation}
+\mbox{min.}\ z \;=\; \sum_{t=1}^{12} e_t
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t=1}^{12} e_t \notag \\
+\mbox{s.\ a.:}\quad 
+& \sum_{t=1}^{12} x_t \;\leq\; 80 \notag \\
+& 0 \;\leq\; e_t \;\leq\; x_t \qquad t=1,\dots,12 \notag \\
+& x_t + x_{t-1} + x_{t-3} + x_{t-4} + e_{t-5} \;\geq\; R_t \qquad t=1,\dots,12 \notag \\
+& x_t,\ e_t \;\geq\; 0 \qquad t=1,\dots,12 \notag
+\end{align}
+
+\subsection{Formulación generalizada (escenario 2)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{T}$ & : & periodos de planificación, $\mathcal{T}=\{1,\dots,12\}$\\
+\end{tabular}
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $R_t$ & : & personal mínimo requerido en cada $t\in\mathcal{T}$\\
+    $N$   & : & dotación máxima disponible de profesionales (en el caso, $N=80$)\\
+\end{tabular}
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_t$ & : & profesionales que inician turno en $t\in\mathcal{T}$\\
+    $e_t$ & : & profesionales con 2 horas extra asociados al inicio $t\in\mathcal{T}$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Dotación máxima:
+\begin{equation}
+    \sum_{t\in\mathcal{T}} x_t \;\leq\; N
+\end{equation}
+
+Relación horas extra–inicios:
+\begin{equation}
+    0 \;\leq\; e_t \;\leq\; x_t \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+Cobertura por periodo (con horas extra):
+\begin{equation}
+    \sum_{k\in\{0,1,3,4\}} x_{t-k} \;+\; e_{t-5} \;\geq\; R_t \qquad \forall t\in\mathcal{T}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min.}\ z \;=\; \sum_{t\in\mathcal{T}} e_t
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min.}\quad & z \;=\; \sum_{t\in\mathcal{T}} e_t \notag \\
+\mbox{s.\ a.:}\quad 
+& \sum_{t\in\mathcal{T}} x_t \;\leq\; N \notag \\
+& 0 \;\leq\; e_t \;\leq\; x_t \qquad \forall t\in\mathcal{T} \notag \\
+& \sum_{k\in\{0,1,3,4\}} x_{t-k} \;+\; e_{t-5} \;\geq\; R_t \qquad \forall t\in\mathcal{T} \notag \\
+& x_t,\ e_t \;\geq\; 0 \qquad \forall t\in\mathcal{T} \notag
+\end{align}
+
+\medskip
+\textit{Nota sobre índices:} todas las expresiones con $t\pm k$ deben entenderse módulo 12 (por ejemplo, $x_{0}\equiv x_{12}$, $x_{-1}\equiv x_{11}$).

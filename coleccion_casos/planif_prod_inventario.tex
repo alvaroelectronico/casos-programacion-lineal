@@ -1,0 +1,400 @@
+\section{Planificación de la producción con inventario}
+
+
+% ===================== Plan de producción con inventario =====================
+
+\subsection{Presentación del caso}
+Una empresa fabrica tres productos cuyas ventas trimestrales previstas para el año próximo figuran en el Cuadro~1, en el que se indica también el tiempo-máquina preciso para obtener una unidad de cada producto. Cada trimestre se dispone de \textbf{4.000} horas-máquina normales y, si es necesario, de horas-máquina adicionales hasta un máximo de \textbf{4.000} horas, con un coste de \textbf{2} unidades monetarias (um) por hora adicional. Además, mantener una unidad de producto en inventario de un trimestre al siguiente cuesta \textbf{5} um por unidad.\par
+
+\begin{table}[!h]
+\centering
+\caption{ventas previstas y tiempos de fabricación}
+\begin{tabular}{c|cccc|c}
+\hline
+\textbf{Productos} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{Tiempo de fabricación} \\
+ & \multicolumn{4}{c|}{\textbf{(unidades/trimestre)}} & \textbf{(h/ud)} \\
+\hline
+A & 2000 & 1500 & 3000 & 1000 & 0.5 \\
+B & 1500 & 1500 & 1000 & 1500 & 2.0 \\
+C & 1000 & 3000 & 1500 & 3000 & 1.5 \\
+\hline
+\end{tabular}
+\label{tab:cuadro1}
+\end{table}
+
+Con motivo del rediseño del producto A, este producto no puede fabricarse en el cuarto trimestre.%
+
+Se pide formular un modelo lineal que: (i) minimice el coste total de producción (incluyendo horas extra) y almacenamiento, (ii) satisfaga todas las demandas, y (iii) garantice, al final de cada trimestre, un inventario mínimo de \textbf{100} unidades de cada producto. Las existencias iniciales son nulas. 
+
+
+
+
+
+% ===================== Plan de producción con inventario (Formulación explícita) =====================
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_{a\,t}$ & : & unidades producidas de A en el trimestre $t=1,\dots,4$\\
+    $x_{b\,t}$ & : & unidades producidas de B en el trimestre $t=1,\dots,4$\\
+    $x_{c\,t}$ & : & unidades producidas de C en el trimestre $t=1,\dots,4$\\
+    $s_{a\,t}$ & : & inventario de A al final del trimestre $t=1,\dots,4$\\
+    $s_{b\,t}$ & : & inventario de B al final del trimestre $t=1,\dots,4$\\
+    $s_{c\,t}$ & : & inventario de C al final del trimestre $t=1,\dots,4$\\
+    $h_t$      & : & horas--máquina adicionales utilizadas en el trimestre $t=1,\dots,4$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\\
+Balance de inventario por producto y trimestre (existencias iniciales nulas):
+\begin{align}
+s_{a\,1} &= x_{a\,1} - 2000 \notag\\
+s_{a\,2} &= s_{a\,1} + x_{a\,2} - 1500 \notag\\
+s_{a\,3} &= s_{a\,2} + x_{a\,3} - 3000 \notag\\
+s_{a\,4} &= s_{a\,3} + x_{a\,4} - 1000 \notag
+\end{align}
+
+\begin{align}
+s_{b\,1} &= x_{b\,1} - 1500 \notag\\
+s_{b\,2} &= s_{b\,1} + x_{b\,2} - 1500 \notag\\
+s_{b\,3} &= s_{b\,2} + x_{b\,3} - 1000 \notag\\
+s_{b\,4} &= s_{b\,3} + x_{b\,4} - 1500 \notag
+\end{align}
+
+\begin{align}
+s_{c\,1} &= x_{c\,1} - 1000 \notag\\
+s_{c\,2} &= s_{c\,1} + x_{c\,2} - 3000 \notag\\
+s_{c\,3} &= s_{c\,2} + x_{c\,3} - 1500 \notag\\
+s_{c\,4} &= s_{c\,3} + x_{c\,4} - 3000 \notag
+\end{align}
+\\
+Inventario mínimo al final de cada trimestre:
+\begin{align}
+s_{a\,t} \ge 100,\quad s_{b\,t} \ge 100,\quad s_{c\,t} \ge 100 \qquad t=1,\dots,4 \notag
+\end{align}
+\\
+Capacidad de horas--máquina por trimestre (normales + extra):
+\begin{align}
+0.5\,x_{a\,1} + 2\,x_{b\,1} + 1.5\,x_{c\,1} &\le 4000 + h_1 \notag\\
+0.5\,x_{a\,2} + 2\,x_{b\,2} + 1.5\,x_{c\,2} &\le 4000 + h_2 \notag\\
+0.5\,x_{a\,3} + 2\,x_{b\,3} + 1.5\,x_{c\,3} &\le 4000 + h_3 \notag\\
+0.5\,x_{a\,4} + 2\,x_{b\,4} + 1.5\,x_{c\,4} &\le 4000 + h_4 \notag
+\end{align}
+
+Límite superior de horas adicionales:
+\begin{align}
+0 \le h_t \le 4000 \qquad t=1,\dots,4 \notag
+\end{align}
+\\
+Prohibición de fabricar A en el cuarto trimestre:
+\begin{align}
+x_{a\,4} = 0 \notag
+\end{align}
+\\
+No negatividad:
+\begin{align}
+x_{p\,t}\ge 0,\; s_{p\,t}\ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+\\
+Minimizar el coste total de horas extra y almacenamiento:
+\begin{align}
+\mbox{min. } z \;=\; \sum_{t=1}^{4} 2\,h_t \;+\; \sum_{t=1}^{4}\big(5\,s_{a\,t} + 5\,s_{b\,t} + 5\,s_{c\,t}\big) \notag
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{t=1}^{4} 2\,h_t + \sum_{t=1}^{4}\big(5\,s_{a\,t} + 5\,s_{b\,t} + 5\,s_{c\,t}\big) \notag\\[2mm]
+\mbox{s. a.:}\quad
+& s_{a\,1} = x_{a\,1} - 2000 \notag\\
+& s_{a\,2} = s_{a\,1} + x_{a\,2} - 1500 \notag\\
+& s_{a\,3} = s_{a\,2} + x_{a\,3} - 3000 \notag\\
+& s_{a\,4} = s_{a\,3} + x_{a\,4} - 1000 \notag\\[1mm]
+& s_{b\,1} = x_{b\,1} - 1500 \notag\\
+& s_{b\,2} = s_{b\,1} + x_{b\,2} - 1500 \notag\\
+& s_{b\,3} = s_{b\,2} + x_{b\,3} - 1000 \notag\\
+& s_{b\,4} = s_{b\,3} + x_{b\,4} - 1500 \notag\\[1mm]
+& s_{c\,1} = x_{c\,1} - 1000 \notag\\
+& s_{c\,2} = s_{c\,1} + x_{c\,2} - 3000 \notag\\
+& s_{c\,3} = s_{c\,2} + x_{c\,3} - 1500 \notag\\
+& s_{c\,4} = s_{c\,3} + x_{c\,4} - 3000 \notag\\[1mm]
+& s_{a\,t} \ge 100 \qquad t=1,\dots,4 \notag\\
+& s_{b\,t} \ge 100 \qquad t=1,\dots,4 \notag\\
+& s_{c\,t} \ge 100 \qquad t=1,\dots,4 \notag\\[1mm]
+& 0.5\,x_{a\,1} + 2\,x_{b\,1} + 1.5\,x_{c\,1} \le 4000 + h_1 \notag\\
+& 0.5\,x_{a\,2} + 2\,x_{b\,2} + 1.5\,x_{c\,2} \le 4000 + h_2 \notag\\
+& 0.5\,x_{a\,3} + 2\,x_{b\,3} + 1.5\,x_{c\,3} \le 4000 + h_3 \notag\\
+& 0.5\,x_{a\,4} + 2\,x_{b\,4} + 1.5\,x_{c\,4} \le 4000 + h_4 \notag\\[1mm]
+& 0 \le h_t \le 4000 \qquad t=1,\dots,4 \notag\\
+& x_{a\,4} = 0 \notag\\[1mm]
+& x_{p\,t} \ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag\\
+& s_{p\,t} \ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag
+\end{align}
+
+
+% ============================================================================ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $\mathcal{P}$ & : & productos \\
+    $\mathcal{T}$ & : & trimestres del plan de producción \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $D_{p\,t}$ & : & demanda del producto $p \in \mathcal{P}$ en el trimestre $t \in \mathcal{T}$ \\
+    $TM_p$     & : & tiempo de fabricación (horas--máquina por unidad) del producto $p \in \mathcal{P}$ \\
+    $H$        & : & horas normales disponibles por trimestre \\
+    $H^{\max}$ & : & horas adicionales máximas por trimestre \\
+    $C_H$      & : & coste por hora adicional \\
+    $C_S$      & : & coste por unidad almacenada por trimestre \\
+    $S^{\min}$ & : & inventario mínimo al final de cada trimestre \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_{p\,t}$ & : & unidades producidas del producto $p \in \mathcal{P}$ en el trimestre $t \in \mathcal{T}$ \\
+    $s_{p\,t}$ & : & inventario del producto $p \in \mathcal{P}$ al final del trimestre $t \in \mathcal{T}$ \\
+    $h_t$      & : & horas adicionales utilizadas en el trimestre $t \in \mathcal{T}$ \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+Balance de inventario:
+\begin{align}
+s_{p\,t} = s_{p\,t-1} + x_{p\,t} - D_{p\,t} \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+
+Inventario mínimo:
+\begin{align}
+s_{p\,t} \ge S^{\min} \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+
+Capacidad de horas--máquina:
+\begin{align}
+\sum_{p \in \mathcal{P}} TM_p\,x_{p\,t} \le H + h_t \qquad \forall t \in \mathcal{T} \notag
+\end{align}
+
+Límite de horas adicionales:
+\begin{align}
+0 \le h_t \le H^{\max} \qquad \forall t \in \mathcal{T} \notag
+\end{align}
+
+No negatividad:
+\begin{align}
+x_{p\,t} \ge 0,\; s_{p\,t} \ge 0 \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+\\
+Minimizar el coste total de producción adicional y almacenamiento:
+\begin{align}
+\mbox{min. } z = \sum_{t \in \mathcal{T}} C_H\,h_t + \sum_{t \in \mathcal{T}} \sum_{p \in \mathcal{P}} C_S\,s_{p\,t} \notag
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{t \in \mathcal{T}} C_H\,h_t + \sum_{t \in \mathcal{T}} \sum_{p \in \mathcal{P}} C_S\,s_{p\,t} \notag\\
+\mbox{s. a.:}\quad
+& s_{p\,t} = s_{p\,t-1} + x_{p\,t} - D_{p\,t} \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag\\
+& s_{p\,t} \ge S^{\min} \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag\\
+& \sum_{p \in \mathcal{P}} TM_p\,x_{p\,t} \le H + h_t \qquad \forall t \in \mathcal{T} \notag\\
+& 0 \le h_t \le H^{\max} \qquad \forall t \in \mathcal{T} \notag\\
+& x_{p\,t} \ge 0,\; s_{p\,t} \ge 0 \qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+% ============================================================================
+
+
+\subsection{Formulación explícita (distinguiendo producción en horas normales y en horas extra)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x^{n}_{a\,t}$ & : & unidades de A producidas en horas normales en $t=1,\dots,4$\\
+    $x^{n}_{b\,t}$ & : & unidades de B producidas en horas normales en $t=1,\dots,4$\\
+    $x^{n}_{c\,t}$ & : & unidades de C producidas en horas normales en $t=1,\dots,4$\\
+    $x^{e}_{a\,t}$ & : & unidades de A producidas en horas extra en $t=1,\dots,4$\\
+    $x^{e}_{b\,t}$ & : & unidades de B producidas en horas extra en $t=1,\dots,4$\\
+    $x^{e}_{c\,t}$ & : & unidades de C producidas en horas extra en $t=1,\dots,4$\\
+    $s_{a\,t}$     & : & inventario de A al final del trimestre $t=1,\dots,4$\\
+    $s_{b\,t}$     & : & inventario de B al final del trimestre $t=1,\dots,4$\\
+    $s_{c\,t}$     & : & inventario de C al final del trimestre $t=1,\dots,4$\\
+    $h_t$          & : & horas--máquina adicionales utilizadas en el trimestre $t=1,\dots,4$\\
+\end{tabular}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& 2\sum_{t=1}^{4} h_t \;+\; 5\sum_{t=1}^{4}\!\big(s_{a\,t}+s_{b\,t}+s_{c\,t}\big) \notag
+\end{align}
+
+\paragraph{Restricciones}\mbox{}\\
+\textbf{Balance de inventario (existencias iniciales nulas):}
+\begin{align}
+& s_{a\,1} = (x^{n}_{a\,1}+x^{e}_{a\,1}) - 2000 \notag\\
+& s_{a\,2} = s_{a\,1} + (x^{n}_{a\,2}+x^{e}_{a\,2}) - 1500 \notag\\
+& s_{a\,3} = s_{a\,2} + (x^{n}_{a\,3}+x^{e}_{a\,3}) - 3000 \notag\\
+& s_{a\,4} = s_{a\,3} + (x^{n}_{a\,4}+x^{e}_{a\,4}) - 1000 \notag\\[1mm]
+& s_{b\,1} = (x^{n}_{b\,1}+x^{e}_{b\,1}) - 1500 \notag\\
+& s_{b\,2} = s_{b\,1} + (x^{n}_{b\,2}+x^{e}_{b\,2}) - 1500 \notag\\
+& s_{b\,3} = s_{b\,2} + (x^{n}_{b\,3}+x^{e}_{b\,3}) - 1000 \notag\\
+& s_{b\,4} = s_{b\,3} + (x^{n}_{b\,4}+x^{e}_{b\,4}) - 1500 \notag\\[1mm]
+& s_{c\,1} = (x^{n}_{c\,1}+x^{e}_{c\,1}) - 1000 \notag\\
+& s_{c\,2} = s_{c\,1} + (x^{n}_{c\,2}+x^{e}_{c\,2}) - 3000 \notag\\
+& s_{c\,3} = s_{c\,2} + (x^{n}_{c\,3}+x^{e}_{c\,3}) - 1500 \notag\\
+& s_{c\,4} = s_{c\,3} + (x^{n}_{c\,4}+x^{e}_{c\,4}) - 3000 \notag
+\end{align}
+
+\textbf{Inventario mínimo al final de cada trimestre:}
+\begin{align}
+& s_{a\,t} \ge 100 \qquad t=1,\dots,4 \notag\\
+& s_{b\,t} \ge 100 \qquad t=1,\dots,4 \notag\\
+& s_{c\,t} \ge 100 \qquad t=1,\dots,4 \notag
+\end{align}
+
+\textbf{Capacidad en horas \emph{normales} (4{,}000 h/trim.):}
+\begin{align}
+& 0.5\,x^{n}_{a\,1} + 2\,x^{n}_{b\,1} + 1.5\,x^{n}_{c\,1} \le 4000 \notag\\
+& 0.5\,x^{n}_{a\,2} + 2\,x^{n}_{b\,2} + 1.5\,x^{n}_{c\,2} \le 4000 \notag\\
+& 0.5\,x^{n}_{a\,3} + 2\,x^{n}_{b\,3} + 1.5\,x^{n}_{c\,3} \le 4000 \notag\\
+& 0.5\,x^{n}_{a\,4} + 2\,x^{n}_{b\,4} + 1.5\,x^{n}_{c\,4} \le 4000 \notag
+\end{align}
+
+\textbf{Definición del uso de horas \emph{extra} y cota:}
+\begin{align}
+& 0.5\,x^{e}_{a\,1} + 2\,x^{e}_{b\,1} + 1.5\,x^{e}_{c\,1} = h_1 \notag\\
+& 0.5\,x^{e}_{a\,2} + 2\,x^{e}_{b\,2} + 1.5\,x^{e}_{c\,2} = h_2 \notag\\
+& 0.5\,x^{e}_{a\,3} + 2\,x^{e}_{b\,3} + 1.5\,x^{e}_{c\,3} = h_3 \notag\\
+& 0.5\,x^{e}_{a\,4} + 2\,x^{e}_{b\,4} + 1.5\,x^{e}_{c\,4} = h_4 \notag\\
+& 0 \le h_t \le 4000 \qquad t=1,\dots,4 \notag
+\end{align}
+
+\textbf{Prohibición de fabricar A en el T4:}
+\begin{align}
+& x^{n}_{a\,4} = 0 \notag\\
+& x^{e}_{a\,4} = 0 \notag
+\end{align}
+
+\textbf{No negatividad:}
+\begin{align}
+& x^{n}_{p\,t} \ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag\\
+& x^{e}_{p\,t} \ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag\\
+& s_{p\,t} \ge 0 \qquad p\in\{a,b,c\},\; t=1,\dots,4 \notag
+\end{align}
+
+
+
+\subsection{Formulación generalizada (distinguiendo producción en horas normales y en horas extra)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{P}$ & : & productos \\
+    $\mathcal{T}$ & : & periodos del plan \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $D_{p\,t}$   & : & demanda del producto $p \in \mathcal{P}$ en el periodo $t \in \mathcal{T}$ \\
+    $TM_p$       & : & tiempo de fabricación (h/ud) del producto $p \in \mathcal{P}$ \\
+    $H$          & : & horas normales disponibles por periodo \\
+    $H^{\max}$   & : & horas adicionales máximas por periodo \\
+    $C_H$        & : & coste por hora adicional \\
+    $C_S$        & : & coste por unidad almacenada por periodo \\
+    $S^{\min}$   & : & inventario mínimo al final de cada periodo \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x^{n}_{p\,t}$ & : & unidades de $p$ producidas en horas normales en $t$ \\
+    $x^{e}_{p\,t}$ & : & unidades de $p$ producidas en horas extra en $t$ \\
+    $s_{p\,t}$     & : & inventario de $p$ al final de $t$ \\
+    $h_t$          & : & horas adicionales utilizadas en $t$ \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+Balance de inventario (con $s_{p\,0}$ dado, típicamente $0$):
+\begin{align}
+s_{p\,t} = s_{p\,t-1} + x^{n}_{p\,t} + x^{e}_{p\,t} - D_{p\,t}
+\qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+
+Inventario mínimo:
+\begin{align}
+s_{p\,t} \ge S^{\min}
+\qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+
+Capacidad en horas \emph{normales}:
+\begin{align}
+\sum_{p \in \mathcal{P}} TM_p\,x^{n}_{p\,t} \;\le\; H
+\qquad \forall t \in \mathcal{T} \notag
+\end{align}
+
+Definición del uso de horas \emph{extra} y cota:
+\begin{align}
+\sum_{p \in \mathcal{P}} TM_p\,x^{e}_{p\,t} \;=\; h_t
+\qquad \forall t \in \mathcal{T} \notag\\
+0 \le h_t \le H^{\max}
+\qquad \forall t \in \mathcal{T} \notag
+\end{align}
+
+No negatividad:
+\begin{align}
+x^{n}_{p\,t} \ge 0,\; x^{e}_{p\,t} \ge 0,\; s_{p\,t} \ge 0
+\qquad \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizar el coste de horas extra y almacenamiento:
+\begin{align}
+\mbox{min. } z = \sum_{t \in \mathcal{T}} C_H\,h_t \;+\; \sum_{t \in \mathcal{T}} \sum_{p \in \mathcal{P}} C_S\,s_{p\,t} \notag
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{t \in \mathcal{T}} C_H\,h_t + \sum_{t \in \mathcal{T}} \sum_{p \in \mathcal{P}} C_S\,s_{p\,t} \notag\\
+\mbox{s. a.:}\quad
+& s_{p\,t} = s_{p\,t-1} + x^{n}_{p\,t} + x^{e}_{p\,t} - D_{p\,t} && \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag\\
+& s_{p\,t} \ge S^{\min} && \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag\\
+& \sum_{p \in \mathcal{P}} TM_p\,x^{n}_{p\,t} \le H && \forall t \in \mathcal{T} \notag\\
+& \sum_{p \in \mathcal{P}} TM_p\,x^{e}_{p\,t} = h_t && \forall t \in \mathcal{T} \notag\\
+& 0 \le h_t \le H^{\max} && \forall t \in \mathcal{T} \notag\\
+& x^{n}_{p\,t} \ge 0,\; x^{e}_{p\,t} \ge 0,\; s_{p\,t} \ge 0 && \forall p \in \mathcal{P},\; t \in \mathcal{T} \notag
+\end{align}
+
+

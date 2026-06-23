@@ -1,0 +1,198 @@
+\section{Azucarera}
+
+\subsection{Presentación del caso}
+
+Una azucarera quiere maximizar sus beneficios. Esta empresa fabrica:
+
+\begin{itemize}
+    \item Azúcar sin refinar, que vende con una contribución unitaria al beneficio de 600 unidades monetarias (um) por tonelada si está envasada en polvo, y de 850 um por tonelada si está en terrones.
+    \item Azúcar refinada, que vende con una contribución unitaria al beneficio de 800 um por tonelada si es en polvo, y de 900 um por tonelada si es en terrones.
+\end{itemize}
+
+En una campaña determinada, el suministro de remolacha corresponde a 25.000 toneladas de azúcar sin refinar, cuya producción exige 3 horas-hombre de trabajo por tonelada.  
+Para obtener una tonelada de azúcar refinada se requiere 1 hora-hombre adicional y se consumen 1.150 kg de azúcar sin refinar.  
+
+El envasado del azúcar en polvo requiere 1 hora-hombre por cada 5 toneladas de azúcar sin refinar y 1 hora-hombre por cada 3 toneladas de azúcar refinada.  
+La capacidad de envasado de azúcar en polvo es prácticamente ilimitada.  
+
+Por el contrario, la instalación de fabricación y empaquetado de terrones solamente puede producir durante la campaña un total máximo de 13.000 toneladas; dentro de este límite puede tratar en cualquier proporción azúcar refinado o sin refinar, y se requiere en ambos casos 1 hora-hombre por cada 1,5 toneladas producidas.  
+
+El personal de producción de la plantilla de la azucarera puede trabajar durante la campaña hasta un máximo de 85.000 horas-hombre.  
+Si es necesario, puede contratarse temporalmente todo el personal eventual preciso con un coste de 100 um por hora-hombre.  
+
+Las ventas de azúcar sin refinar en terrones no pueden sobrepasar las 500 toneladas, y no existe limitación comercial alguna para los demás productos.  
+
+Se pide plantear un modelo de programación lineal cuya solución óptima corresponda al programa más ventajoso de producción para la campaña en cuestión.
+
+\subsection{Formulación explícita}
+
+\subsection{Formulación del modelo}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_{11}$ & : & toneladas de azúcar sin refinar en polvo \\
+    $x_{12}$ & : & toneladas de azúcar sin refinar en terrones \\
+    $x_{21}$ & : & toneladas de azúcar refinada en polvo \\
+    $x_{22}$ & : & toneladas de azúcar refinada en terrones \\
+    $h$      & : & horas-hombre eventuales contratadas \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+Disponibilidad de azúcar sin refinar:  
+\begin{align} 
+x_{11} + x_{12} + 1.15x_{21} + 1.15x_{22} \leq 25000 
+\end{align}
+
+Límite de ventas de azúcar sin refinar en terrones:  
+\begin{align}
+x_{12} \leq 500
+\end{align}
+
+Capacidad de fabricación y empaquetado de terrones:  
+\begin{align}
+x_{12} + x_{22} \leq 13000
+\end{align}
+
+Disponibilidad de horas-hombre (plantilla + eventuales):  
+\paragraph{Horas de trabajo}\mbox{}\\
+
+\begin{align}
+\text{Disponibles} & \quad 85000 + h \\[6pt]
+\text{Extracción}  & \quad 3x_{11} + 3x_{12} + 3.45x_{21} + 3.45x_{22} \\[6pt]
+\text{Refino}      & \quad x_{21} + x_{22} \\[6pt]
+\text{Envasado en polvo} & \quad 0.2x_{11} + 0.33x_{21} \\[6pt]
+\text{Formación de terrones} & \quad 0.67x_{12} + 0.67x_{22} \\[10pt]
+\text{Total (suma de procesos)} & \quad 3.2x_{11} + 3.66x_{12} \\
+                                & \quad + 4.78x_{21} + 5.11x_{22} \le 85000 + h
+\end{align}
+
+
+
+
+No negatividad:  
+\begin{align}
+x_{11}, x_{12}, x_{21}, x_{22}, h \geq 0 
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{align}
+\mbox{max. } z \;=\; 600x_{11} + 850x_{12} + 800x_{21} + 900x_{22} - 100h
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+
+
+\begin{align}
+\max z \;=&\; 600x_{11} + 850x_{12} + 800x_{21} + 900x_{22} - 100h \\
+\text{s. a.} \quad
+& x_{11} + x_{12} + 1.15x_{21} + 1.15x_{22} \leq 25000 \\
+& x_{12} \leq 500 \\
+& x_{12} + x_{22} \leq 13000 \\
+& 3.2x_{11} + 3.66x_{12} + 4.78x_{21} + 5.11x_{22} \leq 85000 + h \\
+& x_{11}, x_{12}, x_{21}, x_{22}, h \geq 0
+\end{align}
+
+
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_{up}$  & : & toneladas vendidas de azúcar \textbf{sin refinar} en \textbf{polvo} \\
+    $x_{ut}$  & : & toneladas vendidas de azúcar \textbf{sin refinar} en \textbf{terrón} \\
+    $x_{rp}$  & : & toneladas vendidas de azúcar \textbf{refinada} en \textbf{polvo} \\
+    $x_{rt}$  & : & toneladas vendidas de azúcar \textbf{refinada} en \textbf{terrón} \\
+    $h$       & : & horas-hombre \textbf{eventuales} contratadas \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $S$      & : & suministro equivalente de azúcar sin refinar (t) disponible para la campaña \\
+    $A$      & : & toneladas de azúcar sin refinar necesarias por tonelada de refinado \\
+    $K_T$    & : & capacidad total de producción y empaquetado en terrones (t) \\
+    $V_{UT}$ & : & límite de ventas de azúcar sin refinar en terrones (t) \\
+    $L$      & : & horas-hombre disponibles de plantilla \\
+    $C_{UP}$ & : & contribución unitaria (um/t) de azúcar sin refinar en polvo \\
+    $C_{UT}$ & : & contribución unitaria (um/t) de azúcar sin refinar en terrones \\
+    $C_{RP}$ & : & contribución unitaria (um/t) de azúcar refinada en polvo \\
+    $C_{RT}$ & : & contribución unitaria (um/t) de azúcar refinada en terrones \\
+    $C_H$    & : & coste (um/h) de una hora-hombre eventual \\
+    $PH_{SR}$& : & horas-hombre por tonelada de \textbf{producción} de azúcar sin refinar \\
+    $PH_{RF}$& : & horas-hombre por tonelada de \textbf{refinado} \\
+    $PH_{P,UP}$ & : & horas-hombre por tonelada \textbf{envasada en polvo} de azúcar sin refinar \\
+    $PH_{P,RP}$ & : & horas-hombre por tonelada \textbf{envasada en polvo} de azúcar refinada \\
+    $PH_T$   & : & horas-hombre por tonelada \textbf{en terrones} (sin refinar o refinada) \\
+\end{tabular}
+
+% \\[-2mm]
+% \noindent\textit{Valores usados en el caso: } 
+% $S=25000$, $A=1.15$, $K_T=13000$, $V_{UT}=500$, $L=85000$, 
+% $C_{UP}=600$, $C_{UT}=850$, $C_{RP}=800$, $C_{RT}=900$, $C_H=100$, 
+% $PH_{SR}=3$, $PH_{RF}=1$, $PH_{P,UP}=\tfrac{1}{5}$, $PH_{P,RP}=\tfrac{1}{3}$, $PH_T=\tfrac{1}{1.5}$.
+
+% \\
+% \\
+
+\paragraph{Restricciones}\mbox{}\\
+
+\textbf{Disponibilidad de materia prima (balance de azúcar sin refinar):}
+\begin{align}
+x_{up} + x_{ut} + A\,(x_{rp}+x_{rt}) \;\le\; S
+\end{align}
+
+\textbf{Capacidad de terrones (fabricación y empaquetado):}
+\begin{align}
+x_{ut} + x_{rt} \;\le\; K_T
+\end{align}
+
+\textbf{Límite comercial de terrones sin refinar:}
+\begin{align}
+x_{ut} \;\le\; V_{UT}
+\end{align}
+
+\textbf{Horas-hombre totales (producción, refinado y envasado):}
+\begin{align}
+& \underbrace{PH_{SR}\,(x_{up}+x_{ut}+A(x_{rp}+x_{rt}))}_{\text{producción sin refinar}} \\[6pt]
++& \underbrace{PH_{RF}\,(x_{rp}+x_{rt})}_{\text{refinado}} \\[6pt]
++& \underbrace{PH_{P,UP}\,x_{up} + PH_{P,RP}\,x_{rp}}_{\text{envasado polvo}} \\[6pt]
++& \underbrace{PH_{T}\,(x_{ut}+x_{rt})}_{\text{terrón}} \\[6pt]
+\le & \quad L + h
+\end{align}
+
+
+\textbf{No negatividad:}
+\begin{align}
+x_{up},\,x_{ut},\,x_{rp},\,x_{rt},\,h \;\ge\; 0
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{align}
+\max z \;=\; C_{UP}\,x_{up} \;+\; C_{UT}\,x_{ut} \;+\; C_{RP}\,x_{rp} \;+\; C_{RT}\,x_{rt} \;-\; C_H\,h
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+
+\begin{align}
+\mbox{max. } z \;=&\; C_{UP}x_{up} + C_{UT}x_{ut} + C_{RP}x_{rp} + C_{RT}x_{rt} - C_Hh \\[6pt]
+\text{s. a.}\quad 
+& x_{up} + x_{ut} + A(x_{rp}+x_{rt}) \le S \\[6pt]
+& x_{ut} + x_{rt} \le K_T \\[6pt]
+& x_{ut} \le V_{UT} \\[6pt]
+& PH_{SR}(x_{up}+x_{ut}+A(x_{rp}+x_{rt})) + PH_{RF}(x_{rp}+x_{rt}) \notag \\
+& \quad + PH_{P,UP}x_{up} + PH_{P,RP}x_{rp} + PH_T(x_{ut}+x_{rt}) \le L + h \\[6pt]
+& x_{up}, x_{ut}, x_{rp}, x_{rt}, h \ge 0
+\end{align}
+
+
+

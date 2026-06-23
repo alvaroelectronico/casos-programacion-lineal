@@ -1,0 +1,162 @@
+\section{Cobertura medios de comunicación}
+
+
+\subsection{Presentación del caso}
+
+Una compañía quiere lanzar un nuevo producto al mercado, para lo que realizará una campaña publicitaria para dar a conocer el nuevo producto. Tras realizar un estudio de mercado, la compañía ha identificado varios segmentos de mercado (audiencias) interesados en el nuevo producto. 
+
+A su vez existen diferentes medios de comunicación para dirigirnos a los diferentes segmentos de mercado, pero ha comprobado que, de los medios de comunicación existentes, ninguno alcanza a todos los segmentos de mercado, por lo que resulta necesario seleccionar varios medios a la vez para llegar a todas las audiencias. 
+
+El estudio de mercado ha identificado seis tipos de audiencias potenciales diferentes y la posibilidad de seleccionar ocho medios de comunicación, con las incidencias y costes asociados que se muestran en la tabla correspondiente.  
+
+Se trata de decidir qué medios de comunicación deben seleccionarse para alcanzar todos los segmentos de mercado con el menor coste posible.
+
+\subsubsection{Modelo base}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+$x_j$ & : & variable binaria que vale 1 si se selecciona el medio $j$, 0 en caso contrario, para $j = 1, \dots, 8$. \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+$C_j$ & : & coste del medio $j$ \\
+$A_{ij}$ & : & parámetro que vale 1 si el medio $j$ alcanza a la audiencia $i$, 0 en caso contrario, para $i = 1, \dots, 6$.\\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+Cada audiencia debe ser alcanzada por al menos un medio de comunicación seleccionado:
+\begin{equation}
+\sum_{j=1}^{8} A_{ij}x_j \geq 1 \qquad \forall i = 1,\dots,6
+\end{equation}
+\\
+\\
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{equation}
+\mbox{min. } z = \sum_{j=1}^{8} C_j x_j
+\end{equation}
+\\
+\\
+
+\paragraph{Condiciones de no negatividad y naturaleza}\mbox{}\\
+\begin{equation}
+x_j \in \{0,1\} \qquad \forall j = 1,\dots,8
+\end{equation}
+\\
+\\
+
+\subsubsection{Obligación de elegir al menos un medio de TV}
+
+Si se dispone de dos medios de televisión, TV diurna y TV nocturna, y debemos seleccionar al menos uno de ellos, la restricción correspondiente es:
+
+\begin{equation}
+x_{\text{TVd}} + x_{\text{TVn}} \geq 1
+\end{equation}
+
+\noindent
+De este modo, el modelo garantiza que la campaña incluirá al menos uno de los dos medios televisivos.
+
+\subsubsection{Obligación de elegir al menos un medio de TV si se elige algún tipo de cartel}
+
+Si existen dos medios de carteles (por ejemplo, cartel urbano y cartel carretera), y queremos imponer que si se elige alguno de ellos, debe elegirse al menos una TV, la restricción lógica es:
+
+\begin{align}   
+x_{\text{TVd}} + x_{\text{TVn}} \geq x_{\text{CU}} \\
+x_{\text{TVd}} + x_{\text{TVn}} \geq x_{\text{CC}}
+\end{align}
+\noindent
+Esto asegura que, si se escoge algún cartel ($x_{\text{CU}}=1$ o $x_{\text{CC}}=1$), el modelo deberá seleccionar al menos una TV.
+
+\subsubsection{Obligación de elegir al menos un tipo de cartel si se selecciona alguna TV}
+
+En este caso la implicación es la inversa: si se escoge al menos una de las dos televisiones, debe seleccionarse al menos uno de los dos tipos de carteles.  
+La restricción sería:
+
+
+
+\begin{align}   
+x_{\text{CC}} + x_{\text{CU}} \geq x_{\text{TVd}} \\
+x_{\text{CC}} + x_{\text{CU}} \geq x_{\text{TVn}}
+\end{align}
+% \begin{equation}
+% x_{\text{CU}} + x_{\text{CC}} \geq x_{\text{TVd}} + x_{\text{TVn}} - 1
+% \end{equation}
+
+\noindent
+Esta ecuación impide que haya selección de TV sin carteles, pero no obliga a más de uno.
+
+\subsubsection{Incompatibilidad entre TV diurna y carteles}
+
+Si la selección de TV diurna impide contratar cualquiera de los dos tipos de carteles, debemos expresar la incompatibilidad mediante las siguientes restricciones:
+
+\begin{align}
+x_{\text{TVd}} + x_{\text{CU}} &\leq 1 \\
+x_{\text{TVd}} + x_{\text{CC}} &\leq 1
+\end{align}
+
+\noindent
+Así, si $x_{\text{TVd}}=1$, ambos $x_{\text{CU}}$ y $x_{\text{CC}}$ deben ser 0.
+
+\subsubsection{Obligación de seleccionar el periódico financiero si se eligen  revistas y TV nocturna}
+
+Si $x_{\text{R}}$ representa la selección de revistas y $x_{\text{TVn}}$ la de TV nocturna, y $x_{\text{PF}}$ el periódico financiero, la condición de que si se eligen ambas (revistas y TV nocturna) se deba elegir también el periódico financiero se expresa así:
+
+\begin{equation}
+x_{\text{PF}} \geq x_{\text{R}} + x_{\text{TVn}} - 1
+\end{equation}
+
+\noindent
+Esto garantiza que, si $x_{\text{R}}=1$ y $x_{\text{TVn}}=1$, entonces $x_{\text{PF}}=1$.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% VARIANTE 6
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\subsubsection{Al menos tres audiencias deben ser alcanzadas más de una vez}
+
+Para imponer que, además de cubrir todas las audiencias, al menos tres de ellas sean alcanzadas por más de un medio, se definen variables binarias auxiliares:
+
+
+
+\begin{tabular}{l l}
+$y_i$ : & variable binaria que vale que valen 1 si la audiencia $i$ es alcanzada más de una vez, \\
+& 0 en caso contrario, para $i = 1, \dots, 6$. \\
+\end{tabular}
+
+
+\begin{align}
+\sum_{j=1}^{8} A_{ij}x_j - 1 &\leq 6\times y_i \qquad \forall i=1,\dots,6 
+\label{eq:cobertura6-1}
+\end{align}
+
+La restricción \ref{eq:cobertura6-1} impone que si el número de medios utilizados es 2 o mayor, entonces se cumple que $\sum_{j=1}^{8} A_{ij}x_j - 1 \geq 1$ y la forma de que la restricción se cumpla es que $y_i=1$
+
+
+\begin{align}
+y_i \leq & \sum_{j=1}^{8} A_{ij}x_j - 1 \qquad \forall i=1,\dots,6 
+\label{eq:cobertura6-2}
+\end{align}
+
+Por su parte, la restricción \ref{eq:cobertura6-2} impone que si solo un medio incide sobre una audiencia, es decir, si $\sum_{j=1}^{8} A_{ij}x_j=1$, la parte de la izquierda será 0 y, por lo tanto, $y_i\leq 0$, es decir, $y_i\leq 0$, con lo que la variable $y_i$ tomará el valor correspondiente cuando la audiencia $i$ no recibe la publicidad por más de un medio, es decir, 0.
+
+En resumen, entre las restricciones \ref{eq:cobertura6-1} y \ref{eq:cobertura6-2} se asegura que si se indice sobre la audiencia $i$ solo una vez $y_i=0$ y si se incide dos o más veces $y_i=1$
+
+
+\begin{align}
+\sum_{i=1}^{6} y_i &\geq 3
+\label{eq:cobertura6-3}
+\end{align}
+
+\noindent
+Por último, la restricción \ref{eq:cobertura6-3} fuerza a que al menos tres audiencias tengan cobertura múltiple.

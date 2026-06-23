@@ -1,0 +1,385 @@
+\section{Armesa II}
+
+
+\subsection{Presentación del caso}
+
+La Dirección Comercial de ARMESA ha conseguido nuevos contratos con clientes mayoristas,
+eliminando las ventas directas a minoristas. Las entregas mensuales pasan a ser
+\emph{exactas} y se recogen en la Tabla~\ref{tab:armesaII-entregas}.
+
+\begin{table}[!h]
+\centering
+\caption{entregas mensuales exigidas por producto.}
+\label{tab:armesaII-entregas}
+\begin{tabular}{lcccc}
+\hline
+Producto & 1 & 2 & 3 & 4 \\ \hline
+Unidades & 3000 & 500 & 1000 & 2000 \\
+\hline
+\end{tabular}
+\end{table}
+
+Se han encontrado talleres externos a los que puede subcontratarse la \textbf{embutición} y el
+\textbf{mecanizado} de cualquiera de los productos, lo que incrementa en un 20\% los costes
+variables unitarios de las unidades subcontratadas. El mismo proveedor realiza ambas
+operaciones y adquiere la chapa; por ello, la limitación de 2\,000 pies cuadrados mensuales
+de chapa especial para los productos 2 y 4 sólo afecta a la producción \emph{interna}
+(embutida y mecanizada en ARMESA):contentReference[oaicite:1]{index=1}.
+
+La empresa puede disponer de hasta 100 horas extraordinarias mensuales en el taller de
+\textbf{acabado}. Cuando se utilizan, encarecen los costes variables unitarios según
+la Tabla~\ref{tab:armesaII-recargos}.
+
+\begin{table}[!h]
+\centering
+\caption{recargo unitario en costes por uso de horas extra de acabado (€/unidad).}
+\label{tab:armesaII-recargos}
+\begin{tabular}{lcccc}
+\hline
+Producto & 1 & 2 & 3 & 4 \\ \hline
+Recargo  & 0{,}20 & 0{,}40 & 0{,}30 & 0{,}30 \\
+\hline
+\end{tabular}
+\end{table}
+
+El objetivo sigue siendo formular un modelo de programación lineal que determine el
+programa mensual de producción óptimo bajo estas nuevas condiciones.
+
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+
+Sean $x_{ijk}$ las unidades producidas, donde:
+\begin{itemize}
+    \item $i$: tipo de producto ($i=1,2,3,4$),
+    \item $j$: lugar de embutición + mecanizado ($j=0$: interno, $j=1$: subcontratado),
+    \item $k$: tipo de acabado ($k=0$: normal, $k=1$: horas extra).
+\end{itemize}
+
+\paragraph{Restricciones}\mbox{}\\
+\\
+Disponibilidad de embutición:
+\begin{align}
+0.03(x_{100}+x_{101}) + 0.15(x_{200}+x_{201}) & \notag \\
++ 0.05(x_{300}+x_{301}) + 0.10(x_{400}+x_{401}) & \leq 400
+\end{align}
+
+Disponibilidad de mecanizado:
+\begin{align}
+0.06(x_{100}+x_{101}) & \notag \\
++ 0.12(x_{200}+x_{201}) & \notag \\
++ 0.10(x_{400}+x_{401}) & \leq 400
+\end{align}
+
+
+Disponibilidad de montaje:
+\begin{align}
+0.02(x_{100}+x_{101}+x_{110}+x_{111}) & \notag \\
++0.06(x_{200}+x_{201}+x_{210}+x_{211}) & \notag \\
++0.02(x_{300}+x_{301}+x_{310}+x_{311}) & \notag \\
++0.05(x_{400}+x_{401}+x_{410}+x_{411}) & \leq 500 \label{eq:armesa-montaje}
+\end{align}
+
+
+Disponibilidad de acabado normal:
+\begin{align}
+0.04x_{100}+0.20x_{200}+0.03x_{300}+0.12x_{400} & \notag \\
++0.04x_{110}+0.20x_{210}+0.03x_{310}+0.12x_{410} & \leq 450
+\end{align}
+
+
+Disponibilidad de horas extra de acabado:
+\begin{align}
+0.04x_{101}+0.20x_{201}+0.03x_{301}+0.12x_{401} & \notag \\
++0.04x_{111}+0.20x_{211}+0.03x_{311}+0.12x_{411} & \leq 100
+\end{align}
+
+
+Disponibilidad de embalaje:
+\begin{align}
+0.02(x_{100}+x_{101}+x_{110}+x_{111}) & \notag \\
++0.06(x_{200}+x_{201}+x_{210}+x_{211}) & \notag \\
++0.02(x_{300}+x_{301}+x_{310}+x_{311}) & \notag \\
++0.05(x_{400}+x_{401}+x_{410}+x_{411}) & \leq 400
+\label{eq:armesa-embalaje}
+\end{align}
+
+Disponibilidad de chapa:
+\begin{equation}
+2(x_{200}+x_{201}) + 1.2(x_{400}+x_{401}) \leq 2000
+\end{equation}
+
+Restricciones de mercado (entregas exactas):
+\begin{align}
+x_{100}+x_{101}+x_{110}+x_{111} &= 3000 \notag\\
+x_{200}+x_{201}+x_{210}+x_{211} &= 500 \notag \\
+x_{300}+x_{301}+x_{310}+x_{311} &= 1000 \notag\\
+x_{400}+x_{401}+x_{410}+x_{411} &= 2000
+\end{align}
+
+
+Conviene notar que, dado que las cantidades que hay que producir de cada producto son fijas y que el montaje y el embalaje se hace con las 500 y 400 horas disponbiles, respectivamente, las restricciones \ref{eq:armesa-montaje} y \ref{eq:armesa-embalaje} no dependen de los valores de las variables porque tanto el primer miembro de la desigualdad como el segundo son constantes. Dicho de otro modo, dado que el montaje y el emabalaje se hace con una horas determinadas y las cantidades están fijadas, o hay posibilidad de embalar y montar todas las unidades o no. Si no hay suficientes horas de uno o de otro proceso, no habría forma de obtener un plan de producción (el problema sería no factible).
+
+
+
+\paragraph{Función objetivo}\mbox{}\\
+\\
+La función objetivo incorpora las contribuciones unitarias (precio de venta menos coste variable), 
+penalizando subcontratación (+20\% en costes) y recargos por horas extra:
+
+\begin{align}
+\max z = & \; 4.0x_{100} + 3.8x_{101} + 2.8x_{110} + 2.6x_{111} \notag \\
+&+ 10.0x_{200} + 9.6x_{201} + 7.0x_{210} + 6.6x_{211} \notag \\
+&+ 5.0x_{300} + 4.8x_{301} + 2.8x_{310} + 2.6x_{311} \notag \\
+&+ 6.0x_{400} + 5.7x_{401} + 3.2x_{410} + 2.9x_{411}
+\end{align}
+
+
+% Formulación explícita Armesa II (alineada por columnas)
+
+\paragraph{Modelo completo}\mbox{}\\
+
+{\small
+\begin{align}
+\max\; z \;=\;
+&\; 4.0x_{100} + 3.8x_{101} + 2.8x_{110} + 2.6x_{111} \notag\\
+&+ 10.0x_{200} + 9.6x_{201} + 7.0x_{210} + 6.6x_{211} \notag\\
+&+ 5.0x_{300} + 4.8x_{301} + 6.0x_{400} + 5.7x_{401} \notag\\
+&+ 3.2x_{410} + 2.9x_{411}
+\\[4pt]
+\text{s.a.}\quad
+&0.03x_{100}+0.03x_{101}+0.15x_{200}+0.15x_{201}+0.05x_{300}+0.05x_{301} \notag\\
+&+0.10x_{400}+0.10x_{401}\le400 \\[2pt]
+&0.06x_{100}+0.06x_{101}+0.12x_{200}+0.12x_{201}+0.10x_{400}+0.10x_{401}\le400 \\[2pt]
+&0.02(x_{100}+x_{101}+x_{110}+x_{111})
++0.06(x_{200}+x_{201}+x_{210}+x_{211}) \notag\\
+&+0.02(x_{300}+x_{301}+x_{310}+x_{311})
++0.05(x_{400}+x_{401}+x_{410}+x_{411})\le500 \\[2pt]
+&0.04x_{100}+0.04x_{110}+0.20x_{200}+0.20x_{210}
++0.03x_{300}+0.03x_{310}+0.12x_{400}+0.12x_{410}\leq \notag\ \\ & 450  \\[2pt]
+&0.04x_{101}+0.04x_{111}+0.20x_{201}+0.20x_{211}
++0.03x_{301}+0.03x_{311}+0.12x_{401}+0.12x_{411}\leq \notag\ \\ & 100  \\[2pt]
+&0.02(x_{100}+x_{101}+x_{110}+x_{111})
++0.06(x_{200}+x_{201}+x_{210}+x_{211}) \notag\\
+&+0.02(x_{300}+x_{301}+x_{310}+x_{311})
++0.05(x_{400}+x_{401}+x_{410}+x_{411})\le400 \\[2pt]
+&2.0(x_{200}+x_{201})+1.2(x_{400}+x_{401})\le2000 \\[2pt]
+&x_{100}+x_{101}+x_{110}+x_{111}=3000 \\
+&x_{200}+x_{201}+x_{210}+x_{211}=500 \\
+&x_{300}+x_{301}+x_{310}+x_{311}=1000 \\
+&x_{400}+x_{401}+x_{410}+x_{411}=2000 \\[2pt]
+&x_{ijk}\ge0 \qquad i=1,\dots,4;\; j,k\in\{0,1\}
+\end{align}
+}
+
+
+
+
+\subsection{Formulación generalizada}
+
+\textbf{Conjuntos}\\[0.2cm]
+
+\begin{tabularx}{\textwidth}{l c X}
+    $\mathcal{P}$ & : & conjunto de productos \\
+    $\mathcal{J}$ & : & conjunto de opciones de embutición y mecanizado ($0$: interno, $1$: subcontratado) \\
+    $\mathcal{K}$ & : & conjunto de opciones de acabado ($0$: normal, $1$: horas extra) \\
+    $\mathcal{T}$ & : & conjunto de talleres ($t=$ embutición, mecanizado, montaje, acabado, embalaje) \\
+\end{tabularx}
+\\[0.4cm]
+
+\textbf{Parámetros}\\[0.2cm]
+
+\begin{tabularx}{\textwidth}{l c X}
+    $A_{tp}$   & : & horas requeridas en el taller $t \in \mathcal{T}$ para producir una unidad del producto $p \in \mathcal{P}$ (internamente) \\
+    $H_t$      & : & horas disponibles en el taller $t \in \mathcal{T}$ \\
+    $CH_p$     & : & cantidad de chapa necesaria por unidad de producto $p \in \mathcal{P}$ (sólo si se fabrica internamente) \\
+    $CHAP$     & : & cantidad máxima disponible de chapa especial \\
+    $P_p$      & : & precio de venta unitario del producto $p \in \mathcal{P}$ \\
+    $C_p$      & : & coste variable unitario del producto $p \in \mathcal{P}$ \\
+    $\alpha$   & : & factor de incremento del coste en caso de subcontratación ($\alpha = 1.2$) \\
+    $\beta_p$  & : & recargo en el coste variable por unidad de producto $p$ en caso de acabado en horas extra \\
+    $D_p$      & : & demanda mensual exacta del producto $p \in \mathcal{P}$ \\
+    $H^{\text{extra}}$ & : & número máximo de horas de acabado extraordinarias disponibles \\
+\end{tabularx}
+\\[0.4cm]
+
+\textbf{Variables}\\[0.2cm]
+
+\begin{tabularx}{\textwidth}{l c X}
+    $x_{p j k}$ & : & número de unidades producidas del producto $p \in \mathcal{P}$, con $j \in \mathcal{J}$ (interno/subcontratado) y $k \in \mathcal{K}$ (acabado normal/horas extra). \\
+\end{tabularx}
+
+\paragraph{Restricciones}\mbox{}\\
+
+\noindent
+Disponibilidad de talleres internos (aquellos talleres cuyos procesos no se subcontratan y donde no se usan horas extra: montaje y embalaje):
+\begin{equation}
+\sum_{p \in \mathcal{P}} \sum_{j \in \mathcal{J}} \sum_{k \in \mathcal{K}} A_{tp}\, x_{p j k} \;\; \leq \;\; H_t \qquad \forall t \in \mathcal{T}
+\end{equation}
+
+Disponibilidad de talleres cuyos procesos se subcontratan (embutición y mecanizado):
+\begin{equation}
+\sum_{p \in \mathcal{P}} \sum_{k \in \mathcal{K}} A_{tp}\, x_{p 0 k} \;\; \leq \;\; H_t \qquad \forall t \in \mathcal{T}
+\end{equation}
+
+\noindent
+Disponibilidad de horas normales en acabado:
+\begin{equation}
+\sum_{p \in \mathcal{P}} \sum_{j \in \mathcal{J}} x_{p j 0  }\, A_{\text{acab},p} \;\; \leq \;\; H_t
+\end{equation}
+
+\noindent
+Disponibilidad de horas extra en acabado:
+\begin{equation}
+\sum_{p \in \mathcal{P}} \sum_{j \in \mathcal{J}} x_{p j 1}\, A_{\text{acab},p} \;\; \leq \;\; H^{\text{extra}}
+\end{equation}
+
+\noindent
+Disponibilidad de chapa (solo fabricación interna):
+\begin{equation}
+\sum_{p \in \mathcal{P}} \sum_{k \in \mathcal{K}} CH_p \, x_{p0k} \;\; \leq \;\; CHAP
+\end{equation}
+
+\noindent
+Restricciones de mercado (entregas exactas):
+\begin{equation}
+\sum_{j \in \mathcal{J}} \sum_{k \in \mathcal{K}} x_{p j k} = D_p \qquad \forall p \in \mathcal{P}
+\end{equation}
+\\
+
+
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{align}
+\max z = 
+& \sum_{p \in \mathcal{P}} \Bigg[ 
+\sum_{k \in \mathcal{K}} (P_p - C_p)\, x_{p0k} 
++ \sum_{k \in \mathcal{K}} (P_p - \alpha C_p)\, x_{p1k} \notag \\
+& \qquad - \sum_{j \in \mathcal{J}} \beta_p \, x_{p j 1} 
+\Bigg]
+\end{align}
+\\
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.} \quad & \sum_{p \in \mathcal{P}} \Bigg[ 
+\sum_{k \in \mathcal{K}} (P_p - C_p)\, x_{p0k} 
++ \sum_{k \in \mathcal{K}} (P_p - \alpha C_p)\, x_{p1k} 
+- \sum_{j \in \mathcal{J}} \beta_p \, x_{p j 1} \Bigg] \notag \\
+\mbox{s. a.:} \quad 
+& \sum_{p \in \mathcal{P}} \sum_{j \in \mathcal{J}} \sum_{k \in \mathcal{K}} A_{tp}\, x_{p j k} \leq H_t \qquad \forall t \in \mathcal{T} \notag \\
+& \sum_{p \in \mathcal{P}} \sum_{j \in \mathcal{J}} A_{\text{acab},p}\, x_{p j 1} \leq H^{\text{extra}} \notag \\
+& \sum_{p \in \mathcal{P}} \sum_{k \in \mathcal{K}} CH_p \, x_{p0k} \leq CHAP \notag \\
+& \sum_{j \in \mathcal{J}} \sum_{k \in \mathcal{K}} x_{p j k} = D_p \qquad \forall p \in \mathcal{P} \notag \\
+& x_{p j k} \geq 0 \qquad \forall p \in \mathcal{P}, \; j \in \mathcal{J}, \; k \in \mathcal{K} \notag
+\end{align}
+
+
+
+
+
+
+
+
+\subsection{Formulación explícita ($x,y,z$)}
+
+% ===================== VARIABLES =====================
+\textbf{Variables}\\[0.2cm]
+\begin{tabular}{l c l}
+    $x_i$           & : & unidades totales del producto $i$, \; $i=1,2,3,4$ \\
+    $y_i^{\mathrm{I}}$ & : & unidades del producto $i$ con embutición y mecanizado internos \\
+    $y_i^{\mathrm{S}}$ & : & unidades del producto $i$ con embutición y mecanizado subcontratados \\
+    $z_i^{\mathrm{N}}$ & : & unidades del producto $i$ acabadas en turno normal \\
+    $z_i^{\mathrm{E}}$ & : & unidades del producto $i$ acabadas en horas extra \\
+\end{tabular}
+
+% ===================== ENTREGAS EXACTAS Y FLUJOS =====================
+\textbf{Entregas exactas y vinculación de flujos}\\[0.2cm]
+\begin{align}
+& x_1 = 3000, \quad x_2 = 500, \quad x_3 = 1000, \quad x_4 = 2000 \\
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i=1,2,3,4 \\
+& x_i = z_i^{\mathrm{N}} + z_i^{\mathrm{E}} && i=1,2,3,4
+\end{align}
+
+% ===================== CAPACIDADES INTERNAS (EMB Y MEC) =====================
+\textbf{Capacidades internas de embutición y mecanizado}\\[0.2cm]
+\begin{align}
+& 0.03\,y_1^{\mathrm{I}} + 0.15\,y_2^{\mathrm{I}} + 0.05\,y_3^{\mathrm{I}} + 0.10\,y_4^{\mathrm{I}} \le 400
+&& \text{(embutición)} \\
+& 0.06\,y_1^{\mathrm{I}} + 0.12\,y_2^{\mathrm{I}} \;+\; 0.10\,y_4^{\mathrm{I}} \le 400
+&& \text{(mecanizado)}
+\end{align}
+
+% ===================== CAPACIDADES QUE DEPENDEN DEL TOTAL =====================
+\textbf{Montaje y embalaje}\\[0.2cm]
+\begin{align}
+& 0.02\,x_1 + 0.06\,x_2 + 0.02\,x_3 + 0.05\,x_4 \le 500
+&& \text{(montaje)} \\
+& 0.02\,x_1 + 0.06\,x_2 + 0.02\,x_3 + 0.05\,x_4 \le 400
+&& \text{(embalaje)}
+\end{align}
+
+% ===================== ACABADO NORMAL Y HORAS EXTRA =====================
+\textbf{Acabado (normal y horas extra)}\\[0.2cm]
+\begin{align}
+& 0.04\,z_1^{\mathrm{N}} + 0.20\,z_2^{\mathrm{N}} + 0.03\,z_3^{\mathrm{N}} + 0.12\,z_4^{\mathrm{N}} \le 450
+&& \text{(acabado normal)} \\
+& 0.04\,z_1^{\mathrm{E}} + 0.20\,z_2^{\mathrm{E}} + 0.03\,z_3^{\mathrm{E}} + 0.12\,z_4^{\mathrm{E}} \le 100
+&& \text{(acabado horas extra)}
+\end{align}
+
+% ===================== CHAPA ESPECIAL =====================
+\textbf{Disponibilidad de chapa especial (solo producción interna)}\\[0.2cm]
+\begin{align}
+& 2.0\,y_2^{\mathrm{I}} + 1.2\,y_4^{\mathrm{I}} \le 2000
+\end{align}
+
+% ===================== FUNCIÓN OBJETIVO =====================
+
+
+% ===================== NO NEGATIVIDAD =====================
+\textbf{No negatividad}\\[0.2cm]
+\begin{align}
+& x_i \ge 0,\quad y_i^{\mathrm{I}} \ge 0,\quad y_i^{\mathrm{S}} \ge 0,\quad
+  z_i^{\mathrm{N}} \ge 0,\quad z_i^{\mathrm{E}} \ge 0
+\qquad i=1,2,3,4
+\end{align}
+
+
+Dado que los ingresos y los costes diferentes de las horas extra y la subcontratación son fijos (las cantidades producidas son fijas) el problema consiste en minimizar los costes por subcontratación más los costes por el huso de horas extra:
+
+\begin{align}
+\mbox{min.} \; z \;=\;
+&\; (0.2\cdot 6)\,y_1^{\mathrm{S}} + (0.2\cdot 15)\,y_2^{\mathrm{S}} + (0.2\cdot 11)\,y_3^{\mathrm{S}} + (0.2\cdot 14)\,y_4^{\mathrm{S}} \notag \\
+&\;+\; 0.20\,z_1^{\mathrm{E}} + 0.40\,z_2^{\mathrm{E}} + 0.20\,z_3^{\mathrm{E}} + 0.30\,z_4^{\mathrm{E}}
+\end{align}
+
+
+\textbf{Modelo completo}
+\begin{align}
+\min\; z \;=\;
+&\; (0.2\cdot 6)\,y_1^{\mathrm{S}} + (0.2\cdot 15)\,y_2^{\mathrm{S}}
+   + (0.2\cdot 11)\,y_3^{\mathrm{S}} + (0.2\cdot 14)\,y_4^{\mathrm{S}} \notag \\
+&\;+\; 0.20\,z_1^{\mathrm{E}} + 0.40\,z_2^{\mathrm{E}}
+       + 0.20\,z_3^{\mathrm{E}} + 0.30\,z_4^{\mathrm{E}}
+\\[4pt]
+\text{s.a.}\quad
+& x_1 = 3000 \notag \\ 
+& x_2 = 500\notag \\
+& x_3 = 1000\notag \\
+& x_4 = 2000 \notag \\
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i=1,2,3,4 \notag \\
+& x_i = z_i^{\mathrm{N}} + z_i^{\mathrm{E}} \qquad i=1,2,3,4 \notag \\
+& 0.03\,y_1^{\mathrm{I}} + 0.15\,y_2^{\mathrm{I}} + 0.05\,y_3^{\mathrm{I}} + 0.10\,y_4^{\mathrm{I}} \le 400 \notag \\
+& 0.06\,y_1^{\mathrm{I}} + 0.12\,y_2^{\mathrm{I}} + 0.10\,y_4^{\mathrm{I}} \le 400 \notag \\
+& 0.02\,x_1 + 0.06\,x_2 + 0.02\,x_3 + 0.05\,x_4 \le 500 \notag \\
+& 0.02\,x_1 + 0.06\,x_2 + 0.02\,x_3 + 0.05\,x_4 \le 400 \notag \\
+& 0.04\,z_1^{\mathrm{N}} + 0.20\,z_2^{\mathrm{N}} + 0.03\,z_3^{\mathrm{N}} + 0.12\,z_4^{\mathrm{N}} \le 450 \notag \\
+& 0.04\,z_1^{\mathrm{E}} + 0.20\,z_2^{\mathrm{E}} + 0.03\,z_3^{\mathrm{E}} + 0.12\,z_4^{\mathrm{E}} \le 100 \notag \\
+& 2.0\,y_2^{\mathrm{I}} + 1.2\,y_4^{\mathrm{I}} \le 2000 \notag \\
+& x_i,\,y_i^{\mathrm{I}},\,y_i^{\mathrm{S}},\,z_i^{\mathrm{N}},\,z_i^{\mathrm{E}} \ge 0 \qquad i=1,2,3,4 \notag
+\end{align}
+
+

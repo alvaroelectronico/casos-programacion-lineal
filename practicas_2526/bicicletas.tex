@@ -1,0 +1,1084 @@
+\section{Fábrica de bicicletas}
+
+\subsection{Presentación del caso}
+
+La empresa \textbf{Bicicletas Rápidas S.A.} fabrica tres tipos de bicicletas: montaña, carretera y eléctrica. Cada modelo requiere tiempos diferentes en los talleres de ensamblaje, pintura y embalaje. La empresa busca maximizar sus beneficios.
+
+El margen por bicicleta es: 50 € (montaña), 70 € (carretera) y 90 € (eléctrica). Se dispone de 500 h en ensamblaje, 400 h en pintura y 300 h en embalaje. Los tiempos (h/unidad) son: ensamblaje \((2,3,4)\), pintura \((2,4,5)\) y embalaje \((1,1,1)\) para (montaña, carretera, eléctrica), respectivamente. 
+
+Se pueden usar hasta 100 h extra en ensamblaje con coste de 5 €/h (reduce el beneficio). Se permite subcontratar la pintura de montaña y carretera con un sobrecoste de 10 €/unidad; la eléctrica no puede subcontratarse. :contentReference[oaicite:2]{index=2}
+
+
+\subsection{Formulación explícita}
+
+% \paragraph{Variables}\mbox{}\\
+
+% \begin{tabular}{lcl}
+% $x_{10}$ & : & unidades de \emph{montaña} pintadas internamente \\
+% $x_{11}$ & : & unidades de \emph{montaña} con pintura subcontratada \\
+% $x_{20}$ & : & unidades de \emph{carretera} pintadas internamente \\
+% $x_{21}$ & : & unidades de \emph{carretera} con pintura subcontratada \\
+% $x_{30}$ & : & unidades de \emph{eléctrica} (pintura interna obligatoria) \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\[1mm]
+% \textit{Capacidad de ensamblaje (con horas extra):}
+% \begin{equation}
+% 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \;\leq\; 500 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (solo producción interna):}
+% \begin{equation}
+% 2 x_{10} + 4 x_{20} + 5 x_{30} \;\leq\; 400
+% \end{equation}
+
+% \textit{Capacidad de embalaje:}
+% \begin{equation}
+% (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \;\leq\; 300
+% \end{equation}
+
+% \textit{Límite de horas extra:}
+% \begin{equation}
+% h \;\leq\; 100
+% \end{equation}
+
+% \textit{No se puede subcontratar la eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \textit{No negatividad:}
+% \begin{equation}
+% x_{10},x_{11},x_{20},x_{21},x_{30},h \;\geq\; 0
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\[-1mm]
+% Parámetros numéricos del caso: 
+% \(
+% M_1=50,\; M_2=70,\; M_3=90;\;
+% CHE=5;\; MHE=100;\; CSUb=10
+% \)
+
+% \begin{align}
+% \mbox{max. } z \;=\;& M_1(x_{10}+x_{11}) + M_2(x_{20}+x_{21}) + M_3 x_{30} \notag\\
+% &\;-\; CSUb(x_{11}+x_{21}) \;-\; CHE\,h \notag\\[1mm]
+% =\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} \notag\\
+% &\;-\; 10(x_{11}+x_{21}) \;-\; 5h
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\[-1mm]
+% \begin{align}
+% \mbox{max. } z \;=\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} - 10(x_{11}+x_{21}) - 5h \notag\\
+% \mbox{s. a.:}\quad
+% & 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \leq 500 + h \notag\\
+% & 2 x_{10} + 4 x_{20} + 5 x_{30} \leq 400 \notag\\
+% & (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \leq 300 \notag\\
+% & h \leq 100 \notag\\
+% & x_{31}=0 \notag\\
+% & x_{10},x_{11},x_{20},x_{21},x_{30},h \geq 0 \notag
+% \end{align}
+
+
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ cuya pintura se subcontrata \\
+$h$ & : & horas extra utilizadas en ensamblaje \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\[1mm]
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i = 1,2,3
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de pintura (solo producción interna):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400
+\end{equation}
+
+\textit{Capacidad de embalaje:}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; 100
+\end{equation}
+
+\textit{Prohibición de subcontratar la pintura de las eléctricas:}
+\begin{equation}
+y_3^{\mathrm{S}} = 0
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \;\geq\; 0 \qquad i=1,2,3
+\end{equation}
+
+
+\paragraph{Función objetivo}\mbox{}\\[-1mm]
+
+Parámetros numéricos del caso:
+\[
+M_1 = 50,\quad M_2 = 70,\quad M_3 = 90;\quad
+CHE = 5;\quad MHE = 100;\quad CSUB = 10
+\]
+
+\begin{align}
+\mbox{max. } z \;=\;& 
+M_1x_1 + M_2x_2 + M_3x_3 
+- CSUB(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- CHE\,h \notag\\[2mm]
+=\;& 
+50x_1 + 70x_2 + 90x_3 
+- 10(y_1^{\mathrm{S}} + y_2^{\mathrm{S}}) 
+- 5h
+\end{align}
+
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+
+\begin{align}
+\mbox{max. } z \;=\;& 
+50x_1 + 70x_2 + 90x_3 
+- 10(y_1^{\mathrm{S}} + y_2^{\mathrm{S}}) 
+- 5h \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i=1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 \notag\\
+& x_1 + x_2 + x_3 \leq 300 \notag\\
+& h \leq 100 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && i=1,2,3 \notag
+\end{align}
+
+
+
+
+% \subsection{Formulación generalizada}
+
+% \paragraph{Conjuntos}\mbox{}\\
+% \begin{tabular}{lcl}
+% $\mathcal{I}=\{1,2,3\}$ & : & productos (1: montaña, 2: carretera, 3: eléctrica) \\
+% $\mathcal{J}=\{1,2,3\}$ & : & talleres (1: ensamblaje, 2: pintura, 3: embalaje) \\
+% $\mathcal{K}=\{0,1\}$    & : & modalidad de pintura (0: interna, 1: subcontratada) \\
+% \end{tabular}
+
+% \paragraph{Parámetros}\mbox{}\\
+% \begin{tabular}{lcl}
+% $M_i$     & : & margen del producto $i$ \\
+% $HD_j$    & : & horas disponibles en el taller $j$ \\
+% $H_{i,j}$ & : & horas necesarias del taller $j$ por unidad del producto $i$ \\
+% $CHE$     & : & coste por hora extra en ensamblaje \\
+% $MHE$     & : & máximo de horas extra en ensamblaje \\
+% $CSUb$    & : & sobrecoste unitario por subcontratar pintura \\
+% \end{tabular}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{lcl}
+% $x_{ik}$ & : & cantidad del producto $i$ con modalidad $k$ de pintura \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% \textit{Capacidad de ensamblaje:}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i1}\, x_{ik} \;\leq\; HD_1 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (solo interna):}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}} H_{i2}\, x_{i0} \;\leq\; HD_2
+% \end{equation}
+
+% \textit{Capacidad de embalaje:}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i3}\, x_{ik} \;\leq\; HD_3
+% \end{equation}
+
+% \textit{Límite de horas extra:}
+% \begin{equation}
+% h \;\leq\; MHE
+% \end{equation}
+
+% \textit{No se permite subcontratar la eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} M_i\, x_{ik}
+% \;-\; CSUb \sum_{i\in\mathcal{I}} x_{i1}
+% \;-\; CHE \, h
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i,k} M_i\, x_{ik} - CSUb \sum_i x_{i1} - CHE\, h \notag\\
+% \mbox{s. a.:}\quad
+% & \sum_{i,k} H_{i1} x_{ik} \leq HD_1 + h \notag\\
+% & \sum_i H_{i2} x_{i0} \leq HD_2 \notag\\
+% & \sum_{i,k} H_{i3} x_{ik} \leq HD_3 \notag\\
+% & h \leq MHE \notag\\
+% & x_{31}=0 \notag\\
+% & x_{ik},\, h \geq 0 \quad \forall i\in\mathcal{I},\, k\in\mathcal{K} \notag
+% \end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$ & : & conjunto de tipos de bicicletas ($i \in \{1,2,3\}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen de beneficio unitario del producto $i$ \\
+$H_{i1}$  & : & horas necesarias en ensamblaje por unidad del producto $i$ \\
+$H_{i2}$  & : & horas necesarias en pintura interna por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en ensamblaje en horario normal \\
+$HD_2$    & : & horas disponibles en pintura \\
+$HD_3$    & : & horas disponibles en embalaje \\
+$CHE$     & : & coste por hora extra en ensamblaje \\
+$MHE$     & : & máximo de horas extra en ensamblaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar pintura \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del producto $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$ & : & unidades del producto $i$ cuya pintura se subcontrata \\
+$h$ & : & horas extra utilizadas en ensamblaje \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i1}\,x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de pintura (solo interna):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i2}\,y_i^{\mathrm{I}} \;\leq\; HD_2
+\end{equation}
+
+\textit{Capacidad de embalaje:}
+\begin{equation}
+\sum_{i \in \mathcal{I}} x_i \;\leq\; HD_3
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; MHE
+\end{equation}
+
+\textit{Prohibición de subcontratar ciertos productos (por ejemplo, la eléctrica):}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I}_0
+\end{equation}
+donde $\mathcal{I}_0 \subseteq \mathcal{I}$ es el subconjunto de productos cuya pintura no puede subcontratarse.
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \;\geq\; 0 \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;& 
+\sum_{i \in \mathcal{I}} M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}} y_i^{\mathrm{S}}
+- CHE\,h
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;& 
+\sum_i M_i\,x_i
+- CSUB \sum_i y_i^{\mathrm{S}}
+- CHE\,h \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\,x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\,y_i^{\mathrm{I}} \leq HD_2 \notag\\
+& \sum_i x_i \leq HD_3 \notag\\
+& h \leq MHE \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}_0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && \forall i \in \mathcal{I} \notag
+\end{align}
+
+
+\subsection{Presentación del caso}
+
+Partiendo de la situación inicial, tras una renegociación del contrato, el subcontratista de pintura reduce el \textbf{sobrecoste unitario} a \textbf{5 €} por bicicleta subcontratada, pero exige un \textbf{mínimo de 150 bicicletas} subcontratadas en total (sumando montaña y carretera) y cobra un \textbf{coste fijo de 50 €} si se decide subcontratar. Se mantiene que la bicicleta eléctrica no puede subcontratarse. El objetivo sigue siendo \textbf{maximizar el beneficio}. :contentReference[oaicite:2]{index=2}
+
+
+\subsection{Formulación explícita}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{lcl}
+% $x_{10}$ & : & unidades de \emph{montaña} pintadas internamente \\
+% $x_{11}$ & : & unidades de \emph{montaña} con pintura subcontratada \\
+% $x_{20}$ & : & unidades de \emph{carretera} pintadas internamente \\
+% $x_{21}$ & : & unidades de \emph{carretera} con pintura subcontratada \\
+% $x_{30}$ & : & unidades de \emph{eléctrica} (pintura interna obligatoria) \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% $y$      & : & 1 si se activa la subcontratación (existe pedido al subcontratista);\\
+% && 0 en caso contrario \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% \textit{Capacidad de ensamblaje (con horas extra):}
+% \begin{equation}
+% 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \;\leq\; 500 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (solo producción interna):}
+% \begin{equation}
+% 2 x_{10} + 4 x_{20} + 5 x_{30} \;\leq\; 400
+% \end{equation}
+
+% \textit{Capacidad de embalaje:}
+% \begin{equation}
+% (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \;\leq\; 300
+% \end{equation}
+
+% \textit{Límite de horas extra:}
+% \begin{equation}
+% h \;\leq\; 100
+% \end{equation}
+
+% \textit{No se puede subcontratar la eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \textit{Activación y mínimo del subcontratista (global para montaña+carretera):}
+% \begin{align}
+% & x_{11} + x_{21} \;\geq\; 150\, y \label{minimo-sub}\\
+% & x_{11} + x_{21} \;\leq\; U\, y \label{cota-superior-sub}
+% \end{align}
+% donde $U$ es una cota suficientemente grande (por ejemplo, $U=300$ por la restricción de embalaje).
+
+% \textit{No negatividad y binariedad:}
+% \begin{equation}
+% x_{10},x_{11},x_{20},x_{21},x_{30},h \;\geq\; 0, 
+% \qquad y \in \{0,1\}
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% Parámetros numéricos (Parte 2): 
+% \(
+% M_1=50,\; M_2=70,\; M_3=90;\;
+% CHE=5;\; MHE=100;\; CSUb=5;\; F=50
+% \) :contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}.
+
+% \begin{align}
+% \mbox{max. } z \;=\;& M_1(x_{10}+x_{11}) + M_2(x_{20}+x_{21}) + M_3 x_{30} \notag\\
+% &\;-\; CSUb(x_{11}+x_{21}) \;-\; CHE\,h \;-\; F\,y \notag\\[1mm]
+% =\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} \notag\\
+% &\;-\; 5(x_{11}+x_{21}) \;-\; 5h \;-\; 50y
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} - 5(x_{11}+x_{21}) - 5h - 50y \notag\\
+% \mbox{s. a.:}\quad
+% & 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \leq 500 + h \notag\\
+% & 2 x_{10} + 4 x_{20} + 5 x_{30} \leq 400 \notag\\
+% & (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \leq 300 \notag\\
+% & h \leq 100 \notag\\
+% & x_{31}=0 \notag\\
+% & x_{11}+x_{21} \geq 150\,y \notag\\
+% & x_{11}+x_{21} \leq U\,y \notag\\
+% & x_{10},x_{11},x_{20},x_{21},x_{30},h \geq 0,\;\; y\in\{0,1\} \notag
+% \end{align}
+
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ cuya pintura se subcontrata \\
+$h$ & : & horas extra utilizadas en ensamblaje \\
+$\alpha$ & : & 1 si se activa la subcontratación (se contrata el servicio externo); 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\[1mm]
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i = 1,2,3
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de pintura (solo producción interna):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400
+\end{equation}
+
+\textit{Capacidad de embalaje:}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; 100
+\end{equation}
+
+\textit{Prohibición de subcontratar la eléctrica:}
+\begin{equation}
+y_3^{\mathrm{S}} = 0
+\end{equation}
+
+\textit{Activación y mínimo del subcontratista (global para montaña y carretera):}
+\begin{align}
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \;\geq\; 150\, \alpha \label{minimo-sub-alpha}\\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \;\leq\; U\, \alpha \label{cota-superior-sub-alpha}
+\end{align}
+donde $U$ es una cota suficientemente grande (por ejemplo, $U=300$ por la restricción de embalaje).
+
+\textit{No negatividad y binariedad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 \quad (i=1,2,3),
+\qquad \alpha \in \{0,1\}
+\end{equation}
+
+
+\paragraph{Función objetivo}\mbox{}\\
+Parámetros numéricos (parte 2):  
+\(
+M_1=50,\; M_2=70,\; M_3=90;\;
+CHE=5;\; MHE=100;\; CSUB=5;\; F=50
+\)
+
+\begin{align}
+\mbox{max. } z \;=\;& 
+M_1x_1 + M_2x_2 + M_3x_3 
+- CSUB(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- CHE\,h 
+- F\,\alpha \notag\\[1mm]
+=\;& 
+50x_1 + 70x_2 + 90x_3
+- 5(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h - 50\alpha
+\end{align}
+
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;& 
+50x_1 + 70x_2 + 90x_3
+- 5(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h - 50\alpha \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i = 1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 \notag\\
+& x_1 + x_2 + x_3 \leq 300 \notag\\
+& h \leq 100 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \geq 150\,\alpha \notag\\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \leq U\,\alpha \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && i=1,2,3 \notag\\
+& \alpha \in \{0,1\} \notag
+\end{align}
+
+
+
+
+\subsection{Formulación generalizada}
+
+% \paragraph{Conjuntos}\mbox{}\\
+% \begin{tabular}{lcl}
+% $\mathcal{I}=\{1,2,3\}$ & : & productos (1: montaña, 2: carretera, 3: eléctrica) \\
+% $\mathcal{J}=\{1,2,3\}$ & : & talleres (1: ensamblaje, 2: pintura, 3: embalaje) \\
+% $\mathcal{K}=\{0,1\}$    & : & modalidad de pintura (0: interna, 1: subcontratada) \\
+% \end{tabular}
+
+% \paragraph{Parámetros}\mbox{}\\
+% \begin{tabular}{lcl}
+% $M_i$     & : & margen del producto $i$ \\
+% $HD_j$    & : & horas disponibles en el taller $j$ \\
+% $H_{i,j}$ & : & horas necesarias del taller $j$ por unidad del producto $i$ \\
+% $CHE$     & : & coste por hora extra (ensamblaje) \\
+% $MHE$     & : & máximo de horas extra en ensamblaje \\
+% $CSUb$    & : & sobrecoste unitario por subcontratar pintura \\
+% $F$       & : & coste fijo si se activa la subcontratación \\
+% $S_{\min}$& : & mínimo total subcontratado si se activa ($S_{\min}=150$ en el caso) \\
+% $U$       & : & cota grande para enlazar activación y cantidades subcontratadas \\
+% \end{tabular}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{lcl}
+% $x_{ik}$ & : & cantidad del producto $i$ con modalidad $k$ de pintura \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% $y$      & : & 1 si se activa la subcontratación; 0 en caso contrario \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% \textit{Capacidad de ensamblaje:}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i1}\, x_{ik} \;\leq\; HD_1 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (solo interna):}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}} H_{i2}\, x_{i0} \;\leq\; HD_2
+% \end{equation}
+
+% \textit{Capacidad de embalaje:}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i3}\, x_{ik} \;\leq\; HD_3
+% \end{equation}
+
+% \textit{Límite de horas extra:}
+% \begin{equation}
+% h \;\leq\; MHE
+% \end{equation}
+
+% \textit{Prohibición de subcontratar eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \textit{Activación y mínimo de subcontratación (global):}
+% \begin{align}
+% & \sum_{i\in\{1,2\}} x_{i1} \;\geq\; S_{\min}\, y \\
+% & \sum_{i\in\{1,2\}} x_{i1} \;\leq\; U\, y
+% \end{align}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} M_i\, x_{ik}
+% \;-\; CSUb \sum_{i\in\{1,2\}} x_{i1}
+% \;-\; CHE \, h
+% \;-\; F\, y
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i,k} M_i\, x_{ik} - CSUb \sum_{i\in\{1,2\}} x_{i1} - CHE\, h - F\, y \notag\\
+% \mbox{s. a.:}\quad
+% & \sum_{i,k} H_{i1} x_{ik} \leq HD_1 + h \notag\\
+% & \sum_i H_{i2} x_{i0} \leq HD_2 \notag\\
+% & \sum_{i,k} H_{i3} x_{ik} \leq HD_3 \notag\\
+% & h \leq MHE \notag\\
+% & x_{31}=0 \notag\\
+% & \sum_{i\in\{1,2\}} x_{i1} \geq S_{\min}\, y \notag\\
+% & \sum_{i\in\{1,2\}} x_{i1} \leq U\, y \notag\\
+% & x_{ik},\, h \geq 0 \;\; \forall i,k,\qquad y\in\{0,1\} \notag
+% \end{align}
+
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$ & : & conjunto de tipos de bicicletas ($i \in \{1,2,3\}$) \\
+$\mathcal{I}_S$ & : & subconjunto de productos que pueden subcontratarse ($\mathcal{I}_S = \{1,2\}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen de beneficio unitario del producto $i$ \\
+$H_{i1}$  & : & horas necesarias en ensamblaje por unidad del producto $i$ \\
+$H_{i2}$  & : & horas necesarias en pintura interna por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en ensamblaje en horario normal \\
+$HD_2$    & : & horas disponibles en pintura interna \\
+$HD_3$    & : & horas disponibles en embalaje \\
+$CHE$     & : & coste por hora extra en ensamblaje \\
+$MHE$     & : & máximo de horas extra en ensamblaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar pintura \\
+$F$       & : & coste fijo de activación del subcontratista \\
+$S_{\min}$& : & número mínimo total de unidades subcontratadas si se activa la subcontratación \\
+$U$       & : & cota grande para vincular la activación con las cantidades subcontratadas \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del producto $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$ & : & unidades del producto $i$ cuya pintura se subcontrata \\
+$h$ & : & horas extra utilizadas en ensamblaje \\
+$\alpha$ & : & 1 si se activa la subcontratación; 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i1}\,x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de pintura (solo interna):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i2}\,y_i^{\mathrm{I}} \;\leq\; HD_2
+\end{equation}
+
+\textit{Capacidad de embalaje:}
+\begin{equation}
+\sum_{i \in \mathcal{I}} x_i \;\leq\; HD_3
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; MHE
+\end{equation}
+
+\textit{Prohibición de subcontratar determinados productos:}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I} \setminus \mathcal{I}_S
+\end{equation}
+
+\textit{Activación del subcontratista y mínimo de unidades subcontratadas:}
+\begin{align}
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \;\geq\; S_{\min}\,\alpha \\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \;\leq\; U\,\alpha
+\end{align}
+
+\textit{No negatividad y binariedad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 \quad \forall i \in \mathcal{I}, 
+\qquad \alpha \in \{0,1\}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;& 
+\sum_{i \in \mathcal{I}} M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\,h
+- F\,\alpha
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;& 
+\sum_i M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\,h
+- F\,\alpha \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\,x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\,y_i^{\mathrm{I}} \leq HD_2 \notag\\
+& \sum_i x_i \leq HD_3 \notag\\
+& h \leq MHE \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}\setminus\mathcal{I}_S \notag\\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \geq S_{\min}\,\alpha \notag\\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \leq U\,\alpha \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && \forall i \in \mathcal{I} \notag\\
+& \alpha \in \{0,1\} \notag
+\end{align}
+
+
+
+\subsection{Presentación del caso}
+
+Partiendo de la situación inicial, la empresa puede \textbf{trasladar hasta 70 horas del taller de embalaje al taller de pintura}. Cada hora trasladada al taller de pintura conlleva un \textbf{coste adicional de 2 € por hora}. Se mantiene el resto de condiciones de la Parte 1: posibilidad de usar hasta 100 horas extra en ensamblaje (coste 5 €/h) y posibilidad de \textbf{subcontratar pintura} solo para montaña y carretera (sobrecoste 10 €/ud), no para la eléctrica. El objetivo sigue siendo \textbf{maximizar el beneficio}. :contentReference[oaicite:1]{index=1}
+
+
+\subsection{Formulación explícita}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{lcl}
+% $x_{10}$ & : & unidades de \emph{montaña} pintadas internamente \\
+% $x_{11}$ & : & unidades de \emph{montaña} con pintura subcontratada \\
+% $x_{20}$ & : & unidades de \emph{carretera} pintadas internamente \\
+% $x_{21}$ & : & unidades de \emph{carretera} con pintura subcontratada \\
+% $x_{30}$ & : & unidades de \emph{eléctrica} (pintura interna obligatoria) \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% $s$      & : & horas trasladadas desde \emph{embalaje} a \emph{pintura} \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% \textit{Capacidad de ensamblaje (con horas extra):}
+% \begin{equation}
+% 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \;\leq\; 500 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (con horas trasladadas):}
+% \begin{equation}
+% 2 x_{10} + 4 x_{20} + 5 x_{30} \;\leq\; 400 + s
+% \end{equation}
+
+% \textit{Capacidad de embalaje (disminuye al trasladar horas):}
+% \begin{equation}
+% (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \;\leq\; 300 - s
+% \end{equation}
+
+% \textit{Límites de horas extra y de traslado:}
+% \begin{align}
+% & h \;\leq\; 100 \\
+% & 0 \;\leq\; s \;\leq\; 70
+% \end{align}
+
+% \textit{No se puede subcontratar la eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \textit{No negatividad:}
+% \begin{equation}
+% x_{10},x_{11},x_{20},x_{21},x_{30},h,s \;\geq\; 0
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% Parámetros numéricos (Parte 3): 
+% \(
+% M_1=50,\; M_2=70,\; M_3=90;\;
+% CHE=5;\; MHE=100;\; CSUb=10;\;
+% CTR=2
+% \) (coste por hora trasladada). :contentReference[oaicite:2]{index=2}
+
+% \begin{align}
+% \mbox{max. } z \;=\;& M_1(x_{10}+x_{11}) + M_2(x_{20}+x_{21}) + M_3 x_{30} \notag\\
+% &\;-\; CSUb(x_{11}+x_{21}) \;-\; CHE\,h \;-\; CTR\,s \notag\\[1mm]
+% =\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} \notag\\
+% &\;-\; 10(x_{11}+x_{21}) \;-\; 5h \;-\; 2s
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& 50(x_{10}+x_{11}) + 70(x_{20}+x_{21}) + 90 x_{30} - 10(x_{11}+x_{21}) - 5h - 2s \notag\\
+% \mbox{s. a.:}\quad
+% & 2(x_{10}+x_{11}) + 3(x_{20}+x_{21}) + 4 x_{30} \leq 500 + h \notag\\
+% & 2 x_{10} + 4 x_{20} + 5 x_{30} \leq 400 + s \notag\\
+% & (x_{10}+x_{11}) + (x_{20}+x_{21}) + x_{30} \leq 300 - s \notag\\
+% & h \leq 100 \notag\\
+% & 0 \leq s \leq 70 \notag\\
+% & x_{31}=0 \notag\\
+% & x_{10},x_{11},x_{20},x_{21},x_{30},h,s \geq 0 \notag
+% \end{align}
+
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ con pintura subcontratada \\
+$h$      & : & horas extra utilizadas en ensamblaje \\
+$s$      & : & horas trasladadas desde \emph{embalaje} a \emph{pintura} \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i=1,2,3
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de pintura (con horas trasladadas; sólo interna):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400 + s
+\end{equation}
+
+\textit{Capacidad de embalaje (disminuye al trasladar horas):}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300 - s
+\end{equation}
+
+\textit{Límites de horas extra y de traslado:}
+\begin{align}
+& h \;\leq\; 100 \\
+& 0 \;\leq\; s \;\leq\; 70
+\end{align}
+
+\textit{Prohibición de subcontratar la eléctrica:}
+\begin{equation}
+y_3^{\mathrm{S}} \;=\; 0
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \;\geq\; 0 \qquad i=1,2,3
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Parámetros numéricos (parte 3): 
+\(
+M_1=50,\; M_2=70,\; M_3=90;\;
+CHE=5;\; MHE=100;\; CSUB=10;\; CTR=2
+\) (coste por hora trasladada).
+\begin{align}
+\mbox{max. } z \;=\;& M_1x_1 + M_2x_2 + M_3 x_3 \notag\\
+&\;-\; CSUB\,(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) \;-\; CHE\,h \;-\; CTR\,s \notag\\[1mm]
+=\;& 50x_1 + 70x_2 + 90x_3 - 10(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) - 5h - 2s
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;& 50x_1 + 70x_2 + 90x_3 - 10(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) - 5h - 2s \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i=1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 + s \notag\\
+& x_1 + x_2 + x_3 \leq 300 - s \notag\\
+& h \leq 100,\quad 0 \leq s \leq 70 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \geq 0 && i=1,2,3 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+% \paragraph{Conjuntos}\mbox{}\\
+% \begin{tabular}{lcl}
+% $\mathcal{I}=\{1,2,3\}$ & : & productos (1: montaña, 2: carretera, 3: eléctrica) \\
+% $\mathcal{J}=\{1,2,3\}$ & : & talleres (1: ensamblaje, 2: pintura, 3: embalaje) \\
+% $\mathcal{K}=\{0,1\}$    & : & modalidad de pintura (0: interna, 1: subcontratada) \\
+% \end{tabular}
+
+% \paragraph{Parámetros}\mbox{}\\
+% \begin{tabular}{lcl}
+% $M_i$     & : & margen del producto $i$ \\
+% $HD_j$    & : & horas disponibles en el taller $j$ \\
+% $H_{i,j}$ & : & horas necesarias del taller $j$ por unidad del producto $i$ \\
+% $CHE$     & : & coste por hora extra (ensamblaje) \\
+% $MHE$     & : & máximo de horas extra en ensamblaje \\
+% $CSUb$    & : & sobrecoste unitario por subcontratar pintura \\
+% $CTR$     & : & coste por hora trasladada de $j{=}3$ (embalaje) a $j{=}2$ (pintura) \\
+% $SMAX$    & : & máximo de horas trasladables de embalaje a pintura \\
+% \end{tabular}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{lcl}
+% $x_{ik}$ & : & cantidad del producto $i$ con modalidad $k$ de pintura \\
+% $h$      & : & horas extra utilizadas en ensamblaje \\
+% $s$      & : & horas trasladadas desde embalaje a pintura \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% \textit{Capacidad de ensamblaje:}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i1}\, x_{ik} \;\leq\; HD_1 + h
+% \end{equation}
+
+% \textit{Capacidad de pintura (aumentada por traslado):}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}} H_{i2}\, x_{i0} \;\leq\; HD_2 + s
+% \end{equation}
+
+% \textit{Capacidad de embalaje (reducida por traslado):}
+% \begin{equation}
+% \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} H_{i3}\, x_{ik} \;\leq\; HD_3 - s
+% \end{equation}
+
+% \textit{Límites de horas extra y traslado:}
+% \begin{align}
+% & h \;\leq\; MHE \\
+% & 0 \;\leq\; s \;\leq\; SMAX
+% \end{align}
+
+% \textit{Prohibición de subcontratar la eléctrica:}
+% \begin{equation}
+% x_{31} \;=\; 0
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i\in\mathcal{I}}\sum_{k\in\mathcal{K}} M_i\, x_{ik}
+% \;-\; CSUb \sum_{i\in\{1,2\}} x_{i1}
+% \;-\; CHE \, h
+% \;-\; CTR \, s
+% \end{align}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max. } z \;=\;& \sum_{i,k} M_i\, x_{ik} - CSUb \sum_{i\in\{1,2\}} x_{i1} - CHE\, h - CTR\, s \notag\\
+% \mbox{s. a.:}\quad
+% & \sum_{i,k} H_{i1} x_{ik} \leq HD_1 + h \notag\\
+% & \sum_i H_{i2} x_{i0} \leq HD_2 + s \notag\\
+% & \sum_{i,k} H_{i3} x_{ik} \leq HD_3 - s \notag\\
+% & h \leq MHE,\quad 0 \leq s \leq SMAX \notag\\
+% & x_{31}=0,\quad x_{ik},\, h,\, s \geq 0 \notag
+% \end{align}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$      & : & conjunto de tipos de bicicletas \\
+$\mathcal{I}_S$    & : & subconjunto de productos que pueden subcontratarse ($\mathcal{I}_S \subseteq \mathcal{I}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen unitario del producto $i$ \\
+$H_{i1}$  & : & horas de \emph{ensamblaje} por unidad del producto $i$ \\
+$H_{i2}$  & : & horas de \emph{pintura interna} por unidad del producto $i$ \\
+$H_{i3}$  & : & horas de \emph{embalaje} por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en ensamblaje (normales) \\
+$HD_2$    & : & horas disponibles en pintura (internas) \\
+$HD_3$    & : & horas disponibles en embalaje \\
+$CHE$     & : & coste por hora extra en ensamblaje \\
+$MHE$     & : & máximo de horas extra en ensamblaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar la pintura \\
+$CTR$     & : & coste por cada hora trasladada de embalaje a pintura \\
+$SMAX$    & : & máximo de horas trasladables de embalaje a pintura \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$               & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$  & : & unidades del producto $i$ pintadas internamente \\
+$y_i^{\mathrm{S}}$  & : & unidades del producto $i$ con pintura subcontratada \\
+$h$                 & : & horas extra utilizadas en ensamblaje \\
+$s$                 & : & horas trasladadas desde embalaje a pintura \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textit{Vinculación producción–pintura:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de ensamblaje (con horas extra):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i1}\, x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de pintura interna (aumenta con $s$):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i2}\, y_i^{\mathrm{I}} \;\leq\; HD_2 + s
+\end{equation}
+
+\textit{Capacidad de embalaje (disminuye con $s$):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i3}\, x_i \;\leq\; HD_3 - s
+\end{equation}
+
+\textit{Límites operativos:}
+\begin{align}
+& h \;\leq\; MHE \\
+& 0 \;\leq\; s \;\leq\; SMAX
+\end{align}
+
+\textit{Prohibición de subcontratar donde no esté permitido:}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I}\setminus\mathcal{I}_S
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \;\geq\; 0 \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_{i\in\mathcal{I}} M_i\, x_i
+\;-\; CSUB \sum_{i\in\mathcal{I}_S} y_i^{\mathrm{S}}
+\;-\; CHE\, h
+\;-\; CTR\, s
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_i M_i\, x_i
+- CSUB \sum_{i\in\mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\, h
+- CTR\, s \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\, x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\, y_i^{\mathrm{I}} \leq HD_2 + s \notag\\
+& \sum_i H_{i3}\, x_i \leq HD_3 - s \notag\\
+& h \leq MHE,\quad 0 \leq s \leq SMAX \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}\setminus\mathcal{I}_S \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \geq 0 && \forall i \in \mathcal{I} \notag
+\end{align}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Formulación explícita de la situación inicial (variante 2)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_{ijk}$ & : & unidades del producto $i$ con pintura $j$ y ensamblaje $k$ \\
+          &   & $i\in\{1,2,3\}$ (1: montaña, 2: carretera, 3: eléctrica) \\
+          &   & $j\in\{0,1\}$ (0: interna, 1: subcontratada) \\
+          &   & $k\in\{0,1\}$ (0: horas normales, 1: horas extra) \\
+\end{tabular}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;
+& \;50\sum_{j,k} x_{1jk} + 70\sum_{j,k} x_{2jk} + 90\sum_{j,k} x_{3jk} \notag\\
+& - 10\Big(\sum_{k} x_{1,1,k} + \sum_{k} x_{2,1,k}\Big) \notag\\
+& - 5\Big( 2\sum_{j} x_{1j1} + 3\sum_{j} x_{2j1} + 4\sum_{j} x_{3j1} \Big)
+\end{align}
+
+\paragraph{Restricciones}\mbox{}\\
+\textit{Capacidad de ensamblaje en horas normales (500 h):}
+\begin{equation}
+2\sum_{j} x_{1j0} + 3\sum_{j} x_{2j0} + 4\sum_{j} x_{3j0} \;\leq\; 500
+\end{equation}
+
+\textit{Capacidad de ensamblaje en horas extra (100 h):}
+\begin{equation}
+2\sum_{j} x_{1j1} + 3\sum_{j} x_{2j1} + 4\sum_{j} x_{3j1} \;\leq\; 100
+\end{equation}
+
+\textit{Capacidad de pintura (solo pintura interna, 400 h):}
+\begin{equation}
+2\sum_{k} x_{1,0,k} + 4\sum_{k} x_{2,0,k} + 5\sum_{k} x_{3,0,k} \;\leq\; 400
+\end{equation}
+
+\textit{Capacidad de embalaje (300 h = 300 uds):}
+\begin{equation}
+\sum_{i=1}^{3}\sum_{j=0}^{1}\sum_{k=0}^{1} x_{ijk} \;\leq\; 300
+\end{equation}
+
+\textit{Prohibición de subcontratar la eléctrica:}
+\begin{align}
+& x_{3,1,0} \;=\; 0 \\
+& x_{3,1,1} \;=\; 0
+\end{align}
+
+\textit{No negatividad:}
+\begin{equation}
+x_{ijk} \;\geq\; 0 \qquad \forall i\in\{1,2,3\},\; j\in\{0,1\},\; k\in\{0,1\}
+\end{equation}
+
+
+
+
+
+
+

@@ -1,0 +1,125 @@
+\section{Flow shop}
+
+
+\subsection{Presentación del caso}
+
+Un taller que produce tubos de metal bajo demanda para la industria automotriz dispone de tres estaciones de trabajo: una para el doblado, otra para la soldadura y otra para el ensamblaje.  
+Debe procesar tres pedidos, cuyos tiempos de procesamiento (en minutos) en cada estación son los siguientes:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & Pedido 1 & Pedido 2 & Pedido 3 \\
+\midrule
+Doblado & 3 & 6 & 3 \\
+Soldadura & 5 & 4 & 2 \\
+Ensamblaje & 5 & 2 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cada pedido pasa por las tres estaciones en ese orden.  
+Cada estación solo puede procesar un pedido a la vez, y no se permite el solapamiento ni el cambio del orden de paso.  
+El objetivo es encontrar la secuencia de pedidos que minimiza el tiempo total de producción (\textit{makespan}).
+
+\subsection{Formulación explícita}
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+$T_{ps}$ & : & tiempo de proceso del pedido $p$ en la estación $s$ \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+$x_{pp'}$ & : & $1$ si el pedido $p$ precede al pedido $p'$, $0$ en caso contrario \\
+$t^I_{ps}$ & : & tiempo de inicio del pedido $p$ en la estación $s$ \\
+$f$ & : & tiempo total de finalización de la producción (\textit{makespan}) \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Duración de las operaciones:
+\begin{align}
+t^F_{ps} &= t^I_{ps} + T_{ps} \qquad \forall p,s
+\end{align}
+
+Para este caso particular:
+\begin{align}
+t^F_{11} &= t^I_{11} + 3 & t^F_{21} &= t^I_{21} + 6 & t^F_{31} &= t^I_{31} + 3 \notag \\
+t^F_{12} &= t^I_{12} + 5 & t^F_{22} &= t^I_{22} + 4 & t^F_{32} &= t^I_{32} + 2 \notag \\
+t^F_{13} &= t^I_{13} + 5 & t^F_{23} &= t^I_{23} + 2 & t^F_{33} &= t^I_{33} + 4
+\end{align}
+
+Orden de operaciones dentro de cada pedido:
+\begin{align}
+t^I_{p,s+1} \ge t^F_{ps} \qquad \forall p, s=1,2
+\end{align}
+
+No solapamiento en una misma estación (\textit{big-M} con $M=34$):
+\begin{align}
+t^I_{ps} &\ge t^F_{p's} - M(1 - x_{pp'}) \qquad \forall p \ne p', s \\
+t^I_{p's} &\ge t^F_{ps} - M x_{pp'} \qquad \forall p \ne p', s
+\end{align}
+
+Definición del \textit{makespan}:
+\begin{align}
+f \ge t^F_{ps} \qquad \forall p,s
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z = f
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+
+\begin{align}
+\mbox{min. } & z = f \notag \\
+\mbox{s. a.: } & \notag \\
+&t^F_{11}=t^I_{11}+3, \quad t^F_{21}=t^I_{21}+6, \quad t^F_{31}=t^I_{31}+3 \notag\\
+&t^F_{12}=t^I_{12}+5, \quad t^F_{22}=t^I_{22}+4, \quad t^F_{32}=t^I_{32}+2 \notag\\
+&t^F_{13}=t^I_{13}+5, \quad t^F_{23}=t^I_{23}+2, \quad t^F_{33}=t^I_{33}+4 \notag\\[2mm]
+&t^I_{p,s+1} \ge t^F_{ps} \qquad \forall p=1,2,3;\ s=1,2 \notag\\
+&t^I_{ps} \ge t^F_{p's} - 34(1-x_{pp'}) \qquad \forall p\ne p',\ s=1,2,3 \notag\\
+&t^I_{p's} \ge t^F_{ps} - 34x_{pp'} \qquad \forall p\ne p',\ s=1,2,3 \notag\\
+&f \ge t^F_{ps} \qquad \forall p,s \notag\\[2mm]
+&x_{pp'} \in \{0,1\},\ t^I_{ps},t^F_{ps},f \ge 0 \notag
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+$\mathcal{P}$ & : & conjunto de pedidos a procesar \\
+$\mathcal{S}$ & : & conjunto de estaciones del taller \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+$T_{ps}$ & : & tiempo de proceso del pedido $p$ en la estación $s$ \\
+$M$ & : & constante grande (\textit{big-M}) \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+$x_{pp'}$ & : & 1 si el pedido $p$ precede al pedido $p'$ \\
+$t^I_{ps}$ & : & tiempo de inicio del pedido $p$ en la estación $s$ \\
+$t^F_{ps}$ & : & tiempo de finalización del pedido $p$ en la estación $s$ \\
+$f$ & : & tiempo total de producción (\textit{makespan}) \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\begin{align}
+t^F_{ps} &= t^I_{ps} + T_{ps} && \forall p\in\mathcal{P}, s\in\mathcal{S} \\
+t^I_{p,s+1} &\ge t^F_{ps} && \forall p\in\mathcal{P}, s\in\mathcal{S}\setminus\{\text{última}\} \\
+t^I_{ps} &\ge t^F_{p's} - M(1-x_{pp'}) && \forall p\ne p', s\in\mathcal{S} \\
+t^I_{p's} &\ge t^F_{ps} - Mx_{pp'} && \forall p\ne p', s\in\mathcal{S} \\
+f &\ge t^F_{ps} && \forall p\in\mathcal{P}, s\in\mathcal{S}
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z = f
+\end{align}

@@ -1,0 +1,351 @@
+\section{Paneles fotovoltaicos}
+
+\subsection{Presentación del caso}
+Una empresa especializada en la fabricación de paneles fotovoltaicos produce y fabrica tres tipos de paneles con diferentes márgenes unitarios de beneficio.  
+Cada panel requiere pasar por cinco procesos productivos: soldadura de células, laminación, ensamblado, control de calidad y embalado, con tiempos distintos según el tipo de panel.  
+Existen limitaciones en la capacidad diaria de cada proceso, así como en el consumo de material adhesivo adicional utilizado en los paneles policristalinos.  
+Además, el proceso de control de calidad puede externalizarse mediante una contrata que permite ampliar su capacidad, aunque a un coste adicional.  
+
+Se pide establecer el plan de producción que maximice el beneficio diario de la empresa.
+
+\subsection{Formulación explícita (versión con duplicación de variables)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+  $x_s^{\mathrm{i}}$ & : & paneles policristalinos pequeños con c. calidad \textbf{interna}\\
+  $x_m^{\mathrm{i}}$ & : & paneles monocristalinos medianos con c. calidad \textbf{interna}\\
+  $x_g^{\mathrm{i}}$ & : & paneles policristalinos grandes con c. calidad \textbf{interna}\\
+  $x_s^{\mathrm{e}}$ & : & paneles policristalinos pequeños con c. calidad \textbf{externa}\\
+  $x_m^{\mathrm{e}}$ & : & paneles monocristalinos medianos con c. calidad \textbf{externa}\\
+  $x_g^{\mathrm{e}}$ & : & paneles policristalinos grandes con c. calidad \textbf{externa}\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de soldadura (min):
+\begin{equation}
+5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 5(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 240
+\end{equation}
+
+Capacidad de laminación (min):
+\begin{equation}
+6(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 10(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 12(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 480
+\end{equation}
+
+Capacidad de ensamblado (min):
+\begin{equation}
+8(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 15(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 960
+\end{equation}
+
+Control de calidad \textbf{interno} (min):
+\begin{equation}
+2x_s^{\mathrm{i}} + 2x_m^{\mathrm{i}} + 2x_g^{\mathrm{i}} \le 10
+\end{equation}
+
+Control de calidad \textbf{externo} (min):
+\begin{equation}
+2x_s^{\mathrm{e}} + 2x_m^{\mathrm{e}} + 2x_g^{\mathrm{e}} \le 24000
+\end{equation}
+
+Capacidad de embalado (min):
+\begin{equation}
+3(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 4(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 400
+\end{equation}
+
+Disponibilidad de adhesivo (kg):
+\begin{equation}
+0.2(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 0.5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 5
+\end{equation}
+
+No negatividad:
+\begin{equation}
+x_s^{\mathrm{i}},x_m^{\mathrm{i}},x_g^{\mathrm{i}},x_s^{\mathrm{e}},x_m^{\mathrm{e}},x_g^{\mathrm{e}} \ge 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Beneficio por ventas menos coste de subcontratación (0,5 u.m./panel externo):
+\begin{equation}
+\mbox{max.}\; z = 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 7(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 8(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}})
+- 0.5\,(x_s^{\mathrm{e}} + x_m^{\mathrm{e}} + x_g^{\mathrm{e}})
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad 
+& 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 7(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 8(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}})
+ - 0.5(x_s^{\mathrm{e}}{+}x_m^{\mathrm{e}}{+}x_g^{\mathrm{e}}) \notag\\
+\mbox{s. a.:}\quad
+& 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 5(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 240 \notag\\
+& 6(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 10(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 12(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 480 \notag\\
+& 8(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 15(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 960 \notag\\
+& 2x_s^{\mathrm{i}} + 2x_m^{\mathrm{i}} + 2x_g^{\mathrm{i}} \le 10 \notag\\
+& 2x_s^{\mathrm{e}} + 2x_m^{\mathrm{e}} + 2x_g^{\mathrm{e}} \le 24000 \notag\\
+& 3(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 4(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 400 \notag\\
+& 0.2(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 0.5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 5 \notag\\
+& x_s^{\mathrm{i}},x_m^{\mathrm{i}},x_g^{\mathrm{i}},x_s^{\mathrm{e}},x_m^{\mathrm{e}},x_g^{\mathrm{e}} \ge 0 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{P}$ & : & tipos de paneles \\
+    $\mathcal{R}$ & : & procesos de producción (incluye, si aplica, \emph{calidad}) \\
+\end{tabular}
+\\[0.25cm]
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $B_p$           & : & margen unitario del panel $p \in \mathcal{P}$ \\
+    $T_{rp}$        & : & tiempo requerido en el proceso $r \in \mathcal{R}$ por unidad de $p$ \\
+    $C_r$           & : & capacidad disponible del proceso $r \in \mathcal{R}$ \\
+    $A_p$           & : & adhesivo requerido por unidad del panel $p \in \mathcal{P}$ \\
+    $A$             & : & adhesivo disponible \\
+    $C_{\mathrm{ext}}$ & : & capacidad máxima externalizable del proceso de \emph{calidad} (en unidades de tiempo) \\
+    $K_{\mathrm{ext}}$ & : & coste por unidad de \emph{calidad} externalizada (en unidades de tiempo) \\
+    $K_{\mathrm{pan}}$ & : & coste por panel con \emph{calidad} externalizada (si se modela por unidad de producto) \\
+\end{tabular}
+\\[0.25cm]
+
+\paragraph{Variables}\mbox{}\\
+\textbf{Versión A: con tiempo externalizado}\\
+\begin{tabular}{l c l}
+    $x_p$ & : & unidades fabricadas del panel $p \in \mathcal{P}$ \\
+    $y$   & : & tiempo externalizado de \emph{calidad} \\
+\end{tabular}
+
+\noindent\textbf{Versión B: con duplicación de variables (interna/externa)}\\
+\begin{tabular}{l c l}
+    $x_p^{\mathrm{i}}$ & : & unidades del panel $p$ con \emph{calidad} interna \\
+    $x_p^{\mathrm{e}}$ & : & unidades del panel $p$ con \emph{calidad} externalizada \\
+\end{tabular}
+\\[0.25cm]
+
+% ======================== VERSIÓN A ========================
+\paragraph{Restricciones (versión A)}\mbox{}\\
+Capacidades de procesos \emph{no calidad}:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{rp}\,x_p \;\le\; C_r \qquad \forall r \in \mathcal{R}\setminus\{\mathrm{calidad}\}
+\end{equation}
+
+Proceso de \emph{calidad} con parte externalizada:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{calidad},p}\,x_p \;\le\; C_{\mathrm{calidad}} + y
+\end{equation}
+
+Capacidad máxima de la contrata:
+\begin{equation}
+    y \;\le\; C_{\mathrm{ext}}
+\end{equation}
+
+Disponibilidad de adhesivo:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} A_p\,x_p \;\le\; A
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_p \ge 0 \;\;\forall p \in \mathcal{P}, \quad y \ge 0
+\end{equation}
+
+\paragraph{Función objetivo (Versión A)}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z \;=\; \sum_{p \in \mathcal{P}} B_p\,x_p \;-\; K_{\mathrm{ext}}\,y
+\end{equation}
+
+\paragraph{Modelo completo (versión A)}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & z \;=\; \sum_{p \in \mathcal{P}} B_p\,x_p \;-\; K_{\mathrm{ext}}\,y \notag\\
+\mbox{s. a.:}\quad 
+& \sum_{p} T_{rp}\,x_p \le C_r \quad \forall r \in \mathcal{R}\setminus\{\mathrm{calidad}\} \notag\\
+& \sum_{p} T_{\mathrm{calidad},p}\,x_p \le C_{\mathrm{calidad}} + y \notag\\
+& y \le C_{\mathrm{ext}} \notag\\
+& \sum_{p} A_p\,x_p \le A \notag\\
+& x_p \ge 0 \;\forall p \in \mathcal{P},\; y \ge 0 \notag
+\end{align}
+
+% ======================== VERSIÓN B ========================
+\paragraph{Restricciones (versión B)}\mbox{}\\
+Acumulación por procesos \emph{no calidad}:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{rp}\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;\le\; C_r 
+    \qquad \forall r \in \mathcal{R}\setminus\{\mathrm{calidad}\}
+\end{equation}
+
+\emph{Calidad} interna:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{calidad},p}\,x_p^{\mathrm{i}} \;\le\; C_{\mathrm{calidad}}
+\end{equation}
+
+\emph{Calidad} externalizada (capacidad de la contrata expresada en tiempo):
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{calidad},p}\,x_p^{\mathrm{e}} \;\le\; C_{\mathrm{ext}}
+\end{equation}
+
+Disponibilidad de adhesivo:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} A_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;\le\; A
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_p^{\mathrm{i}} \ge 0,\; x_p^{\mathrm{e}} \ge 0 \qquad \forall p \in \mathcal{P}
+\end{equation}
+
+\paragraph{Función objetivo (versión B)}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z \;=\; 
+\sum_{p \in \mathcal{P}} B_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big)
+\;-\;
+K_{\mathrm{pan}} \sum_{p \in \mathcal{P}} x_p^{\mathrm{e}}
+\end{equation}
+
+\paragraph{Modelo completo (versión B)}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad 
+& z \;=\; \sum_{p} B_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;-\; K_{\mathrm{pan}}\sum_{p} x_p^{\mathrm{e}} \notag\\
+\mbox{s. a.:}\quad 
+& \sum_{p} T_{rp}\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \le C_r \quad \forall r \in \mathcal{R}\setminus\{\mathrm{calidad}\} \notag\\
+& \sum_{p} T_{\mathrm{calidad},p}\,x_p^{\mathrm{i}} \le C_{\mathrm{calidad}} \notag\\
+& \sum_{p} T_{\mathrm{calidad},p}\,x_p^{\mathrm{e}} \le C_{\mathrm{ext}} \notag\\
+& \sum_{p} A_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \le A \notag\\
+& x_p^{\mathrm{i}},\,x_p^{\mathrm{e}} \ge 0 \;\; \forall p \in \mathcal{P} \notag
+\end{align}
+
+
+% \subsection{Formulación explícita}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{l c l}
+%     $x_s$ & : & número de paneles policristalinos pequeños producidos (1m$^2$)\\
+%     $x_m$ & : & número de paneles monocristalinos medianos producidos (2m$^2$)\\
+%     $x_g$ & : & número de paneles policristalinos grandes producidos (3,5m$^2$)\\
+%     $y$   & : & tiempo (en minutos) de control de calidad externalizado\\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+
+% Disponibilidad de soldadura:
+% \begin{equation}
+% 5x_s + 5x_m + 5x_g \leq 240
+% \end{equation}
+
+% Disponibilidad de laminación:
+% \begin{equation}
+% 6x_s + 10x_m + 12x_g \leq 480
+% \end{equation}
+
+% Disponibilidad de ensamblado:
+% \begin{equation}
+% 8x_s + 15x_m + 5x_g \leq 960
+% \end{equation}
+
+% Disponibilidad de control de calidad:
+% \begin{equation}
+% 2x_s + 2x_m + 2x_g \leq 10 + y
+% \end{equation}
+
+% Disponibilidad de embalado:
+% \begin{equation}
+% 3x_s + 4x_m + 5x_g \leq 400
+% \end{equation}
+
+% Disponibilidad de adhesivo:
+% \begin{equation}
+% 0.2x_s + 0.5x_g \leq 5
+% \end{equation}
+
+% Capacidad de la contrata de control de calidad:
+% \begin{equation}
+% y \leq 400 \times 60
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% Márgenes de beneficio:
+% \[
+% 5x_s + 7x_m + 8x_g
+% \]
+
+% Costes de subcontratación de control de calidad:
+% \[
+% 0.5\left(\frac{y}{2}\right)
+% \]
+
+% Expresión de la función objetivo:
+% \begin{equation}
+% \mbox{max.} \; z = 5x_s + 7x_m + 8x_g - 0.25y
+% \end{equation}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max.} \quad & 5x_s + 7x_m + 8x_g - 0.25y \notag \\
+% \mbox{s. a.:} \quad & 5x_s + 5x_m + 5x_g \leq 240 \notag \\
+%                     & 6x_s + 10x_m + 12x_g \leq 480 \notag \\
+%                     & 8x_s + 15x_m + 5x_g \leq 960 \notag \\
+%                     & 2x_s + 2x_m + 2x_g \leq 10 + y \notag \\
+%                     & 3x_s + 4x_m + 5x_g \leq 400 \notag \\
+%                     & 0.2x_s + 0.5x_g \leq 5 \notag \\
+%                     & y \leq 24000 \notag \\
+%                     & x_s, x_m, x_g, y \geq 0
+% \end{align}
+
+% \subsection{Formulación generalizada}
+
+% \paragraph{Conjuntos}\mbox{}\\
+% \begin{tabular}{l c l}
+%     $\mathcal{P}$ & : & conjunto de tipos de paneles fabricados \\
+%     $\mathcal{R}$ & : & conjunto de procesos de producción \\
+% \end{tabular}
+
+% \paragraph{Parámetros}\mbox{}\\
+% \begin{tabular}{l c l}
+%     $B_p$  & : & beneficio unitario del panel $p \in \mathcal{P}$ \\
+%     $T_{rp}$ & : & tiempo requerido en proceso $r \in \mathcal{R}$ para producir un panel $p \in \mathcal{P}$ \\
+%     $C_r$  & : & capacidad diaria disponible del proceso $r \in \mathcal{R}$ \\
+%     $A_p$  & : & adhesivo requerido por el panel $p \in \mathcal{P}$ \\
+%     $A$    & : & adhesivo disponible al día \\
+%     $C_{cc}$ & : & capacidad externa máxima de control de calidad \\
+%     $k$ & : & coste por unidad de control de calidad externalizada \\
+% \end{tabular}
+
+% \paragraph{Variables}\mbox{}\\
+% \begin{tabular}{l c l}
+%     $x_p$ & : & número de paneles fabricados del tipo $p \in \mathcal{P}$ \\
+%     $y$   & : & tiempo de control de calidad externalizado \\
+% \end{tabular}
+
+% \paragraph{Restricciones}\mbox{}\\
+% Restricciones de capacidad de procesos:
+% \begin{equation}
+% \sum_{p \in \mathcal{P}} T_{rp}x_p \leq C_r \qquad \forall r \in \mathcal{R}\setminus \{\text{calidad}\}
+% \end{equation}
+
+% Restricción de control de calidad:
+% \begin{equation}
+% \sum_{p \in \mathcal{P}} T_{\text{calidad},p}x_p \leq C_{\text{calidad}} + y
+% \end{equation}
+
+% Restricción de adhesivo:
+% \begin{equation}
+% \sum_{p \in \mathcal{P}} A_p x_p \leq A
+% \end{equation}
+
+% Restricción de subcontrata:
+% \begin{equation}
+% y \leq C_{cc}
+% \end{equation}
+
+% \paragraph{Función objetivo}\mbox{}\\
+% \begin{equation}
+% \mbox{max.} \; z = \sum_{p \in \mathcal{P}} B_p x_p - k y
+% \end{equation}
+
+% \paragraph{Modelo completo}\mbox{}\\
+% \begin{align}
+% \mbox{max.} \quad & \sum_{p \in \mathcal{P}} B_p x_p - k y \notag \\
+% \mbox{s. a.:} \quad & \sum_{p \in \mathcal{P}} T_{rp}x_p \leq C_r \quad \forall r \in \mathcal{R}\setminus\{\text{calidad}\} \notag \\
+%                     & \sum_{p \in \mathcal{P}} T_{\text{calidad},p}x_p \leq C_{\text{calidad}} + y \notag \\
+%                     & \sum_{p \in \mathcal{P}} A_p x_p \leq A \notag \\
+%                     & y \leq C_{cc} \notag \\
+%                     & x_p \geq 0 \; \forall p \in \mathcal{P}, \; y \geq 0
+% \end{align}

@@ -1,0 +1,139 @@
+\section{La dieta}
+
+\subsection{Presentación del caso}
+
+Un centro de nutrición elabora un cereal natural a partir de tres tipos de granos 
+(A, B y C) que vende por kilos. El eslogan del centro es que cada 125 gramos de 
+este cereal cubren las necesidades alimenticias diarias de un adulto en cuanto a 
+proteínas, hidratos de carbono, fósforo y magnesio. 
+
+El coste de cada tipo de grano y sus contenidos en nutrientes por kilogramo se 
+recogen en la tabla de datos del problema. Los requisitos nutricionales mínimos 
+por día para un adulto son: 3 unidades de proteínas, 2 de hidratos de carbono, 
+1 de fósforo y 0.425 de magnesio. 
+
+Se trata de determinar qué mezcla de granos debe utilizarse en la elaboración de 
+1 kg de cereal de forma que se cubran las necesidades nutricionales mencionadas 
+y el coste total sea mínimo.
+
+\subsection{Formulación del modelo (explícita)}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c p{9cm}}
+    $x_a$ & : & kg del cereal $A$ en 1 kg de mezcla \\
+    $x_b$ & : & kg del cereal $B$ en 1 kg de mezcla \\
+    $x_c$ & : & kg del cereal $C$ en 1 kg de mezcla \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+Mezcla total (1 kg):
+\begin{align}
+x_a + x_b + x_c = 1
+\end{align}
+
+
+Requerimientos mínimos de nutrientes (en 1kg de mezcla, que corresponden a 8 raciones, dado que cada ración pesa 125g):
+\begin{align}
+22x_a + 28x_b + 21x_c &\geq 3 \times 8 = 24   && \text{(proteínas)} \\
+16x_a + 14x_b + 25x_c &\geq 2 \times 8 = 16   && \text{(hidratos de carbono)} \\
+8x_a + 7x_b + 9x_c    &\geq 1 \times 8 = 8    && \text{(fósforo)} \\
+5x_a + 0x_b + 6x_c    &\geq 0.425 \times 8 = 3.4 && \text{(magnesio)}
+\end{align}
+
+
+
+No negatividad:
+ \begin{equation}    
+x_a,\,x_b,\,x_c \;\ge\; 0
+\end{equation}
+
+
+\paragraph{Función objetivo}\mbox{}\\
+
+Coste mínimo por kg de mezcla:
+ \begin{equation}    
+\mbox{min.} z \;=\; 0.33\,x_a \;+\; 0.47\,x_b \;+\; 0.38\,x_c
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+
+\begin{align}
+\min \quad & z = 0.33x_a + 0.47x_b + 0.38x_c \\
+\text{s.a.} \quad
+& x_a + x_b + x_c = 1 \\
+& 22x_a + 28x_b + 21x_c \geq 24 \\
+& 16x_a + 14x_b + 25x_c \geq 16 \\
+& 8x_a + 7x_b + 9x_c \geq 8 \\
+& 5x_a + 0x_b + 6x_c \geq 3.4 \\
+& x_a,\,x_b,\,x_c \geq 0
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $\mathcal{G}$  & : & tipos de granos ($A$, $B$, $C$) \\
+    $\mathcal{N}$  & : & nutrientes considerados (proteínas, hidratos, fósforo, magnesio) \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Parámetros}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $C_g$     & : & coste por kg del grano $g \in \mathcal{G}$ \\
+    $A_{ng}$  & : & cantidad del nutriente $n \in \mathcal{N}$ contenida en 1 kg del grano $g \in \mathcal{G}$ \\
+    $R_n$     & : & requerimiento mínimo del nutriente $n \in \mathcal{N}$ en 1 kg de mezcla \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{l c l}
+    $x_g$  & : & kg del grano $g \in \mathcal{G}$ en la mezcla \\
+\end{tabular}
+\\
+\\
+
+\paragraph{Restricciones}\mbox{}\\
+
+Mezcla total de 1 kg:
+\begin{equation}
+\sum_{g \in \mathcal{G}} x_g \;=\; 1
+\end{equation}
+
+Requerimientos mínimos de nutrientes:
+\begin{equation}
+\sum_{g \in \mathcal{G}} A_{ng}\, x_g \;\geq\; R_n
+\qquad \forall n \in \mathcal{N}
+\end{equation}
+
+No negatividad:
+\begin{equation}
+x_g \;\geq\; 0 
+\qquad \forall g \in \mathcal{G}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+
+\begin{equation}
+\min\ z \;=\; \sum_{g \in \mathcal{G}} C_g\, x_g
+\end{equation}
+
+\textbf{Modelo completo}
+
+\begin{align}
+\min \quad & z = \sum_{g \in \mathcal{G}} C_g x_g \\
+\text{s.a.} \quad 
+& \sum_{g \in \mathcal{G}} x_g = 1 \qquad \text{(mezcla total)} \\
+& \sum_{g \in \mathcal{G}} A_{ng} x_g \geq R_n \quad \forall n \in \mathcal{N} \qquad \text{(requerimientos nutricionales)} \\
+& x_g \geq 0 \quad \forall g \in \mathcal{G} \qquad \text{(no negatividad)}
+\end{align}
+

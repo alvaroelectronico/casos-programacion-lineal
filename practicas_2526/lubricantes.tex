@@ -1,0 +1,105 @@
+\section{Lubricantes}
+
+\subsection{Presentación del caso}
+Una empresa industrial fabrica tres tipos de aceites lubricantes: aceite de motor, aceite hidráulico y aceite de transmisión. 
+Las contribuciones unitarias al beneficio son, respectivamente, 4, 6 y 5 unidades monetarias por m$^3$ producido.  
+
+La producción se organiza en tres procesos principales: calentamiento de materias primas, mezclado y envasado, que requieren la dedicación de 1, 2 y 4 trabajadores respectivamente.  
+
+Cada tipo de aceite emplea los siguientes tiempos de proceso (en minutos por m$^3$):
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & Calentamiento & Mezclado & Envasado \\
+\midrule
+Aceite de motor & 4 & 6 & 8 \\
+Aceite hidráulico & 4 & 10 & 15 \\
+Aceite de transmisión & 4 & 12 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Los tiempos máximos disponibles al día son 240 minutos de calentamiento, 480 minutos de mezclado y 960 minutos de envasado.  
+
+Se pide plantear un modelo de programación lineal que maximice el beneficio.
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_m$ & : & cantidad (m$^3$) de aceite de motor producido \\
+$x_h$ & : & cantidad (m$^3$) de aceite hidráulico producido \\
+$x_t$ & : & cantidad (m$^3$) de aceite de transmisión producido \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Tiempo máximo de calentamiento:
+\begin{equation}
+4x_m + 4x_h + 4x_t \leq 240
+\end{equation}
+
+Tiempo máximo de mezclado:
+\begin{equation}
+6x_m + 10x_h + 12x_t \leq 480
+\end{equation}
+
+Tiempo máximo de envasado:
+\begin{equation}
+8x_m + 15x_h + 5x_t \leq 960
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z = 4x_m + 6x_h + 5x_t
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & 4x_m + 6x_h + 5x_t \notag \\
+\mbox{s.a.}\quad 
+& 4x_m + 4x_h + 4x_t \leq 240 \notag \\
+& 6x_m + 10x_h + 12x_t \leq 480 \notag \\
+& 8x_m + 15x_h + 5x_t \leq 960 \notag \\
+& x_m, x_h, x_t \geq 0
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{A}$ & : & tipos de aceites lubricantes \\
+$\mathcal{P}$ & : & procesos de producción (calentamiento, mezclado, envasado) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$B_a$ & : & beneficio unitario por m$^3$ de aceite $a \in \mathcal{A}$ \\
+$T_{pa}$ & : & tiempo requerido (min) del proceso $p \in \mathcal{P}$ por cada m$^3$ de aceite $a \in \mathcal{A}$ \\
+$D_p$ & : & tiempo disponible (min) para el proceso $p \in \mathcal{P}$ \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_a$ & : & cantidad de aceite $a \in \mathcal{A}$ a producir (m$^3$) \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Para cada proceso $p \in \mathcal{P}$:
+\begin{equation}
+\sum_{a \in \mathcal{A}} T_{pa}\,x_a \leq D_p
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z = \sum_{a \in \mathcal{A}} B_a\,x_a
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & \sum_{a \in \mathcal{A}} B_a\,x_a \notag \\
+\mbox{s.a.}\quad 
+& \sum_{a \in \mathcal{A}} T_{pa}\,x_a \leq D_p, \quad \forall p \in \mathcal{P} \notag \\
+& x_a \geq 0, \quad \forall a \in \mathcal{A}
+\end{align}
