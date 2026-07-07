@@ -1,0 +1,105 @@
+\section{Perfumes}
+
+\subsection{Presentación del caso}
+Una empresa cosmética elabora tres tipos de perfumes: perfume floral, perfume amaderado y perfume cítrico.
+Las contribuciones unitarias al beneficio son, respectivamente, 4, 6 y 5 unidades monetarias por m$^3$ producido.
+
+La producción se organiza en tres procesos principales: maceración de esencias, mezclado y envasado, que requieren la dedicación de 1, 2 y 4 trabajadores respectivamente.
+
+Cada tipo de perfume emplea los siguientes tiempos de proceso (en minutos por m$^3$):
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & Maceración & Mezclado & Envasado \\
+\midrule
+Perfume floral & 4 & 6 & 8 \\
+Perfume amaderado & 4 & 10 & 15 \\
+Perfume cítrico & 4 & 12 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Los tiempos máximos disponibles al día son 240 minutos de maceración, 480 minutos de mezclado y 960 minutos de envasado.
+
+Se pide plantear un modelo de programación lineal que maximice el beneficio.
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_f$ & : & cantidad (m$^3$) de perfume floral producido \\
+$x_a$ & : & cantidad (m$^3$) de perfume amaderado producido \\
+$x_c$ & : & cantidad (m$^3$) de perfume cítrico producido \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+Tiempo máximo de maceración:
+\begin{equation}
+4x_f + 4x_a + 4x_c \leq 240
+\end{equation}
+
+Tiempo máximo de mezclado:
+\begin{equation}
+6x_f + 10x_a + 12x_c \leq 480
+\end{equation}
+
+Tiempo máximo de envasado:
+\begin{equation}
+8x_f + 15x_a + 5x_c \leq 960
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z = 4x_f + 6x_a + 5x_c
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & 4x_f + 6x_a + 5x_c \notag \\
+\mbox{s.a.}\quad
+& 4x_f + 4x_a + 4x_c \leq 240 \notag \\
+& 6x_f + 10x_a + 12x_c \leq 480 \notag \\
+& 8x_f + 15x_a + 5x_c \leq 960 \notag \\
+& x_f, x_a, x_c \geq 0
+\end{align}
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{F}$ & : & tipos de perfumes \\
+$\mathcal{P}$ & : & procesos de producción (maceración, mezclado, envasado) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$B_f$ & : & beneficio unitario por m$^3$ de perfume $f \in \mathcal{F}$ \\
+$T_{pf}$ & : & tiempo requerido (min) del proceso $p \in \mathcal{P}$ por cada m$^3$ de perfume $f \in \mathcal{F}$ \\
+$D_p$ & : & tiempo disponible (min) para el proceso $p \in \mathcal{P}$ \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_f$ & : & cantidad de perfume $f \in \mathcal{F}$ a producir (m$^3$) \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Para cada proceso $p \in \mathcal{P}$:
+\begin{equation}
+\sum_{f \in \mathcal{F}} T_{pf}\,x_f \leq D_p
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z = \sum_{f \in \mathcal{F}} B_f\,x_f
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & \sum_{f \in \mathcal{F}} B_f\,x_f \notag \\
+\mbox{s.a.}\quad
+& \sum_{f \in \mathcal{F}} T_{pf}\,x_f \leq D_p, \quad \forall p \in \mathcal{P} \notag \\
+& x_f \geq 0, \quad \forall f \in \mathcal{F}
+\end{align}

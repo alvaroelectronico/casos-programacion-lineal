@@ -1,0 +1,34 @@
+% --- Paquetes ---
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{{./recursos/figs/}}
+\usepackage{makecell}
+\usepackage{tabularx}
+\usepackage[spanish]{babel}   % Idioma español
+\usepackage[utf8]{inputenc}   % Entrada UTF-8
+\usepackage[T1]{fontenc}      % Codificación de salida T1
+\usepackage{titling}
+\usepackage{etoolbox}
+
+% --- Espaciado de párrafo ---
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+% --- Títulos sin numeración visible ---
+\setcounter{secnumdepth}{0} % Oculta números en \section, \subsection, ...
+
+% --- Ecuaciones: reinicio por sección y sin prefijo ---
+\numberwithin{equation}{section} % Resetea el contador de ecuación al cambiar de sección
+\renewcommand{\theequation}{\arabic{equation}} % Muestra (1), (2), ... sin prefijo
+
+% Resetear ecuaciones al inicio de cada sección
+\preto\section{\setcounter{equation}{0}}
+
+% --- Título desplazado hacia abajo ---
+\setlength{\droptitle}{0.4\textheight}
+
+% --- Metadatos del documento ---
+\title{Casos de Programacion Lineal}
+\author{UD Organización de la Producción}
+\date{Octubre de 2025}

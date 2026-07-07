@@ -1,41 +1,6 @@
 \documentclass{ol-softwaremanual}
 
-
-
-% --- Paquetes ---
-\usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\graphicspath{{./figs/}}
-\usepackage{makecell}
-\usepackage{tabularx}
-\usepackage[spanish]{babel}   % Idioma español
-\usepackage[utf8]{inputenc}   % Entrada UTF-8
-\usepackage[T1]{fontenc}      % Codificación de salida T1
-\usepackage{titling}
-\usepackage{etoolbox}
-
-% --- Espaciado de párrafo ---
-\setlength{\parskip}{0.5em}
-\setlength{\parindent}{0pt}
-
-% --- Títulos sin numeración visible ---
-\setcounter{secnumdepth}{0} % Oculta números en \section, \subsection, ...
-
-% --- Ecuaciones: reinicio por sección y sin prefijo ---
-\numberwithin{equation}{section} % Resetea el contador de ecuación al cambiar de sección
-\renewcommand{\theequation}{\arabic{equation}} % Muestra (1), (2), ... sin prefijo
-
-% Resetear ecuaciones al inicio de cada sección
-\preto\section{\setcounter{equation}{0}}
-
-% --- Título desplazado hacia abajo ---
-\setlength{\droptitle}{0.4\textheight}
-
-
-\title{Casos de Programacion Lineal}
-\author{UD Organización de la Producción}
-\date{Octubre de 2025}
+\input{preambulo}
 
 \begin{document}
 
@@ -46,20 +11,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COLECCIÓN DE CASOS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\input{coleccion_casos}
+\input{contenidos/coleccion_casos/_seccion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PRÁCTICAS 25/26
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\input{practicas_2526}
+\input{contenidos/practicas_2526/_seccion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EXÁMENES 25/26
-%%%%%%%%%%%/%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\input{examenes_2526}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{contenidos/examenes_2526/_seccion}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PRÁCTICAS 26/27
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{contenidos/practicas_2627/_seccion}
 
 \end{document}

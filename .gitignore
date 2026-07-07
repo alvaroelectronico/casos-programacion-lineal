@@ -1,0 +1,5 @@
+# Artefactos de compilación LaTeX
+build/
+
+# PDF de salida generado por compilar.py
+casos_programacion_lineal.pdf
