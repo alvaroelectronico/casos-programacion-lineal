@@ -1,0 +1,574 @@
+\section{Fábrica de drones}
+
+\subsection{Presentación del caso}
+
+La empresa \textbf{DronTech S.A.} fabrica tres tipos de drones: de carreras, de fotografía y profesional. Cada modelo requiere tiempos diferentes en los talleres de montaje, acabado y empaquetado. La empresa busca maximizar sus beneficios.
+
+El margen por dron es: 50 € (de carreras), 70 € (de fotografía) y 90 € (profesional). Se dispone de 500 h en montaje, 400 h en acabado y 300 h en empaquetado. Los tiempos (h/unidad) son: montaje \((2,3,4)\), acabado \((2,4,5)\) y empaquetado \((1,1,1)\) para (de carreras, de fotografía, profesional), respectivamente.
+
+Se pueden usar hasta 100 h extra en montaje con coste de 5 €/h (reduce el beneficio). Se permite subcontratar el acabado de los drones de carreras y de fotografía con un sobrecoste de 10 €/unidad; el profesional no puede subcontratarse.
+
+
+\subsection{Formulación explícita}
+
+\paragraph{Variables}\mbox{}\\
+
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ cuyo acabado se subcontrata \\
+$h$ & : & horas extra utilizadas en montaje \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\[1mm]
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i = 1,2,3
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de acabado (solo producción interna):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400
+\end{equation}
+
+\textit{Capacidad de empaquetado:}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; 100
+\end{equation}
+
+\textit{Prohibición de subcontratar el acabado de los drones profesionales:}
+\begin{equation}
+y_3^{\mathrm{S}} = 0
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \;\geq\; 0 \qquad i=1,2,3
+\end{equation}
+
+
+\paragraph{Función objetivo}\mbox{}\\[-1mm]
+
+Parámetros numéricos del caso:
+\[
+M_1 = 50,\quad M_2 = 70,\quad M_3 = 90;\quad
+CHE = 5;\quad MHE = 100;\quad CSUB = 10
+\]
+
+\begin{align}
+\mbox{max. } z \;=\;&
+M_1x_1 + M_2x_2 + M_3x_3
+- CSUB(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- CHE\,h \notag\\[2mm]
+=\;&
+50x_1 + 70x_2 + 90x_3
+- 10(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h
+\end{align}
+
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+
+\begin{align}
+\mbox{max. } z \;=\;&
+50x_1 + 70x_2 + 90x_3
+- 10(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i=1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 \notag\\
+& x_1 + x_2 + x_3 \leq 300 \notag\\
+& h \leq 100 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && i=1,2,3 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$ & : & conjunto de tipos de drones ($i \in \{1,2,3\}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen de beneficio unitario del producto $i$ \\
+$H_{i1}$  & : & horas necesarias en montaje por unidad del producto $i$ \\
+$H_{i2}$  & : & horas necesarias en acabado interno por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en montaje en horario normal \\
+$HD_2$    & : & horas disponibles en acabado \\
+$HD_3$    & : & horas disponibles en empaquetado \\
+$CHE$     & : & coste por hora extra en montaje \\
+$MHE$     & : & máximo de horas extra en montaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar el acabado \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del producto $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$ & : & unidades del producto $i$ cuyo acabado se subcontrata \\
+$h$ & : & horas extra utilizadas en montaje \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i1}\,x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de acabado (solo interno):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i2}\,y_i^{\mathrm{I}} \;\leq\; HD_2
+\end{equation}
+
+\textit{Capacidad de empaquetado:}
+\begin{equation}
+\sum_{i \in \mathcal{I}} x_i \;\leq\; HD_3
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; MHE
+\end{equation}
+
+\textit{Prohibición de subcontratar ciertos productos (por ejemplo, el profesional):}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I}_0
+\end{equation}
+donde $\mathcal{I}_0 \subseteq \mathcal{I}$ es el subconjunto de productos cuyo acabado no puede subcontratarse.
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \;\geq\; 0 \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_{i \in \mathcal{I}} M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}} y_i^{\mathrm{S}}
+- CHE\,h
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_i M_i\,x_i
+- CSUB \sum_i y_i^{\mathrm{S}}
+- CHE\,h \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\,x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\,y_i^{\mathrm{I}} \leq HD_2 \notag\\
+& \sum_i x_i \leq HD_3 \notag\\
+& h \leq MHE \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}_0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && \forall i \in \mathcal{I} \notag
+\end{align}
+
+
+
+\subsection{Presentación del caso (parte 2)}
+
+Partiendo de la situación inicial, tras una renegociación del contrato, el subcontratista de acabado reduce el \textbf{sobrecoste unitario} a \textbf{5 €} por dron subcontratado, pero exige un \textbf{mínimo de 150 drones} subcontratados en total (sumando los de carreras y los de fotografía) y cobra un \textbf{coste fijo de 50 €} si se decide subcontratar. Se mantiene que el dron profesional no puede subcontratarse. El objetivo sigue siendo \textbf{maximizar el beneficio}.
+
+
+\subsection{Formulación explícita (parte 2)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ cuyo acabado se subcontrata \\
+$h$ & : & horas extra utilizadas en montaje \\
+$\alpha$ & : & 1 si se activa la subcontratación (se contrata el servicio externo); 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\[1mm]
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i = 1,2,3
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de acabado (solo producción interna):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400
+\end{equation}
+
+\textit{Capacidad de empaquetado:}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; 100
+\end{equation}
+
+\textit{Prohibición de subcontratar el dron profesional:}
+\begin{equation}
+y_3^{\mathrm{S}} = 0
+\end{equation}
+
+\textit{Activación y mínimo del subcontratista (global para los drones de carreras y de fotografía):}
+\begin{align}
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \;\geq\; 150\, \alpha \\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \;\leq\; U\, \alpha
+\end{align}
+donde $U$ es una cota suficientemente grande (por ejemplo, $U=300$ por la restricción de empaquetado).
+
+\textit{No negatividad y binariedad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 \quad (i=1,2,3),
+\qquad \alpha \in \{0,1\}
+\end{equation}
+
+
+\paragraph{Función objetivo}\mbox{}\\
+Parámetros numéricos (parte 2):
+\(
+M_1=50,\; M_2=70,\; M_3=90;\;
+CHE=5;\; MHE=100;\; CSUB=5;\; F=50
+\)
+
+\begin{align}
+\mbox{max. } z \;=\;&
+M_1x_1 + M_2x_2 + M_3x_3
+- CSUB(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- CHE\,h
+- F\,\alpha \notag\\[1mm]
+=\;&
+50x_1 + 70x_2 + 90x_3
+- 5(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h - 50\alpha
+\end{align}
+
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;&
+50x_1 + 70x_2 + 90x_3
+- 5(y_1^{\mathrm{S}} + y_2^{\mathrm{S}})
+- 5h - 50\alpha \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i = 1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 \notag\\
+& x_1 + x_2 + x_3 \leq 300 \notag\\
+& h \leq 100 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \geq 150\,\alpha \notag\\
+& y_1^{\mathrm{S}} + y_2^{\mathrm{S}} \leq U\,\alpha \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && i=1,2,3 \notag\\
+& \alpha \in \{0,1\} \notag
+\end{align}
+
+
+\subsection{Formulación generalizada (parte 2)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$ & : & conjunto de tipos de drones ($i \in \{1,2,3\}$) \\
+$\mathcal{I}_S$ & : & subconjunto de productos que pueden subcontratarse ($\mathcal{I}_S = \{1,2\}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen de beneficio unitario del producto $i$ \\
+$H_{i1}$  & : & horas necesarias en montaje por unidad del producto $i$ \\
+$H_{i2}$  & : & horas necesarias en acabado interno por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en montaje en horario normal \\
+$HD_2$    & : & horas disponibles en acabado interno \\
+$HD_3$    & : & horas disponibles en empaquetado \\
+$CHE$     & : & coste por hora extra en montaje \\
+$MHE$     & : & máximo de horas extra en montaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar el acabado \\
+$F$       & : & coste fijo de activación del subcontratista \\
+$S_{\min}$& : & número mínimo total de unidades subcontratadas si se activa la subcontratación \\
+$U$       & : & cota grande para vincular la activación con las cantidades subcontratadas \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del producto $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$ & : & unidades del producto $i$ cuyo acabado se subcontrata \\
+$h$ & : & horas extra utilizadas en montaje \\
+$\alpha$ & : & 1 si se activa la subcontratación; 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i1}\,x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de acabado (solo interno):}
+\begin{equation}
+\sum_{i \in \mathcal{I}} H_{i2}\,y_i^{\mathrm{I}} \;\leq\; HD_2
+\end{equation}
+
+\textit{Capacidad de empaquetado:}
+\begin{equation}
+\sum_{i \in \mathcal{I}} x_i \;\leq\; HD_3
+\end{equation}
+
+\textit{Límite de horas extra:}
+\begin{equation}
+h \;\leq\; MHE
+\end{equation}
+
+\textit{Prohibición de subcontratar determinados productos:}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I} \setminus \mathcal{I}_S
+\end{equation}
+
+\textit{Activación del subcontratista y mínimo de unidades subcontratadas:}
+\begin{align}
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \;\geq\; S_{\min}\,\alpha \\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \;\leq\; U\,\alpha
+\end{align}
+
+\textit{No negatividad y binariedad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 \quad \forall i \in \mathcal{I},
+\qquad \alpha \in \{0,1\}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_{i \in \mathcal{I}} M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\,h
+- F\,\alpha
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_i M_i\,x_i
+- CSUB \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\,h
+- F\,\alpha \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\,x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\,y_i^{\mathrm{I}} \leq HD_2 \notag\\
+& \sum_i x_i \leq HD_3 \notag\\
+& h \leq MHE \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}\setminus\mathcal{I}_S \notag\\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \geq S_{\min}\,\alpha \notag\\
+& \sum_{i \in \mathcal{I}_S} y_i^{\mathrm{S}} \leq U\,\alpha \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h \geq 0 && \forall i \in \mathcal{I} \notag\\
+& \alpha \in \{0,1\} \notag
+\end{align}
+
+
+
+\subsection{Presentación del caso (parte 3)}
+
+Partiendo de la situación inicial, la empresa puede \textbf{trasladar hasta 70 horas del taller de empaquetado al taller de acabado}. Cada hora trasladada al taller de acabado conlleva un \textbf{coste adicional de 2 € por hora}. Se mantiene el resto de condiciones de la parte 1: posibilidad de usar hasta 100 horas extra en montaje (coste 5 €/h) y posibilidad de \textbf{subcontratar el acabado} solo para los drones de carreras y de fotografía (sobrecoste 10 €/ud), no para el profesional. El objetivo sigue siendo \textbf{maximizar el beneficio}.
+
+
+\subsection{Formulación explícita (parte 3)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$ & : & unidades totales producidas del modelo $i$ \\
+$y_i^{\mathrm{I}}$ & : & unidades del modelo $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$ & : & unidades del modelo $i$ con acabado subcontratado \\
+$h$      & : & horas extra utilizadas en montaje \\
+$s$      & : & horas trasladadas desde \emph{empaquetado} a \emph{acabado} \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textit{Definición de producción total:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad i=1,2,3
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+2x_1 + 3x_2 + 4x_3 \;\leq\; 500 + h
+\end{equation}
+
+\textit{Capacidad de acabado (con horas trasladadas; sólo interno):}
+\begin{equation}
+2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \;\leq\; 400 + s
+\end{equation}
+
+\textit{Capacidad de empaquetado (disminuye al trasladar horas):}
+\begin{equation}
+x_1 + x_2 + x_3 \;\leq\; 300 - s
+\end{equation}
+
+\textit{Límites de horas extra y de traslado:}
+\begin{align}
+& h \;\leq\; 100 \\
+& 0 \;\leq\; s \;\leq\; 70
+\end{align}
+
+\textit{Prohibición de subcontratar el dron profesional:}
+\begin{equation}
+y_3^{\mathrm{S}} \;=\; 0
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \;\geq\; 0 \qquad i=1,2,3
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Parámetros numéricos (parte 3):
+\(
+M_1=50,\; M_2=70,\; M_3=90;\;
+CHE=5;\; MHE=100;\; CSUB=10;\; CTR=2
+\) (coste por hora trasladada).
+\begin{align}
+\mbox{max. } z \;=\;& M_1x_1 + M_2x_2 + M_3 x_3 \notag\\
+&\;-\; CSUB\,(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) \;-\; CHE\,h \;-\; CTR\,s \notag\\[1mm]
+=\;& 50x_1 + 70x_2 + 90x_3 - 10(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) - 5h - 2s
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;& 50x_1 + 70x_2 + 90x_3 - 10(y_1^{\mathrm{S}}+y_2^{\mathrm{S}}) - 5h - 2s \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && i=1,2,3 \notag\\
+& 2x_1 + 3x_2 + 4x_3 \leq 500 + h \notag\\
+& 2y_1^{\mathrm{I}} + 4y_2^{\mathrm{I}} + 5y_3^{\mathrm{I}} \leq 400 + s \notag\\
+& x_1 + x_2 + x_3 \leq 300 - s \notag\\
+& h \leq 100,\quad 0 \leq s \leq 70 \notag\\
+& y_3^{\mathrm{S}} = 0 \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \geq 0 && i=1,2,3 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada (parte 3)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{lcl}
+$\mathcal{I}$      & : & conjunto de tipos de drones \\
+$\mathcal{I}_S$    & : & subconjunto de productos que pueden subcontratarse ($\mathcal{I}_S \subseteq \mathcal{I}$) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{lcl}
+$M_i$     & : & margen unitario del producto $i$ \\
+$H_{i1}$  & : & horas de \emph{montaje} por unidad del producto $i$ \\
+$H_{i2}$  & : & horas de \emph{acabado interno} por unidad del producto $i$ \\
+$H_{i3}$  & : & horas de \emph{empaquetado} por unidad del producto $i$ \\
+$HD_1$    & : & horas disponibles en montaje (normales) \\
+$HD_2$    & : & horas disponibles en acabado (internas) \\
+$HD_3$    & : & horas disponibles en empaquetado \\
+$CHE$     & : & coste por hora extra en montaje \\
+$MHE$     & : & máximo de horas extra en montaje \\
+$CSUB$    & : & sobrecoste unitario por subcontratar el acabado \\
+$CTR$     & : & coste por cada hora trasladada de empaquetado a acabado \\
+$SMAX$    & : & máximo de horas trasladables de empaquetado a acabado \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{lcl}
+$x_i$               & : & unidades totales producidas del producto $i$ \\
+$y_i^{\mathrm{I}}$  & : & unidades del producto $i$ con acabado interno \\
+$y_i^{\mathrm{S}}$  & : & unidades del producto $i$ con acabado subcontratado \\
+$h$                 & : & horas extra utilizadas en montaje \\
+$s$                 & : & horas trasladadas desde empaquetado a acabado \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textit{Vinculación producción–acabado:}
+\begin{equation}
+x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\textit{Capacidad de montaje (con horas extra):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i1}\, x_i \;\leq\; HD_1 + h
+\end{equation}
+
+\textit{Capacidad de acabado interno (aumenta con $s$):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i2}\, y_i^{\mathrm{I}} \;\leq\; HD_2 + s
+\end{equation}
+
+\textit{Capacidad de empaquetado (disminuye con $s$):}
+\begin{equation}
+\sum_{i\in\mathcal{I}} H_{i3}\, x_i \;\leq\; HD_3 - s
+\end{equation}
+
+\textit{Límites operativos:}
+\begin{align}
+& h \;\leq\; MHE \\
+& 0 \;\leq\; s \;\leq\; SMAX
+\end{align}
+
+\textit{Prohibición de subcontratar donde no esté permitido:}
+\begin{equation}
+y_i^{\mathrm{S}} = 0 \qquad \forall i \in \mathcal{I}\setminus\mathcal{I}_S
+\end{equation}
+
+\textit{No negatividad:}
+\begin{equation}
+x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \;\geq\; 0 \qquad \forall i \in \mathcal{I}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_{i\in\mathcal{I}} M_i\, x_i
+\;-\; CSUB \sum_{i\in\mathcal{I}_S} y_i^{\mathrm{S}}
+\;-\; CHE\, h
+\;-\; CTR\, s
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\[-1mm]
+\begin{align}
+\mbox{max. } z \;=\;&
+\sum_i M_i\, x_i
+- CSUB \sum_{i\in\mathcal{I}_S} y_i^{\mathrm{S}}
+- CHE\, h
+- CTR\, s \notag\\
+\mbox{s. a.:}\quad
+& x_i = y_i^{\mathrm{I}} + y_i^{\mathrm{S}} && \forall i \in \mathcal{I} \notag\\
+& \sum_i H_{i1}\, x_i \leq HD_1 + h \notag\\
+& \sum_i H_{i2}\, y_i^{\mathrm{I}} \leq HD_2 + s \notag\\
+& \sum_i H_{i3}\, x_i \leq HD_3 - s \notag\\
+& h \leq MHE,\quad 0 \leq s \leq SMAX \notag\\
+& y_i^{\mathrm{S}} = 0 && \forall i \in \mathcal{I}\setminus\mathcal{I}_S \notag\\
+& x_i,\, y_i^{\mathrm{I}},\, y_i^{\mathrm{S}},\, h,\, s \geq 0 && \forall i \in \mathcal{I} \notag
+\end{align}

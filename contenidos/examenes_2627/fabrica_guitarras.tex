@@ -1,0 +1,397 @@
+\section{Fábrica de guitarras (propuesta de examen)}
+
+% Propuesta de examen 26/27. Escalera de dificultad en tres apartados,
+% con estructura matemática DISTINTA de la PE de sillas (no isomorfa):
+%  - Apartado 1 (base): PL bi-índice (modelo x línea) de MÍNIMO COSTE con
+%    demanda a cubrir, capacidades de línea y una línea con capacidad
+%    restringida (no puede fabricar un modelo).
+%  - Apartado 2 (ampliación): extensión MULTIPERIODO con inventario
+%    (balance temporal entre dos meses).
+%  - Apartado 3 (avanzado): MILP con ACTIVACIÓN de línea por mes
+%    (coste fijo) y CARGA MÍNIMA si se activa (variable semicontinua).
+
+\subsection{Presentación del caso (situación inicial)}
+La empresa \textbf{Cuerdas del Norte S.L.} fabrica tres modelos de guitarra, \textit{clásica}, \textit{eléctrica} y \textit{acústica}, en dos líneas de producción: una \textbf{línea artesanal} (L1) y una \textbf{línea automatizada} (L2). Por sus utillajes, la línea automatizada \textbf{no puede fabricar el modelo eléctrico}.
+
+Cada línea dispone de un número limitado de horas al mes y emplea tiempos y costes unitarios distintos según el modelo:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{Clásica} & \textbf{Eléctrica} & \textbf{Acústica}\\
+\midrule
+Tiempo en L1 (h/u)  & 2.0 & 3.0 & 2.5\\
+Tiempo en L2 (h/u)  & 1.5 & --- & 2.0\\
+Coste en L1 (€/u) & 40 & 55 & 45\\
+Coste en L2 (€/u) & 30 & --- & 35\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Las horas disponibles por mes son \textbf{180 h} en L1 y \textbf{200 h} en L2. La empresa debe \textbf{cubrir la demanda} mensual, que es de \textbf{80} guitarras clásicas, \textbf{20} eléctricas y \textbf{50} acústicas.
+
+Se pide formular un modelo de programación lineal que decida cuántas unidades de cada modelo fabricar en cada línea para \textbf{minimizar el coste de producción} cumpliendo la demanda.
+
+\subsection{Formulación explícita (situación inicial)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{1c}$  & : & guitarras \textit{clásicas} fabricadas en la línea artesanal (L1)\\
+    $x_{1e}$  & : & guitarras \textit{eléctricas} fabricadas en L1\\
+    $x_{1a}$  & : & guitarras \textit{acústicas} fabricadas en L1\\
+    $x_{2c}$  & : & guitarras \textit{clásicas} fabricadas en la línea automatizada (L2)\\
+    $x_{2a}$  & : & guitarras \textit{acústicas} fabricadas en L2\\
+\end{tabular}
+\\[2pt]
+(No existe variable para eléctricas en L2, pues esa línea no puede fabricarlas.)
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de la línea artesanal (L1):
+\begin{equation}
+    2.0\,x_{1c} + 3.0\,x_{1e} + 2.5\,x_{1a} \leq 180
+\end{equation}
+
+Capacidad de la línea automatizada (L2):
+\begin{equation}
+    1.5\,x_{2c} + 2.0\,x_{2a} \leq 200
+\end{equation}
+
+Cobertura de la demanda de cada modelo:
+\begin{align}
+    & x_{1c} + x_{2c} \geq 80 \qquad \text{(clásica)}\\
+    & x_{1e} \geq 20 \qquad \text{(eléctrica)}\\
+    & x_{1a} + x_{2a} \geq 50 \qquad \text{(acústica)}
+\end{align}
+
+No negatividad:
+\begin{equation}
+    x_{1c}, x_{1e}, x_{1a}, x_{2c}, x_{2a} \geq 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizar el coste de producción:
+\begin{equation}
+\mbox{min. } z = 40\,x_{1c} + 55\,x_{1e} + 45\,x_{1a} + 30\,x_{2c} + 35\,x_{2a}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \quad & = 40\,x_{1c} + 55\,x_{1e} + 45\,x_{1a} + 30\,x_{2c} + 35\,x_{2a} \notag \\
+\mbox{s. a.:} \quad
+& 2.0\,x_{1c} + 3.0\,x_{1e} + 2.5\,x_{1a} \leq 180 \qquad \text{(cap. L1)} \notag \\
+& 1.5\,x_{2c} + 2.0\,x_{2a} \leq 200 \qquad \text{(cap. L2)} \notag \\
+& x_{1c} + x_{2c} \geq 80 \qquad \text{(dem. clásica)} \notag \\
+& x_{1e} \geq 20 \qquad \text{(dem. eléctrica)} \notag \\
+& x_{1a} + x_{2a} \geq 50 \qquad \text{(dem. acústica)} \notag \\
+& x_{1c}, x_{1e}, x_{1a}, x_{2c}, x_{2a} \geq 0 \notag
+\end{align}
+
+\subsection{Formulación generalizada (situación inicial)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{G}$  & : & modelos de guitarra \\
+    $\mathcal{P}$  & : & líneas de producción \\
+    $\mathcal{A}$  & : & pares admisibles $(p,g)$ tales que la línea $p$ puede fabricar el modelo $g$ \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $T_{pg}$  & : & horas de la línea $p$ por unidad del modelo $g$ \\
+    $C_{pg}$  & : & coste unitario de fabricar el modelo $g$ en la línea $p$ \\
+    $CAP_p$   & : & horas disponibles de la línea $p$ por mes \\
+    $D_g$     & : & demanda del modelo $g$ \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{pg}$  & : & unidades del modelo $g$ fabricadas en la línea $p$, \quad $(p,g)\in\mathcal{A}$\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de cada línea $p \in \mathcal{P}$:
+\begin{equation}
+    \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pg} \leq CAP_p \qquad \forall p \in \mathcal{P}
+\end{equation}
+Cobertura de la demanda de cada modelo $g \in \mathcal{G}$:
+\begin{equation}
+    \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pg} \geq D_g \qquad \forall g \in \mathcal{G}
+\end{equation}
+No negatividad:
+\begin{equation}
+    x_{pg} \geq 0 \qquad \forall (p,g)\in\mathcal{A}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min. } z = \sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pg}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \quad & = \sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pg} \notag \\
+\mbox{s. a.:} \quad
+& \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pg} \leq CAP_p \qquad \forall p \in \mathcal{P} \notag \\
+& \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pg} \geq D_g \qquad \forall g \in \mathcal{G} \notag \\
+& x_{pg} \geq 0 \qquad \forall (p,g)\in\mathcal{A} \notag
+\end{align}
+
+
+\subsection{Presentación del caso (ampliación: planificación a dos meses con inventario)}
+
+La empresa planifica ahora de forma conjunta \textbf{dos meses consecutivos}. La demanda no es la misma en ambos: crece en el segundo mes.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{Clásica} & \textbf{Eléctrica} & \textbf{Acústica}\\
+\midrule
+Demanda mes 1 (u) & 80 & 20 & 50\\
+Demanda mes 2 (u) & 100 & 30 & 60\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Es posible \textbf{fabricar de más en el mes 1 y almacenar} las unidades sobrantes para atender el mes 2, con un \textbf{coste de almacenamiento de 4 €} por unidad guardada de un mes al siguiente (independiente del modelo). Las capacidades de las líneas (180 h en L1 y 200 h en L2 \emph{cada mes}), los tiempos, los costes de producción y la restricción de que L2 no fabrica el modelo eléctrico se mantienen. El objetivo es \textbf{minimizar el coste total} (producción de ambos meses más almacenamiento) cubriendo la demanda de cada mes.
+
+\subsection{Formulación explícita (ampliación)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{pgt}$ & : & unidades del modelo $g$ fabricadas en la línea $p$ durante el mes $t\in\{1,2\}$ \\
+                 &   & (con $g\in\{c,e,a\}$, $p\in\{1,2\}$ y sin variable para $e$ en L2) \\
+    $I_g$        & : & unidades del modelo $g$ almacenadas del mes 1 al mes 2 \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textbf{Capacidad de cada línea en cada mes:}
+\begin{align}
+    & 2.0\,x_{1c1} + 3.0\,x_{1e1} + 2.5\,x_{1a1} \leq 180 && \text{(L1, mes 1)}\\
+    & 1.5\,x_{2c1} + 2.0\,x_{2a1} \leq 200 && \text{(L2, mes 1)}\\
+    & 2.0\,x_{1c2} + 3.0\,x_{1e2} + 2.5\,x_{1a2} \leq 180 && \text{(L1, mes 2)}\\
+    & 1.5\,x_{2c2} + 2.0\,x_{2a2} \leq 200 && \text{(L2, mes 2)}
+\end{align}
+
+\textbf{Balance del mes 1} (lo producido cubre la demanda del mes 1 y define el inventario):
+\begin{align}
+    & x_{1c1} + x_{2c1} - 80 = I_c \\
+    & x_{1e1} - 20 = I_e \\
+    & x_{1a1} + x_{2a1} - 50 = I_a
+\end{align}
+
+\textbf{Cobertura de la demanda del mes 2} (producción del mes 2 más lo almacenado):
+\begin{align}
+    & x_{1c2} + x_{2c2} + I_c \geq 100 \\
+    & x_{1e2} + I_e \geq 30 \\
+    & x_{1a2} + x_{2a2} + I_a \geq 60
+\end{align}
+
+\textbf{No negatividad} (incluye $I_g\ge 0$, es decir, no se puede tomar prestado del futuro):
+\begin{equation}
+    x_{pgt} \geq 0 \quad \forall p,g,t; \qquad I_c, I_e, I_a \geq 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Minimizar el coste de producción de ambos meses más el almacenamiento:
+\begin{align}
+\mbox{min. } z \;=\;
+& \big(40\,x_{1c1} + 55\,x_{1e1} + 45\,x_{1a1} + 30\,x_{2c1} + 35\,x_{2a1}\big) \notag\\
++\;& \big(40\,x_{1c2} + 55\,x_{1e2} + 45\,x_{1a2} + 30\,x_{2c2} + 35\,x_{2a2}\big) \notag\\
++\;& 4\,(I_c + I_e + I_a)
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& \textstyle\sum_{t\in\{1,2\}} \big(40\,x_{1ct} + 55\,x_{1et} + 45\,x_{1at} + 30\,x_{2ct} + 35\,x_{2at}\big) + 4\,(I_c + I_e + I_a) \notag\\
+\mbox{s. a.:}\quad
+& 2.0\,x_{1ct} + 3.0\,x_{1et} + 2.5\,x_{1at} \leq 180 && t=1,2 \notag\\
+& 1.5\,x_{2ct} + 2.0\,x_{2at} \leq 200 && t=1,2 \notag\\
+& x_{1c1} + x_{2c1} - 80 = I_c,\quad x_{1e1} - 20 = I_e,\quad x_{1a1} + x_{2a1} - 50 = I_a \notag\\
+& x_{1c2} + x_{2c2} + I_c \geq 100 \notag\\
+& x_{1e2} + I_e \geq 30 \notag\\
+& x_{1a2} + x_{2a2} + I_a \geq 60 \notag\\
+& x_{pgt} \geq 0 \;\; \forall p,g,t; \qquad I_c, I_e, I_a \geq 0 \notag
+\end{align}
+
+\subsection{Formulación generalizada (ampliación)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{G}$  & : & modelos de guitarra \\
+    $\mathcal{P}$  & : & líneas de producción \\
+    $\mathcal{A}$  & : & pares admisibles $(p,g)$ \\
+    $\mathcal{T}$  & : & periodos (meses), $\mathcal{T}=\{1,2\}$ \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $T_{pg}$   & : & horas de la línea $p$ por unidad del modelo $g$ \\
+    $C_{pg}$   & : & coste unitario de fabricar $g$ en la línea $p$ \\
+    $CAP_p$    & : & horas disponibles de la línea $p$ por mes \\
+    $D_{gt}$   & : & demanda del modelo $g$ en el mes $t$ \\
+    $H$        & : & coste de almacenamiento por unidad y mes \\
+\end{tabular}
+\\[2pt]
+\textit{En este caso: } $H=4$, $CAP_1=180$, $CAP_2=200$; demandas según la tabla.
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{pgt}$ & : & unidades de $g$ fabricadas en la línea $p$ en el mes $t$, \; $(p,g)\in\mathcal{A}$ \\
+    $I_{gt}$    & : & inventario del modelo $g$ al final del mes $t$ (con $I_{g0}=0$) \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\emph{Capacidad de cada línea en cada mes:}
+\begin{equation}
+    \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \leq CAP_p \qquad \forall p \in \mathcal{P},\; \forall t \in \mathcal{T}
+\end{equation}
+\emph{Balance de inventario por modelo y mes:}
+\begin{equation}
+    I_{gt} = I_{g(t-1)} + \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pgt} - D_{gt} \qquad \forall g \in \mathcal{G},\; \forall t \in \mathcal{T}
+\end{equation}
+\emph{No negatividad:}
+\begin{equation}
+    x_{pgt} \geq 0 \;\; \forall (p,g)\in\mathcal{A},\, t; \qquad I_{gt} \geq 0 \;\; \forall g,\, t
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min. } z = \sum_{t\in\mathcal{T}} \sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pgt} \;+\; H \sum_{t\in\mathcal{T}} \sum_{g\in\mathcal{G}} I_{gt}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{t} \sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pgt} + H \sum_{t}\sum_{g} I_{gt} \notag\\
+\mbox{s. a.:}\quad
+& \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \leq CAP_p && \forall p,\, t \notag\\
+& I_{gt} = I_{g(t-1)} + \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pgt} - D_{gt} && \forall g,\, t \notag\\
+& x_{pgt} \geq 0 \;\; \forall (p,g)\in\mathcal{A},\,t; \quad I_{gt} \geq 0 \;\; \forall g,\,t \notag
+\end{align}
+
+
+\subsection{Presentación del caso (avanzado: activación de líneas y carga mínima)}
+
+Manteniendo la planificación a dos meses con inventario, la dirección observa que \textbf{poner en marcha una línea un mes} conlleva costes de preparación, calibración y personal que no dependen de cuánto se fabrique. Por ello, se decide modelar la \textbf{activación} de cada línea en cada mes:
+
+\begin{itemize}
+    \item Si la línea artesanal (L1) opera un mes, incurre en un \textbf{coste fijo de 500 €} ese mes; la línea automatizada (L2), en un coste fijo de \textbf{400 €}.
+    \item Por motivos organizativos, \textbf{si una línea se activa un mes, debe emplearse al menos 40 horas} ese mes (no compensa arrancarla para un uso testimonial). Si no se activa, no puede fabricar nada.
+\end{itemize}
+
+El resto de condiciones (capacidades de 180 h y 200 h por mes, tiempos, costes de producción, demanda de los dos meses, almacenamiento a 4 €/u y la imposibilidad de fabricar eléctricas en L2) se mantienen. El objetivo es \textbf{minimizar el coste total}: producción, almacenamiento y costes fijos de activación.
+
+\subsection{Formulación explícita (avanzado)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{pgt}$ & : & unidades del modelo $g$ en la línea $p$ en el mes $t$ (como antes) \\
+    $I_g$        & : & unidades del modelo $g$ almacenadas del mes 1 al mes 2 \\
+    $z_{pt}$    & : & binaria: 1 si la línea $p$ se activa en el mes $t$; 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\textbf{Capacidad y activación} (una línea no activa no fabrica; una activa no supera su capacidad):
+\begin{align}
+    & 2.0\,x_{1ct} + 3.0\,x_{1et} + 2.5\,x_{1at} \leq 180\,z_{1t} && t=1,2\\
+    & 1.5\,x_{2ct} + 2.0\,x_{2at} \leq 200\,z_{2t} && t=1,2
+\end{align}
+
+\textbf{Carga mínima si la línea se activa:}
+\begin{align}
+    & 2.0\,x_{1ct} + 3.0\,x_{1et} + 2.5\,x_{1at} \geq 40\,z_{1t} && t=1,2\\
+    & 1.5\,x_{2ct} + 2.0\,x_{2at} \geq 40\,z_{2t} && t=1,2
+\end{align}
+
+\textbf{Balance del mes 1 y cobertura del mes 2} (igual que en el apartado anterior):
+\begin{align}
+    & x_{1c1} + x_{2c1} - 80 = I_c,\quad x_{1e1} - 20 = I_e,\quad x_{1a1} + x_{2a1} - 50 = I_a \\
+    & x_{1c2} + x_{2c2} + I_c \geq 100,\quad x_{1e2} + I_e \geq 30,\quad x_{1a2} + x_{2a2} + I_a \geq 60
+\end{align}
+
+\textbf{No negatividad, inventario e integralidad:}
+\begin{equation}
+    x_{pgt} \geq 0 \;\; \forall p,g,t; \qquad I_c, I_e, I_a \geq 0; \qquad z_{11}, z_{12}, z_{21}, z_{22} \in \{0,1\}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& \textstyle\sum_{t\in\{1,2\}} \big(40\,x_{1ct} + 55\,x_{1et} + 45\,x_{1at} + 30\,x_{2ct} + 35\,x_{2at}\big) \notag\\
++\;& 4\,(I_c + I_e + I_a) \;+\; 500\,(z_{11} + z_{12}) \;+\; 400\,(z_{21} + z_{22})
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& \textstyle\sum_{t}\big(40 x_{1ct} + 55 x_{1et} + 45 x_{1at} + 30 x_{2ct} + 35 x_{2at}\big) + 4(I_c + I_e + I_a) \notag\\
+& + 500(z_{11}+z_{12}) + 400(z_{21}+z_{22}) \notag\\
+\mbox{s. a.:}\quad
+& 2.0 x_{1ct} + 3.0 x_{1et} + 2.5 x_{1at} \leq 180\,z_{1t} && t=1,2 \notag\\
+& 1.5 x_{2ct} + 2.0 x_{2at} \leq 200\,z_{2t} && t=1,2 \notag\\
+& 2.0 x_{1ct} + 3.0 x_{1et} + 2.5 x_{1at} \geq 40\,z_{1t} && t=1,2 \notag\\
+& 1.5 x_{2ct} + 2.0 x_{2at} \geq 40\,z_{2t} && t=1,2 \notag\\
+& x_{1c1} + x_{2c1} - 80 = I_c,\;\; x_{1e1} - 20 = I_e,\;\; x_{1a1} + x_{2a1} - 50 = I_a \notag\\
+& x_{1c2} + x_{2c2} + I_c \geq 100,\;\; x_{1e2} + I_e \geq 30,\;\; x_{1a2} + x_{2a2} + I_a \geq 60 \notag\\
+& x_{pgt} \geq 0 \;\forall p,g,t; \;\; I_c,I_e,I_a \geq 0; \;\; z_{11},z_{12},z_{21},z_{22}\in\{0,1\} \notag
+\end{align}
+
+\subsection{Formulación generalizada (avanzado)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{G}$  & : & modelos de guitarra \\
+    $\mathcal{P}$  & : & líneas de producción \\
+    $\mathcal{A}$  & : & pares admisibles $(p,g)$ \\
+    $\mathcal{T}$  & : & periodos (meses) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $T_{pg}$   & : & horas de la línea $p$ por unidad del modelo $g$ \\
+    $C_{pg}$   & : & coste unitario de fabricar $g$ en la línea $p$ \\
+    $CAP_p$    & : & horas disponibles de la línea $p$ por mes \\
+    $D_{gt}$   & : & demanda del modelo $g$ en el mes $t$ \\
+    $H$        & : & coste de almacenamiento por unidad y mes \\
+    $F_p$      & : & coste fijo de activar la línea $p$ un mes \\
+    $L_p$      & : & carga mínima (horas) de la línea $p$ si se activa \\
+\end{tabular}
+\\[2pt]
+\textit{En este caso: } $F_1=500,\; F_2=400,\; L_1=L_2=40,\; H=4,\; CAP_1=180,\; CAP_2=200.$
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{pgt}$ & : & unidades de $g$ en la línea $p$ en el mes $t$, \; $(p,g)\in\mathcal{A}$ \\
+    $I_{gt}$    & : & inventario del modelo $g$ al final del mes $t$ (con $I_{g0}=0$) \\
+    $z_{pt}$    & : & binaria: 1 si la línea $p$ se activa en el mes $t$ \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+\emph{Capacidad con activación y carga mínima:}
+\begin{align}
+    & \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \;\leq\; CAP_p\, z_{pt} && \forall p,\, t \\
+    & \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \;\geq\; L_p\, z_{pt} && \forall p,\, t
+\end{align}
+\emph{Balance de inventario:}
+\begin{equation}
+    I_{gt} = I_{g(t-1)} + \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pgt} - D_{gt} \qquad \forall g,\, t
+\end{equation}
+\emph{No negatividad, inventario e integralidad:}
+\begin{equation}
+    x_{pgt} \geq 0,\quad I_{gt} \geq 0,\quad z_{pt} \in \{0,1\} \qquad \forall (p,g)\in\mathcal{A},\, g,\, p,\, t
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min. } z = \sum_{t} \sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pgt} \;+\; H \sum_{t}\sum_{g} I_{gt} \;+\; \sum_{t} \sum_{p} F_p\, z_{pt}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{t}\sum_{(p,g)\in\mathcal{A}} C_{pg}\, x_{pgt} + H\sum_{t}\sum_{g} I_{gt} + \sum_{t}\sum_{p} F_p\, z_{pt} \notag\\
+\mbox{s. a.:}\quad
+& \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \leq CAP_p\, z_{pt} && \forall p,\, t \notag\\
+& \sum_{g\,:\,(p,g)\in\mathcal{A}} T_{pg}\, x_{pgt} \geq L_p\, z_{pt} && \forall p,\, t \notag\\
+& I_{gt} = I_{g(t-1)} + \sum_{p\,:\,(p,g)\in\mathcal{A}} x_{pgt} - D_{gt} && \forall g,\, t \notag\\
+& x_{pgt} \geq 0,\;\; I_{gt} \geq 0,\;\; z_{pt}\in\{0,1\} && \forall (p,g)\in\mathcal{A},\, g,\, p,\, t \notag
+\end{align}

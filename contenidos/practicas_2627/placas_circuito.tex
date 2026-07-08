@@ -1,0 +1,213 @@
+\section{Placas de circuito impreso}
+
+\subsection{Presentación del caso}
+Una empresa especializada en la fabricación de placas de circuito impreso (PCB) produce tres tipos de placa con diferentes márgenes unitarios de beneficio.
+Cada placa requiere pasar por cinco procesos productivos: serigrafía, laminado, montaje, inspección y empaquetado, con tiempos distintos según el tipo de placa.
+Existen limitaciones en la capacidad diaria de cada proceso, así como en el consumo de resina epoxi adicional utilizada en las placas de fibra de vidrio (FR-4).
+Además, el proceso de inspección puede externalizarse mediante un laboratorio externo que permite ampliar su capacidad, aunque a un coste adicional.
+
+Se pide establecer el plan de producción que maximice el beneficio diario de la empresa.
+
+\subsection{Formulación explícita (versión con duplicación de variables)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+  $x_s^{\mathrm{i}}$ & : & placas FR-4 pequeñas con inspección \textbf{interna}\\
+  $x_m^{\mathrm{i}}$ & : & placas cerámicas medianas con inspección \textbf{interna}\\
+  $x_g^{\mathrm{i}}$ & : & placas FR-4 grandes con inspección \textbf{interna}\\
+  $x_s^{\mathrm{e}}$ & : & placas FR-4 pequeñas con inspección \textbf{externa}\\
+  $x_m^{\mathrm{e}}$ & : & placas cerámicas medianas con inspección \textbf{externa}\\
+  $x_g^{\mathrm{e}}$ & : & placas FR-4 grandes con inspección \textbf{externa}\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Capacidad de serigrafía (min):
+\begin{equation}
+5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 5(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 240
+\end{equation}
+
+Capacidad de laminado (min):
+\begin{equation}
+6(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 10(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 12(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 480
+\end{equation}
+
+Capacidad de montaje (min):
+\begin{equation}
+8(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 15(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 960
+\end{equation}
+
+Inspección \textbf{interna} (min):
+\begin{equation}
+2x_s^{\mathrm{i}} + 2x_m^{\mathrm{i}} + 2x_g^{\mathrm{i}} \le 10
+\end{equation}
+
+Inspección \textbf{externa} (min):
+\begin{equation}
+2x_s^{\mathrm{e}} + 2x_m^{\mathrm{e}} + 2x_g^{\mathrm{e}} \le 24000
+\end{equation}
+
+Capacidad de empaquetado (min):
+\begin{equation}
+3(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 4(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 400
+\end{equation}
+
+Disponibilidad de resina epoxi (kg):
+\begin{equation}
+0.2(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 0.5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 5
+\end{equation}
+
+No negatividad:
+\begin{equation}
+x_s^{\mathrm{i}},x_m^{\mathrm{i}},x_g^{\mathrm{i}},x_s^{\mathrm{e}},x_m^{\mathrm{e}},x_g^{\mathrm{e}} \ge 0
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+Beneficio por ventas menos coste de subcontratación (0,5 u.m./placa externa):
+\begin{equation}
+\mbox{max.}\; z = 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 7(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 8(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}})
+- 0.5\,(x_s^{\mathrm{e}} + x_m^{\mathrm{e}} + x_g^{\mathrm{e}})
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad
+& 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 7(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 8(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}})
+ - 0.5(x_s^{\mathrm{e}}{+}x_m^{\mathrm{e}}{+}x_g^{\mathrm{e}}) \notag\\
+\mbox{s. a.:}\quad
+& 5(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 5(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 240 \notag\\
+& 6(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 10(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 12(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 480 \notag\\
+& 8(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 15(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 960 \notag\\
+& 2x_s^{\mathrm{i}} + 2x_m^{\mathrm{i}} + 2x_g^{\mathrm{i}} \le 10 \notag\\
+& 2x_s^{\mathrm{e}} + 2x_m^{\mathrm{e}} + 2x_g^{\mathrm{e}} \le 24000 \notag\\
+& 3(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 4(x_m^{\mathrm{i}}{+}x_m^{\mathrm{e}}) + 5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 400 \notag\\
+& 0.2(x_s^{\mathrm{i}}{+}x_s^{\mathrm{e}}) + 0.5(x_g^{\mathrm{i}}{+}x_g^{\mathrm{e}}) \le 5 \notag\\
+& x_s^{\mathrm{i}},x_m^{\mathrm{i}},x_g^{\mathrm{i}},x_s^{\mathrm{e}},x_m^{\mathrm{e}},x_g^{\mathrm{e}} \ge 0 \notag
+\end{align}
+
+
+\subsection{Formulación generalizada}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{P}$ & : & tipos de placas \\
+    $\mathcal{R}$ & : & procesos de producción (incluye, si aplica, \emph{inspección}) \\
+\end{tabular}
+\\[0.25cm]
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $B_p$           & : & margen unitario de la placa $p \in \mathcal{P}$ \\
+    $T_{rp}$        & : & tiempo requerido en el proceso $r \in \mathcal{R}$ por unidad de $p$ \\
+    $C_r$           & : & capacidad disponible del proceso $r \in \mathcal{R}$ \\
+    $A_p$           & : & resina epoxi requerida por unidad de la placa $p \in \mathcal{P}$ \\
+    $A$             & : & resina epoxi disponible \\
+    $C_{\mathrm{ext}}$ & : & capacidad máxima externalizable del proceso de \emph{inspección} (en unidades de tiempo) \\
+    $K_{\mathrm{ext}}$ & : & coste por unidad de \emph{inspección} externalizada (en unidades de tiempo) \\
+    $K_{\mathrm{pla}}$ & : & coste por placa con \emph{inspección} externalizada (si se modela por unidad de producto) \\
+\end{tabular}
+\\[0.25cm]
+
+\paragraph{Variables}\mbox{}\\
+\textbf{Versión A: con tiempo externalizado}\\
+\begin{tabular}{l c l}
+    $x_p$ & : & unidades fabricadas de la placa $p \in \mathcal{P}$ \\
+    $y$   & : & tiempo externalizado de \emph{inspección} \\
+\end{tabular}
+
+\noindent\textbf{Versión B: con duplicación de variables (interna/externa)}\\
+\begin{tabular}{l c l}
+    $x_p^{\mathrm{i}}$ & : & unidades de la placa $p$ con \emph{inspección} interna \\
+    $x_p^{\mathrm{e}}$ & : & unidades de la placa $p$ con \emph{inspección} externalizada \\
+\end{tabular}
+\\[0.25cm]
+
+% ======================== VERSIÓN A ========================
+\paragraph{Restricciones (versión A)}\mbox{}\\
+Capacidades de procesos \emph{no inspección}:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{rp}\,x_p \;\le\; C_r \qquad \forall r \in \mathcal{R}\setminus\{\mathrm{insp}\}
+\end{equation}
+
+Proceso de \emph{inspección} con parte externalizada:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{insp},p}\,x_p \;\le\; C_{\mathrm{insp}} + y
+\end{equation}
+
+Capacidad máxima del laboratorio externo:
+\begin{equation}
+    y \;\le\; C_{\mathrm{ext}}
+\end{equation}
+
+Disponibilidad de resina epoxi:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} A_p\,x_p \;\le\; A
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_p \ge 0 \;\;\forall p \in \mathcal{P}, \quad y \ge 0
+\end{equation}
+
+\paragraph{Función objetivo (Versión A)}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z \;=\; \sum_{p \in \mathcal{P}} B_p\,x_p \;-\; K_{\mathrm{ext}}\,y
+\end{equation}
+
+\paragraph{Modelo completo (versión A)}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad & z \;=\; \sum_{p \in \mathcal{P}} B_p\,x_p \;-\; K_{\mathrm{ext}}\,y \notag\\
+\mbox{s. a.:}\quad
+& \sum_{p} T_{rp}\,x_p \le C_r \quad \forall r \in \mathcal{R}\setminus\{\mathrm{insp}\} \notag\\
+& \sum_{p} T_{\mathrm{insp},p}\,x_p \le C_{\mathrm{insp}} + y \notag\\
+& y \le C_{\mathrm{ext}} \notag\\
+& \sum_{p} A_p\,x_p \le A \notag\\
+& x_p \ge 0 \;\forall p \in \mathcal{P},\; y \ge 0 \notag
+\end{align}
+
+% ======================== VERSIÓN B ========================
+\paragraph{Restricciones (versión B)}\mbox{}\\
+Acumulación por procesos \emph{no inspección}:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{rp}\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;\le\; C_r
+    \qquad \forall r \in \mathcal{R}\setminus\{\mathrm{insp}\}
+\end{equation}
+
+\emph{Inspección} interna:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{insp},p}\,x_p^{\mathrm{i}} \;\le\; C_{\mathrm{insp}}
+\end{equation}
+
+\emph{Inspección} externalizada (capacidad del laboratorio expresada en tiempo):
+\begin{equation}
+    \sum_{p \in \mathcal{P}} T_{\mathrm{insp},p}\,x_p^{\mathrm{e}} \;\le\; C_{\mathrm{ext}}
+\end{equation}
+
+Disponibilidad de resina epoxi:
+\begin{equation}
+    \sum_{p \in \mathcal{P}} A_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;\le\; A
+\end{equation}
+
+No negatividad:
+\begin{equation}
+    x_p^{\mathrm{i}} \ge 0,\; x_p^{\mathrm{e}} \ge 0 \qquad \forall p \in \mathcal{P}
+\end{equation}
+
+\paragraph{Función objetivo (versión B)}\mbox{}\\
+\begin{equation}
+\mbox{max.}\; z \;=\;
+\sum_{p \in \mathcal{P}} B_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big)
+\;-\;
+K_{\mathrm{pla}} \sum_{p \in \mathcal{P}} x_p^{\mathrm{e}}
+\end{equation}
+
+\paragraph{Modelo completo (versión B)}\mbox{}\\
+\begin{align}
+\mbox{max.}\quad
+& z \;=\; \sum_{p} B_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \;-\; K_{\mathrm{pla}}\sum_{p} x_p^{\mathrm{e}} \notag\\
+\mbox{s. a.:}\quad
+& \sum_{p} T_{rp}\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \le C_r \quad \forall r \in \mathcal{R}\setminus\{\mathrm{insp}\} \notag\\
+& \sum_{p} T_{\mathrm{insp},p}\,x_p^{\mathrm{i}} \le C_{\mathrm{insp}} \notag\\
+& \sum_{p} T_{\mathrm{insp},p}\,x_p^{\mathrm{e}} \le C_{\mathrm{ext}} \notag\\
+& \sum_{p} A_p\big(x_p^{\mathrm{i}} + x_p^{\mathrm{e}}\big) \le A \notag\\
+& x_p^{\mathrm{i}},\,x_p^{\mathrm{e}} \ge 0 \;\; \forall p \in \mathcal{P} \notag
+\end{align}

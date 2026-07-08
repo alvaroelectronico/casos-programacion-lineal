@@ -1,0 +1,315 @@
+\section{Distribución de agua embotellada (propuesta de examen)}
+
+% Propuesta de examen 26/27. Escalera de dificultad en tres apartados,
+% partiendo de un problema de TRANSPORTE CLÁSICO (un escalón) y con
+% añadidos esencialmente distintos de los exámenes de años anteriores
+% (en particular, distinto del amoniaco 24/25, que era de dos escalones):
+%  - Apartado 1 (base, muy sencillo): transporte clásico equilibrado.
+%  - Apartado 2 (ampliación): oferta insuficiente -> proveedor externo,
+%    capacidad máxima por ruta y una ruta prohibida (sigue siendo LP).
+%  - Apartado 3 (avanzado): localización -- decidir qué nuevas plantas
+%    abrir (coste fijo, capacidad, a lo sumo una) -> MILP.
+
+\subsection{Presentación del caso (situación inicial)}
+La empresa \textbf{AquaNorte S.A.} distribuye agua embotellada (en palés) desde sus \textbf{tres plantas} (P1, P2, P3) hasta \textbf{cuatro centros de distribución} (C1, C2, C3, C4). Cada planta tiene una producción semanal disponible y cada centro una demanda semanal que debe cubrirse exactamente. El coste de transporte por palé depende de la ruta planta--centro.
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Coste (€/palé)} & \textbf{C1} & \textbf{C2} & \textbf{C3} & \textbf{C4} & \textbf{Oferta}\\
+\midrule
+P1 & 4 & 6 & 8 & 5 & 120\\
+P2 & 5 & 3 & 7 & 6 & 100\\
+P3 & 7 & 5 & 4 & 3 & 80\\
+\midrule
+\textbf{Demanda} & 90 & 70 & 80 & 60 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La oferta total (300) coincide con la demanda total (300): el problema está \emph{equilibrado}. Se pide formular un modelo de programación lineal que decida cuántos palés enviar por cada ruta para \textbf{minimizar el coste total de transporte} cubriendo la demanda.
+
+\subsection{Formulación explícita (situación inicial)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés transportados desde la planta $i$ ($i=1,2,3$) al centro $j$ ($j=1,2,3,4$)\\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Toda la oferta de cada planta se envía:
+\begin{align}
+    & x_{11} + x_{12} + x_{13} + x_{14} = 120 && \text{(P1)}\\
+    & x_{21} + x_{22} + x_{23} + x_{24} = 100 && \text{(P2)}\\
+    & x_{31} + x_{32} + x_{33} + x_{34} = 80 && \text{(P3)}
+\end{align}
+La demanda de cada centro se cubre:
+\begin{align}
+    & x_{11} + x_{21} + x_{31} = 90 && \text{(C1)}\\
+    & x_{12} + x_{22} + x_{32} = 70 && \text{(C2)}\\
+    & x_{13} + x_{23} + x_{33} = 80 && \text{(C3)}\\
+    & x_{14} + x_{24} + x_{34} = 60 && \text{(C4)}
+\end{align}
+No negatividad:
+\begin{equation}
+    x_{ij} \geq 0 \qquad \forall i=1,2,3,\; \forall j=1,2,3,4
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& 4x_{11} + 6x_{12} + 8x_{13} + 5x_{14} \notag\\
++\;& 5x_{21} + 3x_{22} + 7x_{23} + 6x_{24} \notag\\
++\;& 7x_{31} + 5x_{32} + 4x_{33} + 3x_{34}
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \textstyle\sum_{i=1}^{3}\sum_{j=1}^{4} C_{ij}\, x_{ij} \notag\\
+\mbox{s. a.:}\quad
+& x_{i1} + x_{i2} + x_{i3} + x_{i4} = S_i && i=1,2,3 \notag\\
+& x_{1j} + x_{2j} + x_{3j} = D_j && j=1,2,3,4 \notag\\
+& x_{ij} \geq 0 && \forall i,j \notag
+\end{align}
+con $S=(120,100,80)$, $D=(90,70,80,60)$ y $C_{ij}$ la matriz de costes de la tabla.
+
+\subsection{Formulación generalizada (situación inicial)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{I}$ & : & plantas (orígenes) \\
+    $\mathcal{J}$ & : & centros de distribución (destinos) \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $S_i$    & : & oferta (palés) de la planta $i \in \mathcal{I}$ \\
+    $D_j$    & : & demanda (palés) del centro $j \in \mathcal{J}$ \\
+    $C_{ij}$ & : & coste de transporte por palé de la planta $i$ al centro $j$ \\
+\end{tabular}
+\\[2pt]
+\textit{Problema equilibrado: } $\sum_{i} S_i = \sum_{j} D_j$.
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés transportados de la planta $i$ al centro $j$ \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Oferta de cada planta y demanda de cada centro:
+\begin{align}
+    & \sum_{j \in \mathcal{J}} x_{ij} = S_i && \forall i \in \mathcal{I} \\
+    & \sum_{i \in \mathcal{I}} x_{ij} = D_j && \forall j \in \mathcal{J} \\
+    & x_{ij} \geq 0 && \forall i \in \mathcal{I},\, j \in \mathcal{J}
+\end{align}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{equation}
+\mbox{min. } z = \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} C_{ij}\, x_{ij}
+\end{equation}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} C_{ij}\, x_{ij} \notag\\
+\mbox{s. a.:}\quad
+& \sum_{j \in \mathcal{J}} x_{ij} = S_i && \forall i \in \mathcal{I} \notag\\
+& \sum_{i \in \mathcal{I}} x_{ij} = D_j && \forall j \in \mathcal{J} \notag\\
+& x_{ij} \geq 0 && \forall i \in \mathcal{I},\, j \in \mathcal{J} \notag
+\end{align}
+
+
+\subsection{Presentación del caso (ampliación: demanda insuficiente y proveedor externo)}
+
+La demanda ha crecido y ahora es de \textbf{110} (C1), \textbf{90} (C2), \textbf{100} (C3) y \textbf{80} (C4) palés, es decir, \textbf{380} palés, por encima de la oferta propia total (300). Para cubrir la diferencia, AquaNorte puede comprar palés a un \textbf{proveedor externo}, que sirve a cualquier centro a un coste de \textbf{12 €/palé} (más caro que cualquier ruta propia) y sin límite de cantidad.
+
+Además, por restricciones logísticas aparecen dos condiciones nuevas sobre el transporte propio:
+\begin{itemize}
+    \item Ninguna ruta planta--centro puede transportar más de \textbf{60 palés} por semana.
+    \item La ruta \textbf{P1--C3 no está disponible} esta temporada.
+\end{itemize}
+
+Las ofertas de las plantas y los costes de transporte propios se mantienen. El objetivo es \textbf{minimizar el coste total} (transporte propio más compra externa) cubriendo la demanda.
+
+\subsection{Formulación explícita (ampliación)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés de la planta $i$ al centro $j$ (con $x_{13}=0$ por ruta no disponible)\\
+    $e_j$    & : & palés comprados al proveedor externo para el centro $j$ \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Oferta disponible de cada planta (puede no agotarse):
+\begin{align}
+    & x_{11} + x_{12} + x_{13} + x_{14} \leq 120 && \text{(P1)}\\
+    & x_{21} + x_{22} + x_{23} + x_{24} \leq 100 && \text{(P2)}\\
+    & x_{31} + x_{32} + x_{33} + x_{34} \leq 80 && \text{(P3)}
+\end{align}
+Cobertura de la demanda (transporte propio más externo):
+\begin{align}
+    & x_{11} + x_{21} + x_{31} + e_1 = 110 && \text{(C1)}\\
+    & x_{12} + x_{22} + x_{32} + e_2 = 90 && \text{(C2)}\\
+    & x_{13} + x_{23} + x_{33} + e_3 = 100 && \text{(C3)}\\
+    & x_{14} + x_{24} + x_{34} + e_4 = 80 && \text{(C4)}
+\end{align}
+Capacidad máxima por ruta y ruta no disponible:
+\begin{equation}
+    x_{ij} \leq 60 \quad \forall i,j; \qquad x_{13} = 0
+\end{equation}
+No negatividad:
+\begin{equation}
+    x_{ij} \geq 0 \quad \forall i,j; \qquad e_j \geq 0 \quad \forall j
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& \big(4x_{11} + 6x_{12} + 8x_{13} + 5x_{14}\big) + \big(5x_{21} + 3x_{22} + 7x_{23} + 6x_{24}\big) \notag\\
++\;& \big(7x_{31} + 5x_{32} + 4x_{33} + 3x_{34}\big) + 12\,(e_1 + e_2 + e_3 + e_4)
+\end{align}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{i=1}^{3}\sum_{j=1}^{4} C_{ij}\, x_{ij} + 12 \sum_{j=1}^{4} e_j \notag\\
+\mbox{s. a.:}\quad
+& \sum_{j=1}^{4} x_{ij} \leq S_i && i=1,2,3 \notag\\
+& \sum_{i=1}^{3} x_{ij} + e_j = D_j && j=1,2,3,4 \notag\\
+& x_{ij} \leq 60 \quad \forall i,j; \qquad x_{13} = 0 \notag\\
+& x_{ij} \geq 0 \quad \forall i,j; \qquad e_j \geq 0 \quad \forall j \notag
+\end{align}
+con $S=(120,100,80)$ y $D=(110,90,100,80)$.
+
+\subsection{Formulación generalizada (ampliación)}
+
+\paragraph{Parámetros (añadidos)}\mbox{}\\
+\begin{tabular}{l c l}
+    $U_{ij}$ & : & capacidad máxima de la ruta $i$--$j$ (con $U_{ij}=0$ si la ruta no está disponible) \\
+    $P$      & : & coste unitario de compra al proveedor externo \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés de la planta $i$ al centro $j$ \\
+    $e_j$    & : & palés comprados al exterior para el centro $j$ \\
+\end{tabular}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} C_{ij}\, x_{ij} + P \sum_{j \in \mathcal{J}} e_j \notag\\
+\mbox{s. a.:}\quad
+& \sum_{j \in \mathcal{J}} x_{ij} \leq S_i && \forall i \in \mathcal{I} \notag\\
+& \sum_{i \in \mathcal{I}} x_{ij} + e_j = D_j && \forall j \in \mathcal{J} \notag\\
+& 0 \leq x_{ij} \leq U_{ij} && \forall i \in \mathcal{I},\, j \in \mathcal{J} \notag\\
+& e_j \geq 0 && \forall j \in \mathcal{J} \notag
+\end{align}
+
+
+\subsection{Presentación del caso (avanzado: apertura de nuevas plantas)}
+
+Recurrir al proveedor externo resulta caro. AquaNorte estudia \textbf{abrir una nueva planta} elegida entre dos ubicaciones candidatas, \textbf{P4} y \textbf{P5}. Abrir una planta supone un \textbf{coste fijo semanal} y aporta una \textbf{capacidad} adicional:
+
+\begin{center}
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Coste (€/palé)} & \textbf{C1} & \textbf{C2} & \textbf{C3} & \textbf{C4} & \textbf{Capacidad} & \textbf{Coste fijo}\\
+\midrule
+P4 & 3 & 4 & 5 & 6 & 100 & 400\\
+P5 & 6 & 5 & 3 & 2 & 120 & 350\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Por limitaciones de inversión, \textbf{se puede abrir como máximo una} de las dos plantas candidatas. Una planta candidata solo puede enviar palés si se ha abierto. Se mantienen las plantas propias (P1, P2, P3) con sus ofertas y costes, la demanda ampliada de 380 palés, la posibilidad de compra externa a 12 €/palé, la capacidad máxima de 60 palés por ruta y la no disponibilidad de la ruta P1--C3. El objetivo es \textbf{minimizar el coste total}: transporte, compra externa y coste fijo de apertura.
+
+\subsection{Formulación explícita (avanzado)}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés de la planta $i$ ($i=1,\dots,5$) al centro $j$ (con $x_{13}=0$) \\
+    $e_j$    & : & palés comprados al exterior para el centro $j$ \\
+    $y_4$    & : & binaria: 1 si se abre la planta P4; 0 en caso contrario \\
+    $y_5$    & : & binaria: 1 si se abre la planta P5; 0 en caso contrario \\
+\end{tabular}
+
+\paragraph{Restricciones}\mbox{}\\
+Oferta de las plantas propias:
+\begin{equation}
+    \sum_{j=1}^{4} x_{ij} \leq S_i \qquad i=1,2,3
+\end{equation}
+Capacidad de las plantas candidatas (solo si se abren):
+\begin{align}
+    & x_{41} + x_{42} + x_{43} + x_{44} \leq 100\,y_4 \\
+    & x_{51} + x_{52} + x_{53} + x_{54} \leq 120\,y_5
+\end{align}
+A lo sumo una apertura:
+\begin{equation}
+    y_4 + y_5 \leq 1
+\end{equation}
+Cobertura de la demanda (todas las plantas más el exterior):
+\begin{equation}
+    \sum_{i=1}^{5} x_{ij} + e_j = D_j \qquad j=1,2,3,4
+\end{equation}
+Capacidad por ruta, ruta no disponible, no negatividad e integralidad:
+\begin{equation}
+    x_{ij} \leq 60 \;\; \forall i,j; \quad x_{13}=0; \quad x_{ij} \geq 0 \;\; \forall i,j; \quad e_j \geq 0 \;\; \forall j; \quad y_4, y_5 \in \{0,1\}
+\end{equation}
+
+\paragraph{Función objetivo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;
+& \sum_{i=1}^{5}\sum_{j=1}^{4} C_{ij}\, x_{ij} \;+\; 12 \sum_{j=1}^{4} e_j \;+\; 400\,y_4 + 350\,y_5
+\end{align}
+donde los costes $C_{ij}$ de las plantas P4 y P5 son los de la tabla anterior.
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{i=1}^{5}\sum_{j=1}^{4} C_{ij}\, x_{ij} + 12 \sum_{j=1}^{4} e_j + 400\,y_4 + 350\,y_5 \notag\\
+\mbox{s. a.:}\quad
+& \sum_{j} x_{ij} \leq S_i && i=1,2,3 \notag\\
+& \sum_{j} x_{4j} \leq 100\,y_4,\qquad \sum_{j} x_{5j} \leq 120\,y_5 \notag\\
+& y_4 + y_5 \leq 1 \notag\\
+& \sum_{i=1}^{5} x_{ij} + e_j = D_j && j=1,2,3,4 \notag\\
+& x_{ij} \leq 60 \;\; \forall i,j; \quad x_{13}=0 \notag\\
+& x_{ij} \geq 0 \;\; \forall i,j; \quad e_j \geq 0 \;\; \forall j; \quad y_4,y_5 \in \{0,1\} \notag
+\end{align}
+
+\subsection{Formulación generalizada (avanzado)}
+
+\paragraph{Conjuntos}\mbox{}\\
+\begin{tabular}{l c l}
+    $\mathcal{I}_0$ & : & plantas existentes \\
+    $\mathcal{I}_c$ & : & plantas candidatas a abrir \\
+    $\mathcal{I}$   & : & todas las plantas, $\mathcal{I} = \mathcal{I}_0 \cup \mathcal{I}_c$ \\
+    $\mathcal{J}$   & : & centros de distribución \\
+\end{tabular}
+
+\paragraph{Parámetros}\mbox{}\\
+\begin{tabular}{l c l}
+    $S_i$      & : & oferta de la planta existente $i \in \mathcal{I}_0$ \\
+    $Q_i$      & : & capacidad de la planta candidata $i \in \mathcal{I}_c$ si se abre \\
+    $F_i$      & : & coste fijo de abrir la planta candidata $i \in \mathcal{I}_c$ \\
+    $C_{ij}$   & : & coste de transporte por palé de la planta $i$ al centro $j$ \\
+    $U_{ij}$   & : & capacidad máxima de la ruta $i$--$j$ \\
+    $D_j$      & : & demanda del centro $j$ \\
+    $P$        & : & coste unitario de compra externa \\
+    $N$        & : & número máximo de plantas candidatas que pueden abrirse \\
+\end{tabular}
+
+\paragraph{Variables}\mbox{}\\
+\begin{tabular}{l c l}
+    $x_{ij}$ & : & palés de la planta $i \in \mathcal{I}$ al centro $j \in \mathcal{J}$ \\
+    $e_j$    & : & palés comprados al exterior para el centro $j$ \\
+    $y_i$    & : & binaria: 1 si se abre la planta candidata $i \in \mathcal{I}_c$ \\
+\end{tabular}
+
+\paragraph{Modelo completo}\mbox{}\\
+\begin{align}
+\mbox{min. } z \;=\;& \sum_{i \in \mathcal{I}} \sum_{j \in \mathcal{J}} C_{ij}\, x_{ij} + P \sum_{j \in \mathcal{J}} e_j + \sum_{i \in \mathcal{I}_c} F_i\, y_i \notag\\
+\mbox{s. a.:}\quad
+& \sum_{j \in \mathcal{J}} x_{ij} \leq S_i && \forall i \in \mathcal{I}_0 \notag\\
+& \sum_{j \in \mathcal{J}} x_{ij} \leq Q_i\, y_i && \forall i \in \mathcal{I}_c \notag\\
+& \sum_{i \in \mathcal{I}_c} y_i \leq N \notag\\
+& \sum_{i \in \mathcal{I}} x_{ij} + e_j = D_j && \forall j \in \mathcal{J} \notag\\
+& 0 \leq x_{ij} \leq U_{ij} \;\; \forall i,j; \quad e_j \geq 0 \;\; \forall j; \quad y_i \in \{0,1\} \;\; \forall i \in \mathcal{I}_c \notag
+\end{align}
+\textit{En este caso: } $N=1$, $P=12$, $U_{ij}=60$ (salvo $U_{13}=0$), $Q_{4}=100$, $Q_{5}=120$, $F_4=400$, $F_5=350$.

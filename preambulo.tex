@@ -10,6 +10,7 @@
 \usepackage[T1]{fontenc}      % Codificación de salida T1
 \usepackage{titling}
 \usepackage{etoolbox}
+\usepackage{xcolor}
 
 % --- Espaciado de párrafo ---
 \setlength{\parskip}{0.5em}
@@ -31,4 +32,18 @@
 % --- Metadatos del documento ---
 \title{Casos de Programacion Lineal}
 \author{UD Organización de la Producción}
-\date{Octubre de 2025}
+\date{\today} % Fecha actual automática al compilar
+
+% --- Hipervínculos (índice clicable). Cargar hyperref al final. ---
+\usepackage{hyperref}
+\definecolor{colorenlace}{RGB}{0,45,98} % azul corporativo UPM (~Pantone 654, #002D62)
+\hypersetup{
+    colorlinks=true,
+    linkcolor=colorenlace,   % enlaces internos (índice, referencias)
+    urlcolor=colorenlace,
+    citecolor=colorenlace,
+    linktoc=all,             % enlaza tanto el texto como el número de página del índice
+    bookmarksopen=true,
+    pdftitle={Casos de Programacion Lineal},
+    pdfauthor={UD Organización de la Producción}
+}
